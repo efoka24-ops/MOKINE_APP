@@ -1,0 +1,68 @@
+html,body,#root{
+    overflow-x: hidden!important;
+}
+@media all and (max-width:767px) {
+    .boutonpc{
+        display: none;
+    }
+}
+
+@media all and (max-width:767px) {
+    .boutonmobile{
+        display: flex;
+    }
+}
+
+@keyframes osciller {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.animate-osciller {
+    animation: osciller 2s infinite ease-in-out;
+}
+
+.bg-gradient-radial {
+  background-image: radial-gradient(circle at center, rgba(255, 255, 0, 0.3) 0%, transparent 70%);
+}
+
+.shadow-lg-yellow {
+    box-shadow: 0 10px 15px -3px rgba(255, 255, 0, 0.1), 0 4px 6px -2px rgba(255, 255, 0, 0.05);
+}
+
+.text-green-700 {
+  color: #178A3B;
+}
+
+@keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+    
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    .animate-float-delay {
+        animation: float 3s ease-in-out infinite;
+        animation-delay: 1.5s;
+    }
+
+    @media all and (max-width:357px) {
+        .boutonherosection{
+            padding-bottom: 0px!important;
+            padding-top: 0px!important;
+        }
+        
+    }
