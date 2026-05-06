@@ -1,7 +1,7 @@
 // src/pages/LoginPage.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../assets/images/logo.jpg'; // Assurez-vous que le chemin est correct
+import logo from '../assets/logo.png'; // Assurez-vous que le chemin est correct
 import loginImage from '../assets/images/veterinaire.png'; // Image pour le fond PC
 
 export default function LoginPage() {
@@ -32,7 +32,7 @@ export default function LoginPage() {
         {/* Partie droite avec le formulaire de connexion */}
         <div className="w-full md:w-1/2 p-4 sm:p-10 flex flex-col justify-center">
           <div className="flex justify-center mb-6">
-            <img src={logo} alt="Mokine Logo" className="w-16 h-16 rounded-full object-cover" />
+            <img src={logo} alt="Mokine Logo" className="w-44 h-16 object-cover" style={{aspectRatio: '1080 / 423'}} />
           </div>
           <h2 className="text-center text-3xl font-extrabold text-gray-900">
             Connexion

@@ -20,6 +20,17 @@ import Consultation from './pages/Consultation';
 import Layout from './Layout/Layout';
 import QRCodeGenerator from './pages/qrcode';
 
+// Admin Imports
+import ProtectedRoute from './admin/ProtectedRoute';
+import {
+  AdminDashboard,
+  AdminUsers,
+  AdminVeterinarians,
+  AdminPayments,
+  AdminProducts,
+  AdminSettings,
+} from './admin/index';
+
 
 const queryClient = new QueryClient();
 
@@ -48,6 +59,56 @@ root.render(
             {/* <Route path="/notification" element={<Notification />} /> */}
             {/* <Route path="/parametres" element={<Parametres />} /> */}
           </Route>
+
+        {/* ====== Admin Routes (Protected) ====== */}
+        <Route 
+          path="/admin/dashboard" 
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route 
+          path="/admin/users" 
+          element={
+            <ProtectedRoute>
+              <AdminUsers />
+            </ProtectedRoute>
+          }
+        />
+        <Route 
+          path="/admin/veterinarians" 
+          element={
+            <ProtectedRoute>
+              <AdminVeterinarians />
+            </ProtectedRoute>
+          }
+        />
+        <Route 
+          path="/admin/payments" 
+          element={
+            <ProtectedRoute>
+              <AdminPayments />
+            </ProtectedRoute>
+          }
+        />
+        <Route 
+          path="/admin/products" 
+          element={
+            <ProtectedRoute>
+              <AdminProducts />
+            </ProtectedRoute>
+          }
+        />
+        <Route 
+          path="/admin/settings" 
+          element={
+            <ProtectedRoute>
+              <AdminSettings />
+            </ProtectedRoute>
+          }
+        />
 
       </Routes>
       </BrowserRouter>

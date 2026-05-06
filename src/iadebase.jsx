@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Plus, Send, Mic, User, Menu, Loader2, Syringe, HeartPulse, Clipboard, Telescope, Scan } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import logo from '../assets/images/logo.jpg'
+import logo from '../assets/logo.png'
 import { useNavigate, useParams } from "react-router-dom";
 import { Footprints, Mouth, Dermis } from 'lucide-react';
 
@@ -145,7 +145,7 @@ export function Ia() {
           <button className="p-2 rounded-full hover:bg-gray-100" onClick={() => setSidebarOpen(!sidebarOpen)}>
             <Menu size={24} />
           </button>
-          <img src={logo} className="h-8 w-10"/>
+          <img src={logo} className="w-20 h-8" style={{aspectRatio: '1080 / 423', objectFit: 'cover'}} />
           <h1 className="font-bold text-lg relative right-2">MOKINE IA</h1>
         </div>
       </nav>
@@ -153,7 +153,7 @@ export function Ia() {
       {/* Sidebar */}
       <div className={`fixed inset-y-0 left-0 w-64 bg-white border-r transform transition-transform duration-300 ease-in-out z-40 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:relative lg:translate-x-0 lg:flex lg:flex-col`}>
         <div onClick={()=>navigate('/')} className="p-4 border-b flex items-center space-x-2">
-          <img src={logo} className="h-8 w-10"/>
+          <img src={logo} className="w-20 h-8" style={{aspectRatio: '1080 / 423', objectFit: 'cover'}} />
           <h1 className="font-bold text-lg relative right-4">MOKINE IA</h1>
         </div>
         <button onClick={() => { setSelectedChat(null); setSidebarOpen(false); }} className="flex items-center p-3 space-x-2 hover:bg-gray-100 border-b">

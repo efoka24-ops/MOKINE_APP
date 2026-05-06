@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from '../assets/images/logo.jpg';
+import logo from '../assets/logo.png';
 
 export default function HeaderHome() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,7 +46,7 @@ export default function HeaderHome() {
         <header className={headerClasses}>
             <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <img src={logo} alt="Mokine" className="w-10 h-10 rounded-md object-cover" />
+                    <img src={logo} alt="Mokine" className="w-20 h-8 rounded-md object-cover" style={{aspectRatio: '1080 / 423'}} />
                     <span className={`text-lg font-bold ${textClasses}`}>Mokine</span>
                 </div>
 

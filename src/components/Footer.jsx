@@ -1,5 +1,5 @@
 import React from "react";
-import logofooter from '../assets/images/logofooter.png'
+import logo from '../assets/logo.png'
 
 export default function Footer() {
   return (
@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-6">
        
          <div className="relative -top-4">
-          <img src={logofooter} className="h-32" alt="" />
+          <img src={logo} className="w-40 h-12" style={{aspectRatio: '1080 / 423', objectFit: 'cover'}} alt="Mokine" />
         </div>
 
         <div>

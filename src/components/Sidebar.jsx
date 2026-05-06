@@ -8,7 +8,7 @@ import {
   BriefcaseIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import logo from "../assets/mokine.jpg";
+import logo from "../assets/logo.png";
 import dashboardImage from "../assets/dashboard.jpg";
 
 const links = [
@@ -27,7 +27,7 @@ export default function Sidebar({ isOpen, onClose }) {
     >
       <div className="flex items-center justify-between mb-6">
         <NavLink to={'/'} className="flex items-center gap-3">
-          <img src={logo} alt="Mokine" className="w-10 h-10 rounded" />
+          <img src={logo} alt="Mokine" className="w-20 h-8 rounded object-cover" style={{aspectRatio: '1080 / 423'}} />
           <span className="text-xl font-bold text-green-800">Mokine</span>
         </NavLink>
         <button onClick={onClose} className="md:hidden text-gray-600">

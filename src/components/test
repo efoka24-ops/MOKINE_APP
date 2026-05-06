@@ -5,7 +5,7 @@ import {
   Cog6ToothIcon,
   Bars3Icon,
 } from "@heroicons/react/24/outline";
-import logo from "../assets/mokine.jpg";
+import logo from "../assets/logo.png";
 import dashboardImage from "../assets/dashboard.jpg";
 
 function pageTitle(pathname) {
