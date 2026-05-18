@@ -41,13 +41,11 @@ export const submitKYC = async (req, res) => {
     };
 
     // Sauvegarder KYC
-    await (db.market_kyc || { insert: async (d) => d }).insert?.(kyc);
+    await db.market_kyc.insert(kyc);
 
     // Mettre à jour vendor
     const updated = { ...vendor, kycStatus: 'under_review', kycData: kyc };
-    if (vendors.updateOne) {
-      await vendors.updateOne({ id: vendor.id }, updated);
-    }
+    await db.market_fournisseurs.update(vendor.id, updated);
 
     res.status(201).json({ message: 'Documents KYC soumis', kyc });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -77,7 +75,7 @@ export const getPendingKYC = async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Non autorisé' });
 
-    const kyc = await (db.market_kyc || { find: async () => [] }).find?.() || [];
+    const kyc = await db.market_kyc.all?.() || [];
     const pending = kyc.filter(k => k.status === 'under_review');
 
     // Enrichir avec infos vendor
@@ -112,18 +110,13 @@ export const approveKYC = async (req, res) => {
       reviewedAt: new Date().toISOString(),
     };
 
-    if (kyc.updateOne) {
-      await kyc.updateOne({ id: kycId }, updated);
-    }
+    await db.market_kyc.update(kycId, updated);
 
     // Mettre à jour vendor
-    const vendors = db.market_fournisseurs || {};
-    const vendor = await vendors.findOne?.(v => v.id === kycData.vendorId);
+    const vendor = await db.market_fournisseurs.findOne?.(v => v.id === kycData.vendorId);
     if (vendor) {
       const vendorUpdated = { ...vendor, kycStatus: 'approved', verified: true };
-      if (vendors.updateOne) {
-        await vendors.updateOne({ id: vendor.id }, vendorUpdated);
-      }
+      await db.market_fournisseurs.update(vendor.id, vendorUpdated);
     }
 
     res.json({ message: 'KYC approuvé', kyc: updated });
@@ -151,18 +144,13 @@ export const rejectKYC = async (req, res) => {
       reviewedAt: new Date().toISOString(),
     };
 
-    if (kyc.updateOne) {
-      await kyc.updateOne({ id: kycId }, updated);
-    }
+    await db.market_kyc.update(kycId, updated);
 
     // Mettre à jour vendor
-    const vendors = db.market_fournisseurs || {};
-    const vendor = await vendors.findOne?.(v => v.id === kycData.vendorId);
+    const vendor = await db.market_fournisseurs.findOne?.(v => v.id === kycData.vendorId);
     if (vendor) {
       const vendorUpdated = { ...vendor, kycStatus: 'rejected', verified: false };
-      if (vendors.updateOne) {
-        await vendors.updateOne({ id: vendor.id }, vendorUpdated);
-      }
+      await db.market_fournisseurs.update(vendor.id, vendorUpdated);
     }
 
     res.json({ message: 'KYC rejeté', kyc: updated });
@@ -174,7 +162,7 @@ export const getKYCStats = async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Non autorisé' });
 
-    const kyc = await (db.market_kyc || { find: async () => [] }).find?.() || [];
+    const kyc = await db.market_kyc.all?.() || [];
 
     const stats = {
       total: kyc.length,

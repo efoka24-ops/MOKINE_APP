@@ -1,0 +1,27 @@
+[
+  {
+    "id": "order_1715960400000",
+    "buyerId": "1",
+    "buyerName": "Jean Éleveur",
+    "buyerPhone": "+237655000001",
+    "items": [
+      {
+        "productId": "prod_1715960400000",
+        "productName": "Vaccin Bouche-Pied",
+        "price": 2500,
+        "quantity": 5,
+        "subtotal": 12500
+      }
+    ],
+    "totalPrice": 12500,
+    "status": "delivered",
+    "paymentStatus": "paid",
+    "deliveryStatus": "delivered",
+    "paymentMethod": "mobile_money",
+    "deliveryAddress": "Obala, Centre, Cameroun",
+    "trackingNumber": "TRACK-001",
+    "notes": "Livraison effectuée",
+    "createdAt": "2026-05-13T12:11:13.738Z",
+    "updatedAt": "2026-05-13T12:11:13.738Z"
+  }
+]

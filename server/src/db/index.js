@@ -318,6 +318,127 @@ export const SEEDS = {
       updatedAt: new Date().toISOString(),
     },
   ],
+
+  // ─── Market Collections ───────────────────────────────────────────────────
+
+  market_products: [
+    {
+      id: 'prod_1715960400000',
+      name: 'Vaccin Bouche-Pied',
+      description: 'Vaccin contre la fièvre aphteuse. Dose 5ml.',
+      category: 'vaccins',
+      sku: 'VAC-001',
+      price: 2500,
+      stock: 150,
+      images: [],
+      specifications: { dosage: '5ml', animals: ['bovins', 'ovins'] },
+      fournisseurId: '3',
+      fournisseurName: 'AgroVet Express',
+      reviews: [],
+      rating: 4.5,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 'prod_1715960400001',
+      name: 'Antibiotique Oxytetracycline 20%',
+      description: 'Antibiothérapie large spectre. Flacon 100ml.',
+      category: 'medicaments',
+      sku: 'MED-001',
+      price: 8500,
+      stock: 80,
+      images: [],
+      specifications: { volume: '100ml', animals: ['bovins', 'ovins', 'porcins'] },
+      fournisseurId: '3',
+      fournisseurName: 'AgroVet Express',
+      reviews: [],
+      rating: 4.8,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+  ],
+
+  market_orders: [
+    {
+      id: 'order_1715960400000',
+      buyerId: '1',
+      buyerName: 'Jean Éleveur',
+      buyerPhone: '+237655000001',
+      items: [
+        { productId: 'prod_1715960400000', productName: 'Vaccin Bouche-Pied', price: 2500, quantity: 5, subtotal: 12500 },
+      ],
+      totalPrice: 12500,
+      status: 'delivered',
+      paymentStatus: 'paid',
+      deliveryStatus: 'delivered',
+      paymentMethod: 'mobile_money',
+      deliveryAddress: 'Obala, Centre, Cameroun',
+      trackingNumber: 'TRACK-001',
+      notes: 'Livraison effectuée',
+      createdAt: new Date(Date.now() - 5 * 24 * 3600000).toISOString(),
+      updatedAt: new Date(Date.now() - 5 * 24 * 3600000).toISOString(),
+    },
+  ],
+
+  market_fournisseurs: [
+    {
+      id: 'fournisseur_1715960400000',
+      userId: '3',
+      userName: 'vendor@mokine.com',
+      userEmail: 'vendor@mokine.com',
+      name: 'AgroVet Express',
+      description: 'Fournisseur de produits vétérinaires et pharmaceutiques',
+      phone: '+237655000003',
+      address: 'Douala, Cameroun',
+      businessType: 'company',
+      categories: ['vaccins', 'medicaments', 'equipements'],
+      status: 'approved',
+      rating: 4.6,
+      reviewCount: 12,
+      productsCount: 2,
+      verified: true,
+      kycStatus: 'approved',
+      kycData: {
+        businessLicense: 'submitted',
+        taxId: 'submitted',
+        bankAccount: 'submitted',
+        ownerIdFront: 'submitted',
+        ownerIdBack: 'submitted',
+        proofOfAddress: 'submitted',
+      },
+      documents: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+  ],
+
+  market_kyc: [
+    {
+      id: 'kyc_1715960400000',
+      vendorId: 'fournisseur_1715960400000',
+      status: 'approved',
+      documents: {
+        businessLicense: 'submitted',
+        taxId: 'submitted',
+        bankAccount: 'submitted',
+        ownerIdFront: 'submitted',
+        ownerIdBack: 'submitted',
+        proofOfAddress: 'submitted',
+      },
+      verifications: {
+        businessLicense: true,
+        taxId: true,
+        bankAccount: true,
+        ownerIdFront: true,
+        ownerIdBack: true,
+        proofOfAddress: true,
+      },
+      comments: 'Tous les documents sont conformes',
+      rejectionReason: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+  ],
 };
 
 export const COLLECTION_NAMES = Object.keys(SEEDS);
@@ -358,6 +479,10 @@ const db = {
   contributions:      makeCollection('contributions'),
   api_subscriptions:  makeCollection('api_subscriptions'),
   api_plans:          makeCollection('api_plans'),
+  market_products:    makeCollection('market_products'),
+  market_orders:      makeCollection('market_orders'),
+  market_fournisseurs: makeCollection('market_fournisseurs'),
+  market_kyc:         makeCollection('market_kyc'),
 };
 
 console.log(`[DB] Using ${isProd ? 'PostgreSQL' : 'JSON files'} backend`);

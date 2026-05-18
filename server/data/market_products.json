@@ -1,0 +1,49 @@
+[
+  {
+    "id": "prod_1715960400000",
+    "name": "Vaccin Bouche-Pied",
+    "description": "Vaccin contre la fièvre aphteuse. Dose 5ml.",
+    "category": "vaccins",
+    "sku": "VAC-001",
+    "price": 2500,
+    "stock": 150,
+    "images": [],
+    "specifications": {
+      "dosage": "5ml",
+      "animals": [
+        "bovins",
+        "ovins"
+      ]
+    },
+    "fournisseurId": "3",
+    "fournisseurName": "AgroVet Express",
+    "reviews": [],
+    "rating": 4.5,
+    "createdAt": "2026-05-18T12:11:13.738Z",
+    "updatedAt": "2026-05-18T12:11:13.738Z"
+  },
+  {
+    "id": "prod_1715960400001",
+    "name": "Antibiotique Oxytetracycline 20%",
+    "description": "Antibiothérapie large spectre. Flacon 100ml.",
+    "category": "medicaments",
+    "sku": "MED-001",
+    "price": 8500,
+    "stock": 80,
+    "images": [],
+    "specifications": {
+      "volume": "100ml",
+      "animals": [
+        "bovins",
+        "ovins",
+        "porcins"
+      ]
+    },
+    "fournisseurId": "3",
+    "fournisseurName": "AgroVet Express",
+    "reviews": [],
+    "rating": 4.8,
+    "createdAt": "2026-05-18T12:11:13.738Z",
+    "updatedAt": "2026-05-18T12:11:13.738Z"
+  }
+]

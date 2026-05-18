@@ -23,9 +23,13 @@ export default function KYCForm() {
     try {
       setLoading(true);
       const res = await marketKYC.getStatus();
-      setKycStatus(res.data);
+      const data = res?.data;
+      setKycStatus(data && typeof data === 'object' && Object.keys(data).length > 0 
+        ? data 
+        : { kycStatus: null, kycData: null, verified: false });
     } catch (err) {
       console.error('Erreur:', err);
+      setKycStatus({ kycStatus: null, kycData: null, verified: false });
     } finally {
       setLoading(false);
     }

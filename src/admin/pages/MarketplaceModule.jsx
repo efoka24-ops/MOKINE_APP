@@ -23,11 +23,17 @@ export default function MarketplaceAdminModule() {
         marketOrders.getStats(),
         marketKYC.getStats(),
       ]);
-      setVendors(vendorRes.data.vendors || []);
-      setKycQueue(kycRes.data.kyc || []);
-      setStats(kycStatsRes.data);
+      setVendors(Array.isArray(vendorRes?.data?.vendors) ? vendorRes.data.vendors : []);
+      setKycQueue(Array.isArray(kycRes?.data?.kyc) ? kycRes.data.kyc : []);
+      const statsData = kycStatsRes?.data;
+      setStats(statsData && typeof statsData === 'object' && Object.keys(statsData).length > 0 
+        ? statsData 
+        : { total: 0, underReview: 0, approved: 0, rejected: 0 });
     } catch (err) {
       console.error('Erreur:', err);
+      setVendors([]);
+      setKycQueue([]);
+      setStats({ total: 0, underReview: 0, approved: 0, rejected: 0 });
     } finally {
       setLoading(false);
     }
@@ -94,7 +100,7 @@ export default function MarketplaceAdminModule() {
       </div>
 
       {/* Stats Cards */}
-      {stats && (
+      {stats && typeof stats === 'object' && 'total' in stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <p className="text-3xl font-bold text-gray-900">{vendors.length}</p>

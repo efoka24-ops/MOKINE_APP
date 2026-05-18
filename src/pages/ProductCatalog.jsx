@@ -28,10 +28,14 @@ export default function ProductCatalog() {
             inStock: filterInStock ? 'true' : undefined,
           }),
         ]);
-        setCategories(catRes.data.categories || []);
-        setProducts(prodRes.data.products || []);
+        const cats = catRes?.data?.categories;
+        const prods = prodRes?.data?.products;
+        setCategories(Array.isArray(cats) ? cats : []);
+        setProducts(Array.isArray(prods) ? prods : []);
       } catch (err) {
         console.error('Erreur:', err);
+        setCategories([]);
+        setProducts([]);
       } finally {
         setLoading(false);
       }

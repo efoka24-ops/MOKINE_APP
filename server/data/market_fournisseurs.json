@@ -1,0 +1,35 @@
+[
+  {
+    "id": "fournisseur_1715960400000",
+    "userId": "3",
+    "userName": "vendor@mokine.com",
+    "userEmail": "vendor@mokine.com",
+    "name": "AgroVet Express",
+    "description": "Fournisseur de produits vétérinaires et pharmaceutiques",
+    "phone": "+237655000003",
+    "address": "Douala, Cameroun",
+    "businessType": "company",
+    "categories": [
+      "vaccins",
+      "medicaments",
+      "equipements"
+    ],
+    "status": "approved",
+    "rating": 4.6,
+    "reviewCount": 12,
+    "productsCount": 2,
+    "verified": true,
+    "kycStatus": "approved",
+    "kycData": {
+      "businessLicense": "submitted",
+      "taxId": "submitted",
+      "bankAccount": "submitted",
+      "ownerIdFront": "submitted",
+      "ownerIdBack": "submitted",
+      "proofOfAddress": "submitted"
+    },
+    "documents": [],
+    "createdAt": "2026-05-18T12:11:13.738Z",
+    "updatedAt": "2026-05-18T12:11:13.738Z"
+  }
+]

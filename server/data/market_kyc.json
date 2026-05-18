@@ -1,0 +1,27 @@
+[
+  {
+    "id": "kyc_1715960400000",
+    "vendorId": "fournisseur_1715960400000",
+    "status": "approved",
+    "documents": {
+      "businessLicense": "submitted",
+      "taxId": "submitted",
+      "bankAccount": "submitted",
+      "ownerIdFront": "submitted",
+      "ownerIdBack": "submitted",
+      "proofOfAddress": "submitted"
+    },
+    "verifications": {
+      "businessLicense": true,
+      "taxId": true,
+      "bankAccount": true,
+      "ownerIdFront": true,
+      "ownerIdBack": true,
+      "proofOfAddress": true
+    },
+    "comments": "Tous les documents sont conformes",
+    "rejectionReason": null,
+    "createdAt": "2026-05-18T12:11:13.738Z",
+    "updatedAt": "2026-05-18T12:11:13.738Z"
+  }
+]

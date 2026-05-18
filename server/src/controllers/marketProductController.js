@@ -10,7 +10,7 @@ export const getProducts = async (req, res) => {
   try {
     const { category, search, fournisseur, inStock } = req.query;
     
-    let products = await (db.market_products || { find: async () => [] }).find?.() || [];
+    let products = await db.market_products.all?.() || [];
 
     // Filtrer par catégorie
     if (category) {
@@ -91,7 +91,7 @@ export const createProduct = async (req, res) => {
       return res.status(403).json({ error: 'Vous devez être un fournisseur approuvé' });
     }
 
-    const product = await (db.market_products || { insert: async (d) => ({ ...d, id: `prod_${Date.now()}` }) }).insert?.({
+    const product = await db.market_products.insert({
       id: `prod_${Date.now()}`,
       name,
       description: description || '',
@@ -107,7 +107,7 @@ export const createProduct = async (req, res) => {
       rating: null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    }) || { id: `prod_${Date.now()}` };
+    });
 
     res.status(201).json({ message: 'Produit créé', product });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -140,9 +140,7 @@ export const updateProduct = async (req, res) => {
       updatedAt: new Date().toISOString(),
     };
 
-    if (products.updateOne) {
-      await products.updateOne({ id }, updated);
-    }
+    await db.market_products.update(id, updated);
 
     res.json({ message: 'Produit mis à jour', product: updated });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -161,9 +159,7 @@ export const deleteProduct = async (req, res) => {
       return res.status(403).json({ error: 'Non autorisé' });
     }
 
-    if (products.deleteOne) {
-      await products.deleteOne({ id });
-    }
+    await db.market_products.remove(id);
 
     res.json({ message: 'Produit supprimé' });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -210,9 +206,7 @@ export const addReview = async (req, res) => {
     product.reviews = product.reviews || [];
     product.reviews.push(review);
 
-    if (products.updateOne) {
-      await products.updateOne({ id }, product);
-    }
+    await db.market_products.update(id, product);
 
     res.status(201).json({ message: 'Avis ajouté', review });
   } catch (e) { res.status(500).json({ error: e.message }); }

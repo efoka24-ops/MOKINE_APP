@@ -10,7 +10,7 @@ export const getVendors = async (req, res) => {
   try {
     const { search, category } = req.query;
 
-    let vendors = await (db.market_fournisseurs || { find: async () => [] }).find?.() || [];
+    let vendors = await db.market_fournisseurs.all?.() || [];
     vendors = vendors.filter(v => v.status === 'approved');
 
     if (search) {
@@ -64,7 +64,7 @@ export const registerVendor = async (req, res) => {
     const existing = await vendors.findOne?.(v => v.userId === req.user.id);
     if (existing) return res.status(400).json({ error: 'Vous êtes déjà enregistré comme fournisseur' });
 
-    const vendor = await (db.market_fournisseurs || { insert: async (d) => ({ ...d, id: `vendor_${Date.now()}` }) }).insert?.({
+    const vendor = await db.market_fournisseurs.insert({
       id: `vendor_${Date.now()}`,
       userId: req.user.id,
       userName: req.user.name,
@@ -144,9 +144,7 @@ export const updateVendor = async (req, res) => {
       updatedAt: new Date().toISOString(),
     };
 
-    if (vendors.updateOne) {
-      await vendors.updateOne({ id }, updated);
-    }
+    await db.market_fournisseurs.update(id, updated);
 
     res.json({ message: 'Profil mis à jour', vendor: updated });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -157,7 +155,7 @@ export const getPendingVendors = async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Non autorisé' });
 
-    const vendors = await (db.market_fournisseurs || { find: async () => [] }).find?.() || [];
+    const vendors = await db.market_fournisseurs.all?.() || [];
     const pending = vendors.filter(v => v.status === 'pending');
 
     res.json({ vendors: pending, total: pending.length });
@@ -181,9 +179,7 @@ export const approveVendor = async (req, res) => {
       approvedAt: new Date().toISOString(),
     };
 
-    if (vendors.updateOne) {
-      await vendors.updateOne({ id }, updated);
-    }
+    await db.market_fournisseurs.update(id, updated);
 
     res.json({ message: 'Fournisseur approuvé', vendor: updated });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -208,9 +204,7 @@ export const rejectVendor = async (req, res) => {
       rejectedAt: new Date().toISOString(),
     };
 
-    if (vendors.updateOne) {
-      await vendors.updateOne({ id }, updated);
-    }
+    await db.market_fournisseurs.update(id, updated);
 
     res.json({ message: 'Fournisseur rejeté', vendor: updated });
   } catch (e) { res.status(500).json({ error: e.message }); }

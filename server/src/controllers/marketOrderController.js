@@ -10,7 +10,7 @@ export const getMyOrders = async (req, res) => {
   try {
     const { status } = req.query;
     
-    let orders = await (db.market_orders || { find: async () => [] }).find?.() || [];
+    let orders = await db.market_orders.all?.() || [];
     orders = orders.filter(o => o.buyerId === req.user.id);
 
     if (status) {
@@ -85,7 +85,7 @@ export const createOrder = async (req, res) => {
       totalPrice += product.price * item.quantity;
     }
 
-    const order = await (db.market_orders || { insert: async (d) => ({ ...d, id: `order_${Date.now()}` }) }).insert?.({
+    const order = await db.market_orders.insert({
       id: `order_${Date.now()}`,
       buyerId: req.user.id,
       buyerName: req.user.name,
@@ -101,7 +101,7 @@ export const createOrder = async (req, res) => {
       notes: notes || '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    }) || { id: `order_${Date.now()}` };
+    });
 
     res.status(201).json({ message: 'Commande créée', order });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -129,9 +129,7 @@ export const completePayment = async (req, res) => {
       updatedAt: new Date().toISOString(),
     };
 
-    if (orders.updateOne) {
-      await orders.updateOne({ id }, updated);
-    }
+    await db.market_orders.update(id, updated);
 
     res.json({ message: 'Paiement complété', order: updated });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -159,9 +157,7 @@ export const updateShipping = async (req, res) => {
       updatedAt: new Date().toISOString(),
     };
 
-    if (orders.updateOne) {
-      await orders.updateOne({ id }, updated);
-    }
+    await db.market_orders.update(id, updated);
 
     res.json({ message: 'Livraison mise à jour', order: updated });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -171,13 +167,13 @@ export const updateShipping = async (req, res) => {
 export const getOrderStats = async (req, res) => {
   try {
     const userId = req.user.id;
-    const orders = await (db.market_orders || { find: async () => [] }).find?.() || [];
+    const orders = await db.market_orders.all?.() || [];
 
     // Pour fournisseur: filtrer ses produits
     // Pour admin: tous
     let filtered = orders;
     if (req.user.role === 'vendor') {
-      const products = await (db.market_products || { find: async () => [] }).find?.() || [];
+      const products = await db.market_products.all?.() || [];
       const vendorProducts = products.filter(p => p.fournisseurId === userId);
       const vendorProductIds = vendorProducts.map(p => p.id);
       filtered = orders.filter(o =>
@@ -222,9 +218,7 @@ export const cancelOrder = async (req, res) => {
       updatedAt: new Date().toISOString(),
     };
 
-    if (orders.updateOne) {
-      await orders.updateOne({ id }, updated);
-    }
+    await db.market_orders.update(id, updated);
 
     res.json({ message: 'Commande annulée', order: updated });
   } catch (e) { res.status(500).json({ error: e.message }); }

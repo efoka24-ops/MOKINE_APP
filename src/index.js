@@ -137,8 +137,8 @@ root.render(
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/veto" element={<ProtectedRoute><VetoModule /></ProtectedRoute>} />
-        <Route path="/admin/box" element={<ProtectedRoute><BoxModuleplaceAdmin /></ProtectedRoute>} />
-        <Route path="/admin/market" element={<ProtectedRoute><MarketModule /></ProtectedRoute>} />
+        <Route path="/admin/box" element={<ProtectedRoute><BoxModule /></ProtectedRoute>} />
+        <Route path="/admin/market" element={<ProtectedRoute><MarketplaceAdminModule /></ProtectedRoute>} />
         <Route path="/admin/lab" element={<ProtectedRoute><LabModule /></ProtectedRoute>} />
         <Route path="/admin/field" element={<ProtectedRoute><FieldModule /></ProtectedRoute>} />
         <Route path="/admin/system" element={<ProtectedRoute><SystemModule /></ProtectedRoute>} />

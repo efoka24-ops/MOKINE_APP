@@ -19,10 +19,15 @@ export default function OrderDashboard() {
         marketOrders.getMyOrders({ status: filter }),
         marketOrders.getStats(),
       ]);
-      setOrders(ordersRes.data.orders || []);
-      setStats(statsRes.data);
+      setOrders(Array.isArray(ordersRes?.data?.orders) ? ordersRes.data.orders : []);
+      const statsData = statsRes?.data;
+      setStats(statsData && typeof statsData === 'object' && Object.keys(statsData).length > 0 
+        ? statsData 
+        : { total: 0, pending: 0, paid: 0, shipped: 0, delivered: 0, totalRevenue: 0 });
     } catch (err) {
       console.error('Erreur:', err);
+      setOrders([]);
+      setStats({ total: 0, pending: 0, paid: 0, shipped: 0, delivered: 0, totalRevenue: 0 });
     } finally {
       setLoading(false);
     }
@@ -55,7 +60,7 @@ export default function OrderDashboard() {
       </div>
 
       {/* Stats */}
-      {stats && (
+      {stats && typeof stats === 'object' && 'total' in stats && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <div className="bg-white border border-gray-200 rounded-lg p-3 text-center">
             <p className="text-2xl font-bold text-gray-900">{stats.total}</p>

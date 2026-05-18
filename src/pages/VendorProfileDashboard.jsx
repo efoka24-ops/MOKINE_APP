@@ -26,9 +26,10 @@ export default function MarketplaceVendorDashboard() {
     try {
       setLoading(true);
       const vendorRes = await marketVendors.getMyProfile();
-      setVendor(vendorRes.data);
+      setVendor(vendorRes?.data || null);
     } catch (err) {
       console.error('Erreur:', err);
+      setVendor(null);
     } finally {
       setLoading(false);
     }
@@ -62,7 +63,7 @@ export default function MarketplaceVendorDashboard() {
 
   if (loading) return <div className="flex items-center justify-center py-12"><div className="animate-spin">⏳</div></div>;
 
-  if (!vendor) {
+  if (!vendor || typeof vendor !== 'object' || Object.keys(vendor).length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-gray-600">Vous n'êtes pas enregistré comme fournisseur</p>
