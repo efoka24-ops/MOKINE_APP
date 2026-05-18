@@ -48,6 +48,7 @@ import VideoTraining from './pages/VideoTraining';
 import SanitaryAlerts from './pages/SanitaryAlerts';
 import FarmManagement from './pages/FarmManagement';
 import MokineFieldPage from './pages/MokineFieldPage';
+import MokineMarketPage from './pages/MokineMarketPage';
 import FarmerRoute from './components/FarmerRoute';
 
 // Admin Imports
@@ -66,6 +67,7 @@ import {
   AdminProducts,
   AdminSettings,
 } from './admin/index';
+import MarketplaceAdminModule from './admin/pages/MarketplaceModule';
 
 // Suppress known third-party (VideoSDK/Emotion) jsx prop warning on DOM elements
 const originalConsoleError = console.error;
@@ -117,6 +119,7 @@ root.render(
             <Route path="/iot" element={<FarmerRoute><IoTDashboard /></FarmerRoute>} />
             <Route path="/farm-management" element={<FarmerRoute><FarmManagement /></FarmerRoute>} />
             <Route path="/mokine-field" element={<FarmerRoute><MokineFieldPage /></FarmerRoute>} />
+            <Route path="/mokine-market" element={<FarmerRoute><MokineMarketPage /></FarmerRoute>} />
             {/* ── Shared routes ── */}
             <Route path="/ia" element={<Ia />} />
             <Route path="/notifications" element={<Notification />} />
@@ -134,7 +137,7 @@ root.render(
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/veto" element={<ProtectedRoute><VetoModule /></ProtectedRoute>} />
-        <Route path="/admin/box" element={<ProtectedRoute><BoxModule /></ProtectedRoute>} />
+        <Route path="/admin/box" element={<ProtectedRoute><BoxModuleplaceAdmin /></ProtectedRoute>} />
         <Route path="/admin/market" element={<ProtectedRoute><MarketModule /></ProtectedRoute>} />
         <Route path="/admin/lab" element={<ProtectedRoute><LabModule /></ProtectedRoute>} />
         <Route path="/admin/field" element={<ProtectedRoute><FieldModule /></ProtectedRoute>} />

@@ -34,6 +34,10 @@ import farmRoutes from './routes/farmRoutes.js';
 import agentRoutes from './routes/agentRoutes.js';
 import interventionRoutes from './routes/interventionRoutes.js';
 import fieldActivityRoutes from './routes/fieldActivityRoutes.js';
+import marketProductRoutes from './routes/marketProductRoutes.js';
+import marketOrderRoutes from './routes/marketOrderRoutes.js';
+import marketVendorRoutes from './routes/marketVendorRoutes.js';
+import marketKYCRoutes from './routes/marketKYCRoutes.js';
 
 // Load .env from server/ using absolute path so CWD doesn't matter
 // override:true ensures server/.env wins over any root-level .env already loaded
@@ -133,6 +137,10 @@ app.use('/api/farms', farmRoutes);
 app.use('/api/agents', agentRoutes);
 app.use('/api/interventions', interventionRoutes);
 app.use('/api/field-activity', fieldActivityRoutes);
+app.use('/api/market/products', marketProductRoutes);
+app.use('/api/market/orders', marketOrderRoutes);
+app.use('/api/market/vendors', marketVendorRoutes);
+app.use('/api/market/kyc', marketKYCRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'Server is running', timestamp: new Date() });

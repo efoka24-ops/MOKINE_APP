@@ -394,6 +394,52 @@ export const fieldActivity = {
   getHeatmap: (farmId, params = {}) => apiClient.get(`/field-activity/heatmap/${farmId}`, { params }),
 };
 
+// ========== MARKETPLACE ENDPOINTS ==========
+
+// Products
+export const marketProducts = {
+  getAll: (params = {}) => apiClient.get('/market/products', { params }),
+  getById: (id) => apiClient.get(`/market/products/${id}`),
+  create: (data) => apiClient.post('/market/products', data),
+  update: (id, data) => apiClient.patch(`/market/products/${id}`, data),
+  delete: (id) => apiClient.delete(`/market/products/${id}`),
+  getCategories: () => apiClient.get('/market/products/categories'),
+  addReview: (id, data) => apiClient.post(`/market/products/${id}/review`, data),
+};
+
+// Orders
+export const marketOrders = {
+  getMyOrders: (params = {}) => apiClient.get('/market/orders', { params }),
+  getById: (id) => apiClient.get(`/market/orders/${id}`),
+  create: (data) => apiClient.post('/market/orders', data),
+  completePayment: (id, data) => apiClient.patch(`/market/orders/${id}/payment`, data),
+  updateShipping: (id, data) => apiClient.patch(`/market/orders/${id}/shipping`, data),
+  getStats: (params = {}) => apiClient.get('/market/orders/stats', { params }),
+  cancel: (id, data = {}) => apiClient.patch(`/market/orders/${id}/cancel`, data),
+};
+
+// Vendors
+export const marketVendors = {
+  getAll: (params = {}) => apiClient.get('/market/vendors', { params }),
+  getById: (id) => apiClient.get(`/market/vendors/${id}`),
+  register: (data) => apiClient.post('/market/vendors/register', data),
+  getMyProfile: () => apiClient.get('/market/vendors/profile/mine'),
+  updateProfile: (id, data) => apiClient.patch(`/market/vendors/${id}`, data),
+  getPending: () => apiClient.get('/market/vendors/pending'),
+  approve: (id) => apiClient.patch(`/market/vendors/${id}/approve`),
+  reject: (id, data = {}) => apiClient.patch(`/market/vendors/${id}/reject`, data),
+};
+
+// KYC
+export const marketKYC = {
+  submit: (data) => apiClient.post('/market/kyc/submit', data),
+  getStatus: () => apiClient.get('/market/kyc/status'),
+  getPending: () => apiClient.get('/market/kyc/pending'),
+  getStats: () => apiClient.get('/market/kyc/stats'),
+  approve: (id, data = {}) => apiClient.patch(`/market/kyc/${id}/approve`, data),
+  reject: (id, data = {}) => apiClient.patch(`/market/kyc/${id}/reject`, data),
+};
+
 // ========== VIDEOSDK ENDPOINTS ==========
 export const authToken = process.env.REACT_APP_TOKENPRIERE;
 
