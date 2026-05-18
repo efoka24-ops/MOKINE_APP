@@ -31,6 +31,9 @@ import { getPublicApiPlans } from './controllers/admin/adminController.js';
 import iotRoutes from './routes/iotRoutes.js';
 import sanitaryAlertRoutes from './routes/sanitaryAlertRoutes.js';
 import farmRoutes from './routes/farmRoutes.js';
+import agentRoutes from './routes/agentRoutes.js';
+import interventionRoutes from './routes/interventionRoutes.js';
+import fieldActivityRoutes from './routes/fieldActivityRoutes.js';
 
 // Load .env from server/ using absolute path so CWD doesn't matter
 // override:true ensures server/.env wins over any root-level .env already loaded
@@ -127,6 +130,9 @@ app.get('/api/plans', getPublicApiPlans);
 app.use('/api/iot', iotRoutes);
 app.use('/api/alerts/sanitary', sanitaryAlertRoutes);
 app.use('/api/farms', farmRoutes);
+app.use('/api/agents', agentRoutes);
+app.use('/api/interventions', interventionRoutes);
+app.use('/api/field-activity', fieldActivityRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'Server is running', timestamp: new Date() });

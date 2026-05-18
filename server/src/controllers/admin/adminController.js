@@ -619,8 +619,16 @@ export const deleteMarketProduct = async (req, res) => {
 // ==================== MOKINEMARKET — COMMANDES ====================
 export const getOrders = async (req, res) => {
   try {
-    const orders = await db.orders.all();
-    res.status(200).json(orders);
+    const [orders, users] = await Promise.all([db.orders.all(), db.users.all()]);
+    const enriched = orders.map(o => {
+      if (!o.buyerName && o.buyerId) {
+        const buyer = users.find(u => u.id === o.buyerId);
+        return { ...o, buyerName: buyer?.name || o.buyerId };
+      }
+      return o;
+    });
+    enriched.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    res.status(200).json(enriched);
   } catch (error) { res.status(500).json({ error: error.message }); }
 };
 

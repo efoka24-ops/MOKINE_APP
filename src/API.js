@@ -365,6 +365,35 @@ export const farms = {
   removeMember: (farmId, memberId) => apiClient.delete(`/farms/${farmId}/members/${memberId}`),
 };
 
+// ========== AGENTS TERRAIN ENDPOINTS ==========
+export const agents = {
+  getAll: () => apiClient.get('/agents'),
+  create: (data) => apiClient.post('/agents', data),
+  getLocation: (agentId) => apiClient.get(`/agents/${agentId}/location`),
+  updateLocation: (agentId, data) => apiClient.patch(`/agents/${agentId}/location`, data),
+  sync: (agentId, data) => apiClient.patch(`/agents/${agentId}/sync`, data),
+  delete: (agentId) => apiClient.delete(`/agents/${agentId}`),
+};
+
+// ========== INTERVENTIONS ENDPOINTS ==========
+export const interventions = {
+  getAll: (params = {}) => apiClient.get('/interventions', { params }),
+  getAgentInterventions: (agentId, params = {}) => apiClient.get(`/interventions/agent/${agentId}/assigned`, { params }),
+  create: (data) => apiClient.post('/interventions', data),
+  update: (id, data) => apiClient.patch(`/interventions/${id}`, data),
+  complete: (id, data) => apiClient.post(`/interventions/${id}/complete`, data),
+  getStats: (params = {}) => apiClient.get('/interventions/stats/overview', { params }),
+};
+
+// ========== FIELD ACTIVITY ENDPOINTS ==========
+export const fieldActivity = {
+  getAll: (params = {}) => apiClient.get('/field-activity', { params }),
+  log: (data) => apiClient.post('/field-activity', data),
+  getTimeline: (farmId, params = {}) => apiClient.get(`/field-activity/timeline/${farmId}`, { params }),
+  getAgentPerformance: (agentId, params = {}) => apiClient.get(`/field-activity/agent/${agentId}/performance`, { params }),
+  getHeatmap: (farmId, params = {}) => apiClient.get(`/field-activity/heatmap/${farmId}`, { params }),
+};
+
 // ========== VIDEOSDK ENDPOINTS ==========
 export const authToken = process.env.REACT_APP_TOKENPRIERE;
 

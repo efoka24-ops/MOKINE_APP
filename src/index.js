@@ -47,6 +47,7 @@ import Analytics from './pages/Analytics';
 import VideoTraining from './pages/VideoTraining';
 import SanitaryAlerts from './pages/SanitaryAlerts';
 import FarmManagement from './pages/FarmManagement';
+import MokineFieldPage from './pages/MokineFieldPage';
 import FarmerRoute from './components/FarmerRoute';
 
 // Admin Imports
@@ -115,6 +116,7 @@ root.render(
             <Route path="/tebe" element={<FarmerRoute><TebeDiagnostic /></FarmerRoute>} />
             <Route path="/iot" element={<FarmerRoute><IoTDashboard /></FarmerRoute>} />
             <Route path="/farm-management" element={<FarmerRoute><FarmManagement /></FarmerRoute>} />
+            <Route path="/mokine-field" element={<FarmerRoute><MokineFieldPage /></FarmerRoute>} />
             {/* ── Shared routes ── */}
             <Route path="/ia" element={<Ia />} />
             <Route path="/notifications" element={<Notification />} />

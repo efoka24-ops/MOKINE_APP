@@ -107,7 +107,47 @@ export const SEEDS = {
     { id: 'p5', vendorId: '3', vendorName: 'AgroVet Express', name: 'Seringues vétérinaires 10ml (x20)', category: 'equipment', description: 'Seringues jetables pour injections.', price: 4500, unit: 'boite', stock: 300, imageUrl: null, isActive: true, createdAt: new Date().toISOString() },
   ],
 
-  orders:        [],
+  orders: [
+    {
+      id: 'ord1', buyerId: '1', buyerName: 'Jean Éleveur',
+      vendorId: '3', vendorName: 'AgroVet Express',
+      items: [{ productId: 'p1', name: 'Vaccin Bouche-Pied', quantity: 5, unitPrice: 2500 }],
+      totalAmount: 12500, status: 'pending',
+      paymentMethod: 'mobile_money', paymentStatus: 'paid',
+      deliveryAddress: 'Obala, Centre, Cameroun',
+      createdAt: new Date(Date.now() - 2 * 3600000).toISOString(),
+    },
+    {
+      id: 'ord2', buyerId: '1', buyerName: 'Jean Éleveur',
+      vendorId: '3', vendorName: 'AgroVet Express',
+      items: [
+        { productId: 'p2', name: 'Antibiotique Oxytetracycline 20%', quantity: 2, unitPrice: 8500 },
+        { productId: 'p5', name: 'Seringues vétérinaires 10ml (x20)', quantity: 1, unitPrice: 4500 },
+      ],
+      totalAmount: 21500, status: 'confirmed',
+      paymentMethod: 'mobile_money', paymentStatus: 'paid',
+      deliveryAddress: 'Obala, Centre, Cameroun',
+      createdAt: new Date(Date.now() - 24 * 3600000).toISOString(),
+    },
+    {
+      id: 'ord3', buyerId: '1', buyerName: 'Jean Éleveur',
+      vendorId: '3', vendorName: 'AgroVet Express',
+      items: [{ productId: 'p4', name: 'Aliment Minéral Bétail', quantity: 2, unitPrice: 15000 }],
+      totalAmount: 30000, status: 'delivered',
+      paymentMethod: 'mobile_money', paymentStatus: 'paid',
+      deliveryAddress: 'Obala, Centre, Cameroun',
+      createdAt: new Date(Date.now() - 5 * 24 * 3600000).toISOString(),
+    },
+    {
+      id: 'ord4', buyerId: '1', buyerName: 'Jean Éleveur',
+      vendorId: '3', vendorName: 'AgroVet Express',
+      items: [{ productId: 'p3', name: 'Vermifuge Levamisole', quantity: 3, unitPrice: 3200 }],
+      totalAmount: 9600, status: 'shipped',
+      paymentMethod: 'mobile_money', paymentStatus: 'paid',
+      deliveryAddress: 'Obala, Centre, Cameroun',
+      createdAt: new Date(Date.now() - 3 * 24 * 3600000).toISOString(),
+    },
+  ],
   payments:      [],
   notifications: [
     {
@@ -127,7 +167,31 @@ export const SEEDS = {
   ],
   agenda:        [],
   invoices:      [],
-  kyc:           [],
+  kyc: [
+    {
+      id: 'kyc1', userId: '3', businessName: 'AgroVet Express',
+      documentType: 'Registre de Commerce',
+      documentUrl: null, status: 'approved',
+      submittedAt: new Date(Date.now() - 10 * 24 * 3600000).toISOString(),
+      reviewedAt: new Date(Date.now() - 8 * 24 * 3600000).toISOString(),
+      reviewedBy: 'admin1',
+    },
+    {
+      id: 'kyc2', userId: null, businessName: 'FarmPharm Cameroun',
+      documentType: 'Carte Nationale d\'Identité + Patente',
+      documentUrl: null, status: 'pending',
+      submittedAt: new Date(Date.now() - 1 * 24 * 3600000).toISOString(),
+    },
+    {
+      id: 'kyc3', userId: null, businessName: 'VetSupply SARL',
+      documentType: 'Registre de Commerce',
+      documentUrl: null, status: 'rejected',
+      rejectionReason: 'Document illisible — veuillez soumettre une version plus claire',
+      submittedAt: new Date(Date.now() - 15 * 24 * 3600000).toISOString(),
+      reviewedAt: new Date(Date.now() - 13 * 24 * 3600000).toISOString(),
+      reviewedBy: 'admin1',
+    },
+  ],
   sales_points:  [],
 
   farms: [],
