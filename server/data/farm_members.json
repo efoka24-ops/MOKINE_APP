@@ -1,0 +1,41 @@
+[
+  {
+    "farmId": "1778234797980",
+    "farmName": "test",
+    "invitedBy": "1",
+    "phone": "691227149",
+    "email": null,
+    "role": "assistant",
+    "status": "pending",
+    "token": "JTMT4I2H58",
+    "userId": null,
+    "createdAt": "2026-05-08T10:07:48.196Z",
+    "id": "1778234868196"
+  },
+  {
+    "farmId": "1778237874749",
+    "farmName": "Ferme Éleveur Jean",
+    "invitedBy": "1",
+    "phone": null,
+    "email": "test_eleveur_873238056@mokine.com",
+    "role": "manager",
+    "status": "pending",
+    "token": "7NLT3QEMRV",
+    "userId": null,
+    "createdAt": "2026-05-08T10:57:54.803Z",
+    "id": "1778237874803"
+  },
+  {
+    "farmId": "1778237926256",
+    "farmName": "Ferme Jean Eleveur",
+    "invitedBy": "1",
+    "phone": null,
+    "email": "test_eleveur_873238056@mokine.com",
+    "role": "manager",
+    "status": "pending",
+    "token": "N5BBA0BJF6",
+    "userId": null,
+    "createdAt": "2026-05-08T10:58:46.329Z",
+    "id": "1778237926329"
+  }
+]

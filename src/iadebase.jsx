@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Plus, Send, Mic, User, Menu, Loader2, Syringe, HeartPulse, Clipboard, Telescope, Scan } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import logo from '../assets/logo.png'
+import logo from '../assets/logo-removebg-preview.png'
 import { useNavigate, useParams } from "react-router-dom";
 import { Footprints, Mouth, Dermis } from 'lucide-react';
 

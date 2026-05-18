@@ -1,0 +1,33 @@
+[
+  {
+    "id": "al1",
+    "animalId": "a3",
+    "ownerId": "1",
+    "type": "health",
+    "severity": "high",
+    "message": "Blanche montre des signes de maladie",
+    "isRead": false,
+    "createdAt": "2026-05-07T17:13:57.906Z"
+  },
+  {
+    "id": "1778237471028_al",
+    "ownerId": "1",
+    "animalId": "a1",
+    "animalName": "Bessie",
+    "message": "Rappel: Vaccin PPCB prévu le 08/08/2026 pour Bessie",
+    "severity": "medium",
+    "isRead": false,
+    "createdAt": "2026-05-08T10:51:11.028Z"
+  },
+  {
+    "id": "1778237688584_al",
+    "ownerId": "1",
+    "animalId": "a3",
+    "animalName": "Blanche",
+    "message": "Problème de santé signalé pour Blanche: Toux persistante",
+    "severity": "high",
+    "isRead": true,
+    "createdAt": "2026-05-08T10:54:48.584Z",
+    "updatedAt": "2026-05-08T10:56:25.871Z"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1778237841128",
+    "consultationId": "1778237840908",
+    "veterinarianId": "2",
+    "veterinarianName": "Vétérinaire",
+    "animalId": "1778237198170",
+    "animalName": "Mufasa",
+    "medicines": [
+      {
+        "name": "Pénicilline G",
+        "dosage": "5ml",
+        "frequency": "2x/jour",
+        "duration": "5 jours"
+      }
+    ],
+    "instructions": "Administrer par injection intramusculaire. Garder l animal au repos.",
+    "validUntil": "2026-06-07T10:57:21.128Z",
+    "status": "active",
+    "createdAt": "2026-05-08T10:57:21.128Z"
+  }
+]

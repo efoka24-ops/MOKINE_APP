@@ -1,0 +1,855 @@
+[
+  {
+    "id": "restore_1778839409872",
+    "action": "restore",
+    "reason": "Test restore snapshot pre-reset",
+    "createdAt": "2026-05-15T10:03:29.872Z",
+    "actor": {
+      "id": "admin1",
+      "name": "admin@mokine.com",
+      "email": "admin@mokine.com"
+    },
+    "restoredFromSnapshotId": "pre-reset_1778839409819",
+    "rollbackSnapshotId": "pre-restore_1778839409849",
+    "beforeKpis": {
+      "users": 4,
+      "farmers": 1,
+      "veterinarians": 1,
+      "vendors": 1,
+      "animals": 3,
+      "consultations": 1,
+      "prescriptions": 0,
+      "activeConsultations": 1,
+      "appointments": 1,
+      "orders": 0,
+      "revenue": 0,
+      "iotDevices": 1,
+      "sanitaryAlerts": 2
+    },
+    "afterKpis": {
+      "users": 8,
+      "farmers": 3,
+      "veterinarians": 3,
+      "vendors": 1,
+      "animals": 6,
+      "consultations": 1,
+      "prescriptions": 1,
+      "activeConsultations": 1,
+      "appointments": 5,
+      "orders": 1,
+      "revenue": 5000,
+      "iotDevices": 0,
+      "sanitaryAlerts": 2
+    },
+    "analysis": {
+      "delta": {
+        "users": 4,
+        "farmers": 2,
+        "veterinarians": 2,
+        "vendors": 0,
+        "animals": 3,
+        "consultations": 0,
+        "prescriptions": 1,
+        "activeConsultations": 0,
+        "appointments": 4,
+        "orders": 1,
+        "revenue": 5000,
+        "iotDevices": -1,
+        "sanitaryAlerts": 0
+      },
+      "majorChanges": [
+        {
+          "kpi": "revenue",
+          "change": 5000
+        },
+        {
+          "kpi": "users",
+          "change": 4
+        },
+        {
+          "kpi": "appointments",
+          "change": 4
+        },
+        {
+          "kpi": "animals",
+          "change": 3
+        },
+        {
+          "kpi": "farmers",
+          "change": 2
+        },
+        {
+          "kpi": "veterinarians",
+          "change": 2
+        }
+      ],
+      "impactLevel": "high"
+    }
+  },
+  {
+    "id": "reset_1778839409840",
+    "action": "reset",
+    "reason": "Test reset-restaure final",
+    "createdAt": "2026-05-15T10:03:29.840Z",
+    "actor": {
+      "id": "admin1",
+      "name": "admin@mokine.com",
+      "email": "admin@mokine.com"
+    },
+    "beforeKpis": {
+      "users": 8,
+      "farmers": 3,
+      "veterinarians": 3,
+      "vendors": 1,
+      "animals": 6,
+      "consultations": 1,
+      "prescriptions": 1,
+      "activeConsultations": 1,
+      "appointments": 5,
+      "orders": 1,
+      "revenue": 5000,
+      "iotDevices": 0,
+      "sanitaryAlerts": 2
+    },
+    "afterKpis": {
+      "users": 4,
+      "farmers": 1,
+      "veterinarians": 1,
+      "vendors": 1,
+      "animals": 3,
+      "consultations": 1,
+      "prescriptions": 0,
+      "activeConsultations": 1,
+      "appointments": 1,
+      "orders": 0,
+      "revenue": 0,
+      "iotDevices": 1,
+      "sanitaryAlerts": 2
+    },
+    "analysis": {
+      "delta": {
+        "users": -4,
+        "farmers": -2,
+        "veterinarians": -2,
+        "vendors": 0,
+        "animals": -3,
+        "consultations": 0,
+        "prescriptions": -1,
+        "activeConsultations": 0,
+        "appointments": -4,
+        "orders": -1,
+        "revenue": -5000,
+        "iotDevices": 1,
+        "sanitaryAlerts": 0
+      },
+      "majorChanges": [
+        {
+          "kpi": "revenue",
+          "change": -5000
+        },
+        {
+          "kpi": "users",
+          "change": -4
+        },
+        {
+          "kpi": "appointments",
+          "change": -4
+        },
+        {
+          "kpi": "animals",
+          "change": -3
+        },
+        {
+          "kpi": "farmers",
+          "change": -2
+        },
+        {
+          "kpi": "veterinarians",
+          "change": -2
+        }
+      ],
+      "impactLevel": "high"
+    },
+    "backupSnapshotId": "pre-reset_1778839409819"
+  },
+  {
+    "id": "restore_1778839376254",
+    "action": "restore",
+    "reason": "E2E restore du snapshot pre-reset",
+    "createdAt": "2026-05-15T10:02:56.254Z",
+    "actor": {
+      "id": "admin1",
+      "name": "admin@mokine.com",
+      "email": "admin@mokine.com"
+    },
+    "restoredFromSnapshotId": "pre-reset_1778839376170",
+    "rollbackSnapshotId": "pre-restore_1778839376214",
+    "beforeKpis": {
+      "users": 4,
+      "farmers": 1,
+      "veterinarians": 1,
+      "vendors": 1,
+      "animals": 3,
+      "consultations": 1,
+      "prescriptions": 0,
+      "activeConsultations": 1,
+      "appointments": 1,
+      "orders": 0,
+      "revenue": 0,
+      "iotDevices": 1,
+      "sanitaryAlerts": 2
+    },
+    "afterKpis": {
+      "users": 8,
+      "farmers": 3,
+      "veterinarians": 3,
+      "vendors": 1,
+      "animals": 6,
+      "consultations": 1,
+      "prescriptions": 1,
+      "activeConsultations": 1,
+      "appointments": 5,
+      "orders": 1,
+      "revenue": 5000,
+      "iotDevices": 0,
+      "sanitaryAlerts": 2
+    },
+    "analysis": {
+      "delta": {
+        "users": 4,
+        "farmers": 2,
+        "veterinarians": 2,
+        "vendors": 0,
+        "animals": 3,
+        "consultations": 0,
+        "prescriptions": 1,
+        "activeConsultations": 0,
+        "appointments": 4,
+        "orders": 1,
+        "revenue": 5000,
+        "iotDevices": -1,
+        "sanitaryAlerts": 0
+      },
+      "majorChanges": [
+        {
+          "kpi": "revenue",
+          "change": 5000
+        },
+        {
+          "kpi": "users",
+          "change": 4
+        },
+        {
+          "kpi": "appointments",
+          "change": 4
+        },
+        {
+          "kpi": "animals",
+          "change": 3
+        },
+        {
+          "kpi": "farmers",
+          "change": 2
+        },
+        {
+          "kpi": "veterinarians",
+          "change": 2
+        }
+      ],
+      "impactLevel": "high"
+    }
+  },
+  {
+    "id": "reset_1778839376203",
+    "action": "reset",
+    "reason": "E2E reset/restore validation finale",
+    "createdAt": "2026-05-15T10:02:56.203Z",
+    "actor": {
+      "id": "admin1",
+      "name": "admin@mokine.com",
+      "email": "admin@mokine.com"
+    },
+    "beforeKpis": {
+      "users": 8,
+      "farmers": 3,
+      "veterinarians": 3,
+      "vendors": 1,
+      "animals": 6,
+      "consultations": 1,
+      "prescriptions": 1,
+      "activeConsultations": 1,
+      "appointments": 5,
+      "orders": 1,
+      "revenue": 5000,
+      "iotDevices": 0,
+      "sanitaryAlerts": 2
+    },
+    "afterKpis": {
+      "users": 4,
+      "farmers": 1,
+      "veterinarians": 1,
+      "vendors": 1,
+      "animals": 3,
+      "consultations": 1,
+      "prescriptions": 0,
+      "activeConsultations": 1,
+      "appointments": 1,
+      "orders": 0,
+      "revenue": 0,
+      "iotDevices": 1,
+      "sanitaryAlerts": 2
+    },
+    "analysis": {
+      "delta": {
+        "users": -4,
+        "farmers": -2,
+        "veterinarians": -2,
+        "vendors": 0,
+        "animals": -3,
+        "consultations": 0,
+        "prescriptions": -1,
+        "activeConsultations": 0,
+        "appointments": -4,
+        "orders": -1,
+        "revenue": -5000,
+        "iotDevices": 1,
+        "sanitaryAlerts": 0
+      },
+      "majorChanges": [
+        {
+          "kpi": "revenue",
+          "change": -5000
+        },
+        {
+          "kpi": "users",
+          "change": -4
+        },
+        {
+          "kpi": "appointments",
+          "change": -4
+        },
+        {
+          "kpi": "animals",
+          "change": -3
+        },
+        {
+          "kpi": "farmers",
+          "change": -2
+        },
+        {
+          "kpi": "veterinarians",
+          "change": -2
+        }
+      ],
+      "impactLevel": "high"
+    },
+    "backupSnapshotId": "pre-reset_1778839376170"
+  },
+  {
+    "id": "restore_1778839356988",
+    "action": "restore",
+    "reason": "E2E restore du snapshot pre-reset",
+    "createdAt": "2026-05-15T10:02:36.988Z",
+    "actor": {
+      "id": "admin1",
+      "name": "admin@mokine.com",
+      "email": "admin@mokine.com"
+    },
+    "restoredFromSnapshotId": "pre-reset_1778839337370",
+    "rollbackSnapshotId": "pre-restore_1778839356898",
+    "beforeKpis": {
+      "users": 4,
+      "farmers": 1,
+      "veterinarians": 1,
+      "vendors": 1,
+      "animals": 3,
+      "consultations": 1,
+      "prescriptions": 0,
+      "activeConsultations": 1,
+      "appointments": 1,
+      "orders": 0,
+      "revenue": 0,
+      "iotDevices": 1,
+      "sanitaryAlerts": 2
+    },
+    "afterKpis": {
+      "users": 8,
+      "farmers": 3,
+      "veterinarians": 3,
+      "vendors": 1,
+      "animals": 6,
+      "consultations": 1,
+      "prescriptions": 1,
+      "activeConsultations": 1,
+      "appointments": 5,
+      "orders": 1,
+      "revenue": 5000,
+      "iotDevices": 0,
+      "sanitaryAlerts": 2
+    },
+    "analysis": {
+      "delta": {
+        "users": 4,
+        "farmers": 2,
+        "veterinarians": 2,
+        "vendors": 0,
+        "animals": 3,
+        "consultations": 0,
+        "prescriptions": 1,
+        "activeConsultations": 0,
+        "appointments": 4,
+        "orders": 1,
+        "revenue": 5000,
+        "iotDevices": -1,
+        "sanitaryAlerts": 0
+      },
+      "majorChanges": [
+        {
+          "kpi": "revenue",
+          "change": 5000
+        },
+        {
+          "kpi": "users",
+          "change": 4
+        },
+        {
+          "kpi": "appointments",
+          "change": 4
+        },
+        {
+          "kpi": "animals",
+          "change": 3
+        },
+        {
+          "kpi": "farmers",
+          "change": 2
+        },
+        {
+          "kpi": "veterinarians",
+          "change": 2
+        }
+      ],
+      "impactLevel": "high"
+    }
+  },
+  {
+    "id": "reset_1778839337427",
+    "action": "reset",
+    "reason": "E2E reset/restore validation finale",
+    "createdAt": "2026-05-15T10:02:17.427Z",
+    "actor": {
+      "id": "admin1",
+      "name": "admin@mokine.com",
+      "email": "admin@mokine.com"
+    },
+    "beforeKpis": {
+      "users": 8,
+      "farmers": 3,
+      "veterinarians": 3,
+      "vendors": 1,
+      "animals": 6,
+      "consultations": 1,
+      "prescriptions": 1,
+      "activeConsultations": 1,
+      "appointments": 5,
+      "orders": 1,
+      "revenue": 5000,
+      "iotDevices": 0,
+      "sanitaryAlerts": 2
+    },
+    "afterKpis": {
+      "users": 4,
+      "farmers": 1,
+      "veterinarians": 1,
+      "vendors": 1,
+      "animals": 3,
+      "consultations": 1,
+      "prescriptions": 0,
+      "activeConsultations": 1,
+      "appointments": 1,
+      "orders": 0,
+      "revenue": 0,
+      "iotDevices": 1,
+      "sanitaryAlerts": 2
+    },
+    "analysis": {
+      "delta": {
+        "users": -4,
+        "farmers": -2,
+        "veterinarians": -2,
+        "vendors": 0,
+        "animals": -3,
+        "consultations": 0,
+        "prescriptions": -1,
+        "activeConsultations": 0,
+        "appointments": -4,
+        "orders": -1,
+        "revenue": -5000,
+        "iotDevices": 1,
+        "sanitaryAlerts": 0
+      },
+      "majorChanges": [
+        {
+          "kpi": "revenue",
+          "change": -5000
+        },
+        {
+          "kpi": "users",
+          "change": -4
+        },
+        {
+          "kpi": "appointments",
+          "change": -4
+        },
+        {
+          "kpi": "animals",
+          "change": -3
+        },
+        {
+          "kpi": "farmers",
+          "change": -2
+        },
+        {
+          "kpi": "veterinarians",
+          "change": -2
+        }
+      ],
+      "impactLevel": "high"
+    },
+    "backupSnapshotId": "pre-reset_1778839337370"
+  },
+  {
+    "id": "restore_1778839069051",
+    "action": "restore",
+    "reason": "Restauration demandée depuis le backoffice",
+    "createdAt": "2026-05-15T09:57:49.051Z",
+    "actor": {
+      "id": "admin1",
+      "name": "admin@mokine.com",
+      "email": "admin@mokine.com"
+    },
+    "restoredFromSnapshotId": "pre-reset_1778838984351",
+    "rollbackSnapshotId": "pre-restore_1778839069017",
+    "beforeKpis": {
+      "users": 4,
+      "farmers": 1,
+      "veterinarians": 1,
+      "vendors": 1,
+      "animals": 3,
+      "consultations": 1,
+      "activeConsultations": 1,
+      "appointments": 1,
+      "orders": 0,
+      "revenue": 0,
+      "iotDevices": 1,
+      "sanitaryAlerts": 2
+    },
+    "afterKpis": {
+      "users": 8,
+      "farmers": 3,
+      "veterinarians": 3,
+      "vendors": 1,
+      "animals": 6,
+      "consultations": 1,
+      "activeConsultations": 1,
+      "appointments": 5,
+      "orders": 1,
+      "revenue": 5000,
+      "iotDevices": 0,
+      "sanitaryAlerts": 2
+    },
+    "analysis": {
+      "delta": {
+        "users": 4,
+        "farmers": 2,
+        "veterinarians": 2,
+        "vendors": 0,
+        "animals": 3,
+        "consultations": 0,
+        "activeConsultations": 0,
+        "appointments": 4,
+        "orders": 1,
+        "revenue": 5000,
+        "iotDevices": -1,
+        "sanitaryAlerts": 0
+      },
+      "majorChanges": [
+        {
+          "kpi": "revenue",
+          "change": 5000
+        },
+        {
+          "kpi": "users",
+          "change": 4
+        },
+        {
+          "kpi": "appointments",
+          "change": 4
+        },
+        {
+          "kpi": "animals",
+          "change": 3
+        },
+        {
+          "kpi": "farmers",
+          "change": 2
+        },
+        {
+          "kpi": "veterinarians",
+          "change": 2
+        }
+      ],
+      "impactLevel": "high"
+    }
+  },
+  {
+    "id": "reset_1778838984386",
+    "action": "reset",
+    "reason": "test",
+    "createdAt": "2026-05-15T09:56:24.386Z",
+    "actor": {
+      "id": "admin1",
+      "name": "admin@mokine.com",
+      "email": "admin@mokine.com"
+    },
+    "beforeKpis": {
+      "users": 8,
+      "farmers": 3,
+      "veterinarians": 3,
+      "vendors": 1,
+      "animals": 6,
+      "consultations": 1,
+      "activeConsultations": 1,
+      "appointments": 5,
+      "orders": 1,
+      "revenue": 5000,
+      "iotDevices": 0,
+      "sanitaryAlerts": 2
+    },
+    "afterKpis": {
+      "users": 4,
+      "farmers": 1,
+      "veterinarians": 1,
+      "vendors": 1,
+      "animals": 3,
+      "consultations": 1,
+      "activeConsultations": 1,
+      "appointments": 1,
+      "orders": 0,
+      "revenue": 0,
+      "iotDevices": 1,
+      "sanitaryAlerts": 2
+    },
+    "analysis": {
+      "delta": {
+        "users": -4,
+        "farmers": -2,
+        "veterinarians": -2,
+        "vendors": 0,
+        "animals": -3,
+        "consultations": 0,
+        "activeConsultations": 0,
+        "appointments": -4,
+        "orders": -1,
+        "revenue": -5000,
+        "iotDevices": 1,
+        "sanitaryAlerts": 0
+      },
+      "majorChanges": [
+        {
+          "kpi": "revenue",
+          "change": -5000
+        },
+        {
+          "kpi": "users",
+          "change": -4
+        },
+        {
+          "kpi": "appointments",
+          "change": -4
+        },
+        {
+          "kpi": "animals",
+          "change": -3
+        },
+        {
+          "kpi": "farmers",
+          "change": -2
+        },
+        {
+          "kpi": "veterinarians",
+          "change": -2
+        }
+      ],
+      "impactLevel": "high"
+    },
+    "backupSnapshotId": "pre-reset_1778838984351"
+  },
+  {
+    "id": "restore_1778838894328",
+    "action": "restore",
+    "reason": "E2E restore du snapshot pre-reset",
+    "createdAt": "2026-05-15T09:54:54.328Z",
+    "actor": {
+      "id": "admin1",
+      "name": "admin@mokine.com",
+      "email": "admin@mokine.com"
+    },
+    "restoredFromSnapshotId": "pre-reset_1778838894262",
+    "rollbackSnapshotId": "pre-restore_1778838894306",
+    "beforeKpis": {
+      "users": 4,
+      "farmers": 1,
+      "veterinarians": 1,
+      "vendors": 1,
+      "animals": 3,
+      "consultations": 1,
+      "activeConsultations": 1,
+      "appointments": 1,
+      "orders": 0,
+      "revenue": 0,
+      "iotDevices": 1,
+      "sanitaryAlerts": 2
+    },
+    "afterKpis": {
+      "users": 8,
+      "farmers": 3,
+      "veterinarians": 3,
+      "vendors": 1,
+      "animals": 6,
+      "consultations": 1,
+      "activeConsultations": 1,
+      "appointments": 5,
+      "orders": 1,
+      "revenue": 5000,
+      "iotDevices": 0,
+      "sanitaryAlerts": 2
+    },
+    "analysis": {
+      "delta": {
+        "users": 4,
+        "farmers": 2,
+        "veterinarians": 2,
+        "vendors": 0,
+        "animals": 3,
+        "consultations": 0,
+        "activeConsultations": 0,
+        "appointments": 4,
+        "orders": 1,
+        "revenue": 5000,
+        "iotDevices": -1,
+        "sanitaryAlerts": 0
+      },
+      "majorChanges": [
+        {
+          "kpi": "revenue",
+          "change": 5000
+        },
+        {
+          "kpi": "users",
+          "change": 4
+        },
+        {
+          "kpi": "appointments",
+          "change": 4
+        },
+        {
+          "kpi": "animals",
+          "change": 3
+        },
+        {
+          "kpi": "farmers",
+          "change": 2
+        },
+        {
+          "kpi": "veterinarians",
+          "change": 2
+        }
+      ],
+      "impactLevel": "high"
+    }
+  },
+  {
+    "id": "reset_1778838894288",
+    "action": "reset",
+    "reason": "E2E validation reset/restore depuis Copilot",
+    "createdAt": "2026-05-15T09:54:54.288Z",
+    "actor": {
+      "id": "admin1",
+      "name": "admin@mokine.com",
+      "email": "admin@mokine.com"
+    },
+    "beforeKpis": {
+      "users": 8,
+      "farmers": 3,
+      "veterinarians": 3,
+      "vendors": 1,
+      "animals": 6,
+      "consultations": 1,
+      "activeConsultations": 1,
+      "appointments": 5,
+      "orders": 1,
+      "revenue": 5000,
+      "iotDevices": 0,
+      "sanitaryAlerts": 2
+    },
+    "afterKpis": {
+      "users": 4,
+      "farmers": 1,
+      "veterinarians": 1,
+      "vendors": 1,
+      "animals": 3,
+      "consultations": 1,
+      "activeConsultations": 1,
+      "appointments": 1,
+      "orders": 0,
+      "revenue": 0,
+      "iotDevices": 1,
+      "sanitaryAlerts": 2
+    },
+    "analysis": {
+      "delta": {
+        "users": -4,
+        "farmers": -2,
+        "veterinarians": -2,
+        "vendors": 0,
+        "animals": -3,
+        "consultations": 0,
+        "activeConsultations": 0,
+        "appointments": -4,
+        "orders": -1,
+        "revenue": -5000,
+        "iotDevices": 1,
+        "sanitaryAlerts": 0
+      },
+      "majorChanges": [
+        {
+          "kpi": "revenue",
+          "change": -5000
+        },
+        {
+          "kpi": "users",
+          "change": -4
+        },
+        {
+          "kpi": "appointments",
+          "change": -4
+        },
+        {
+          "kpi": "animals",
+          "change": -3
+        },
+        {
+          "kpi": "farmers",
+          "change": -2
+        },
+        {
+          "kpi": "veterinarians",
+          "change": -2
+        }
+      ],
+      "impactLevel": "high"
+    },
+    "backupSnapshotId": "pre-reset_1778838894262"
+  }
+]

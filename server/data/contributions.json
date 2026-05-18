@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1778334866924",
+    "contributorId": "anonymous",
+    "animalType": "cattle",
+    "condition": "fmd",
+    "vetValidated": false,
+    "hasImage": false,
+    "status": "approved",
+    "submittedAt": "2026-05-09T13:54:26.924Z",
+    "approvedAt": "2026-05-09T13:56:22.907Z",
+    "updatedAt": "2026-05-09T13:56:22.907Z"
+  },
+  {
+    "id": "1778334998166",
+    "contributorId": "anonymous",
+    "animalType": "goat",
+    "condition": "mange",
+    "vetValidated": true,
+    "hasImage": true,
+    "status": "rejected",
+    "submittedAt": "2026-05-09T13:56:38.166Z",
+    "rejectionReason": "Image floue, qualité insuffisante",
+    "rejectedAt": "2026-05-09T13:56:53.643Z",
+    "updatedAt": "2026-05-09T13:56:53.643Z"
+  },
+  {
+    "id": "1778335127988",
+    "contributorId": "admin1",
+    "animalType": "cattle",
+    "condition": "fmd",
+    "vetValidated": true,
+    "hasImage": true,
+    "status": "pending_review",
+    "submittedAt": "2026-05-09T13:58:47.988Z"
+  }
+]

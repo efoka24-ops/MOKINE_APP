@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Plus, Send, Mic, User, Menu, Loader2, Syringe, HeartPulse, Clipboard, Telescope, Scan } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import logo from '../assets/logo.png'
+import logo from '../assets/logo-removebg-preview.png'
 import { useNavigate, useParams } from "react-router-dom";
-import { Footprints, Mouth, Dermis } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
+
 
 export function Ia() {
   const navigate = useNavigate();
@@ -28,99 +27,82 @@ export function Ia() {
   const queryClient = useQueryClient();
   const chatContainerRef = useRef(null);
   const bottomRef = useRef(null);
-  const token = "20|UUCoTY4VcNBe8eCoCxQvuMSeSHChsgmbRnNmHl2x68faf7eb"; // A sécuriser en production
+  const token = localStorage.getItem('mokine_token') || '';
+  const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-  // 2. Initialisation de l'IA de Google (Clé à sécuriser en production)
-  // ATTENTION: Remplacez par votre vraie clé
-  const ai = new GoogleGenAI({ apiKey: "AIzaSyBIBNdJ9QQ5vpC8F_Vu4cxiJQDA7m0faU4" });
+  // 🔹 Historique localStorage
+  const HISTORY_KEY = 'mokine_ia_history';
+  const [chatHistory, setChatHistory] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('mokine_ia_history') || '[]'); } catch { return []; }
+  });
 
-  // 3. Fonction pour appeler Gemini (MISE À JOUR pour demander du JSON)
-  const sendMessageToGemini = async (message) => {
-    // Message de l'utilisateur ajouté immédiatement
+  const saveToHistory = useCallback((messages, id = null) => {
+    if (!messages.length) return null;
+    const firstUserMsg = messages.find(m => m.appartenance === 'user');
+    const title = firstUserMsg?.contenu?.message?.slice(0, 60) || 'Consultation IA';
+    const entryId = id || `chat_${Date.now()}`;
+    const entry = { id: entryId, title, date: new Date().toLocaleDateString('fr-FR'), messages, updatedAt: new Date().toISOString() };
+    setChatHistory(prev => {
+      const filtered = prev.filter(h => h.id !== entryId);
+      const updated = [entry, ...filtered].slice(0, 30);
+      localStorage.setItem('mokine_ia_history', JSON.stringify(updated));
+      return updated;
+    });
+    return entryId;
+  }, []);
+
+  // 3. Appel au modèle MokineVeto IA (backend local)
+  const sendMessageToMokineIA = async (message) => {
+    const activeChatId = selectedChat && String(selectedChat).startsWith('chat_') ? String(selectedChat) : null;
     const userMessage = {
       appartenance: "user",
       typeContenu: "texte",
       contenu: { message: message },
-      id: Date.now() + Math.random(), 
+      id: Date.now() + Math.random(),
     };
-    setCurrentChatMessages(prev => [...prev, userMessage]);
+    const messagesWithUser = [...currentChatMessages, userMessage];
+    setCurrentChatMessages(messagesWithUser);
     setInput("");
     setIsGeminiLoading(true);
 
-    // Prompt pour forcer la structure JSON
-    const systemInstruction = `
-      Vous êtes une intelligence artificielle de pré-diagnostic.
-      Analysez la requête de l'utilisateur (qui est un symptôme ou une question médicale générale, hors image) et fournissez une réponse structurée en JSON.
-      Le format JSON DOIT être le suivant:
-      {
-        "titre": "Un titre accrocheur pour le pré-diagnostic (Ex: Pré-diagnostic : Carence, Parasites ou Douleur)",
-        "conclusion": "Une phrase finale cruciale (Ex: Il est crucial de consulter un vétérinaire rapidement...)",
-        "causes": [
-          {"symptome": "Cause 1", "description": "Description concise de la cause 1."},
-          {"symptome": "Cause 2", "description": "Description concise de la cause 2."},
-          {"symptome": "Cause 3", "description": "Description concise de la cause 3."}
-        ]
-      }
-      Vous ne devez retourner QUE le JSON.
-    `;
-
     try {
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash", 
-        contents: message,
-        config: {
-          systemInstruction: systemInstruction,
-          responseMimeType: "application/json", // Demande un retour en JSON
-        },
+      const res = await axios.post(`${API_BASE}/ia/chat`, { message }, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      // La réponse.text est maintenant le JSON structuré
-      const aiResponseJson = JSON.parse(response.text);
-
-      // Ajouter la réponse structurée de l'IA à l'état local
       const aiMessage = {
         appartenance: "ai",
-        typeContenu: "struct_text", // Nouveau type pour différencier les réponses structurées
-        contenu: { message: aiResponseJson }, 
+        typeContenu: "struct_text",
+        contenu: { message: res.data },
         id: Date.now() + Math.random() + 1,
       };
-      setCurrentChatMessages(prev => [...prev, aiMessage]);
-
+      const fullMessages = [...messagesWithUser, aiMessage];
+      setCurrentChatMessages(fullMessages);
+      const savedId = saveToHistory(fullMessages, activeChatId);
+      if (!activeChatId) setSelectedChat(savedId);
     } catch (error) {
-      console.error("Erreur Gemini :", error);
+      console.error("Erreur MokineIA :", error);
       const errorMessage = {
         appartenance: "ai",
         typeContenu: "texte",
-        contenu: { message: "❌ Erreur de connexion avec l'IA ou format de réponse incorrect." },
+        contenu: { message: "❌ Erreur de connexion avec le serveur MokineVeto IA." },
         id: Date.now() + Math.random() + 1,
       };
-      setCurrentChatMessages(prev => [...prev, errorMessage]);
-
+      const fullMessages = [...messagesWithUser, errorMessage];
+      setCurrentChatMessages(fullMessages);
+      const savedId = saveToHistory(fullMessages, activeChatId);
+      if (!activeChatId) setSelectedChat(savedId);
     } finally {
       setIsGeminiLoading(false);
     }
   };
 
 
-  // 🔹 Récupération discussions (Inchangement)
-  const { data: discussions, isLoading: isDiscussionsLoading } = useQuery({
-    queryKey: ["discussions"],
-    queryFn: async () => {
-      const res = await axios.get(`http://35.177.48.103/api/ia/history`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return res?.data;
-    },
-  });
-
-  console.log("Discussions récupérées :", discussions);
-
-  // 🔹 Récupération messages (Léger changement : utilise l'état local si pas de chat sélectionné)
+  // 🔹 Récupération messages backend (pour envois de fichiers)
   const { data: messagesFromApi, isLoading: isMessagesLoading } = useQuery({
     queryKey: ["messages", selectedChat],
     queryFn: async () => {
       if (!selectedChat) return { data: [] }; // Retourne un objet vide pour ne pas casser la structure
-      const res = await axios.get(`http://35.177.48.103/api/ia/request/${selectedChat}`, {
+      const res = await axios.get(`${API_BASE}/ia/request/${selectedChat}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return res?.data;
@@ -128,14 +110,15 @@ export function Ia() {
     enabled: !!selectedChat,
   });
 
-  // Affiche les messages de l'API s'il y a un chat sélectionné, sinon affiche les messages locaux
-  const messagesToDisplay = selectedChat ? (messagesFromApi?.data || []) : currentChatMessages;
+  // Affiche les messages selon le type de chat (localStorage ou backend)
+  const isLocalChatSelected = selectedChat && String(selectedChat).startsWith('chat_');
+  const messagesToDisplay = isLocalChatSelected ? currentChatMessages : (selectedChat ? (messagesFromApi?.data || []) : currentChatMessages);
 
 
   // 🔹 Envoi message vers le backend (Inchangement)
   const mutation = useMutation({
     mutationFn: async (formData) => {
-      const res = await axios.post("http://35.177.48.103/api/ia/request/send", formData, {
+      const res = await axios.post(`${API_BASE}/ia/request/send`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return res.data;
@@ -189,7 +172,7 @@ export function Ia() {
     }
 
     if (input.trim()) {
-      sendMessageToGemini(input.trim());
+      sendMessageToMokineIA(input.trim());
     }
   };
   
@@ -227,8 +210,13 @@ export function Ia() {
 
   // 🔹 Fonction pour gérer le changement de chat
   const handleSelectChat = (id) => {
+    if (String(id).startsWith('chat_')) {
+      const entry = chatHistory.find(h => h.id === id);
+      if (entry) setCurrentChatMessages(entry.messages);
+    } else {
+      setCurrentChatMessages([]);
+    }
     setSelectedChat(id);
-    setCurrentChatMessages([]); 
     setSidebarOpen(false);
   }
 
@@ -249,7 +237,6 @@ export function Ia() {
             <Menu size={24} />
           </button>
           <img src={logo} className="w-20 h-8" style={{aspectRatio: '1080 / 423', objectFit: 'cover'}} />
-          <h1 className="font-bold text-lg relative right-2">MOKINE IA</h1>
         </div>
       </nav>
 
@@ -257,19 +244,19 @@ export function Ia() {
       <div className={`fixed inset-y-0 left-0 w-64 bg-white border-r transform transition-transform duration-300 ease-in-out z-40 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:relative lg:translate-x-0 lg:flex lg:flex-col`}>
         <div onClick={()=>navigate('/')} className="p-4 border-b flex items-center space-x-2">
           <img src={logo} className="w-20 h-8" style={{aspectRatio: '1080 / 423', objectFit: 'cover'}} />
-          <h1 className="font-bold text-lg relative right-4">MOKINE IA</h1>
         </div>
         <button onClick={handleNewChat} className="flex items-center p-3 space-x-2 hover:bg-gray-100 border-b">
           <Plus size={18} />
           <span>Nouveau chat</span>
         </button>
         <div className="flex-1 overflow-y-auto">
-          {isDiscussionsLoading ? (
-            <div className="p-3 text-center text-gray-500">Chargement de l'historique...</div>
+          {chatHistory.length === 0 ? (
+            <div className="p-3 text-center text-gray-400 text-sm mt-4">Aucun historique<br/><span className="text-xs">Vos consultations apparaîtront ici</span></div>
           ) : (
-            discussions?.data?.map((discussion) => (
-              <button key={discussion.id} onClick={() => handleSelectChat(discussion.id)} className={`w-full text-left p-3 hover:bg-gray-100 ${selectedChat === discussion.id ? "bg-gray-200 font-semibold" : ""}`}>
-                {discussion.date}
+            chatHistory.map((entry) => (
+              <button key={entry.id} onClick={() => handleSelectChat(entry.id)} className={`w-full text-left p-3 hover:bg-gray-100 border-b ${selectedChat === entry.id ? "bg-green-50 font-semibold border-l-2 border-l-green-600" : ""}`}>
+                <p className="text-sm truncate text-gray-800">{entry.title}</p>
+                <p className="text-xs text-gray-400">{entry.date}</p>
               </button>
             ))
           )}
@@ -298,7 +285,7 @@ export function Ia() {
       {/* Zone chat */}
       <div className="flex-1 flex flex-col relative">
         <div ref={chatContainerRef} className="flex-1 p-6 overflow-y-auto space-y-4 lg:mt-0 mt-16">
-          {(isMessagesLoading && selectedChat) ? ( 
+          {(isMessagesLoading && selectedChat && !isLocalChatSelected) ? ( 
             <p className="text-center text-gray-500">Chargement...</p>
           ) : !messagesToDisplay || messagesToDisplay.length === 0 ? (
             <div className="text-center text-gray-500 mt-10">Que puis-je faire pour vous ?</div>
@@ -307,7 +294,7 @@ export function Ia() {
               const isUser = msg.appartenance === "user";
               
               let iaResponse = msg?.contenu?.message;
-              const isStructuredGeminiResponse = msg.typeContenu === "struct_text" && !selectedChat;
+              const isStructuredGeminiResponse = msg.typeContenu === "struct_text";
               
               if (!isUser && !isStructuredGeminiResponse && iaResponse && typeof iaResponse === "string" && selectedChat) {
                 try { iaResponse = JSON.parse(iaResponse); } catch { iaResponse = null; }
@@ -328,7 +315,7 @@ export function Ia() {
                     // Style Utilisateur : à droite, texte noir, background vert
                     msg.typeContenu === "fichier" ? (
                       <img 
-                        src={selectedChat ? `http://35.177.48.103/storage/${msg?.contenu?.lien}` : previewImage} 
+                        src={selectedChat ? `${API_BASE.replace('/api', '')}/storage/${msg?.contenu?.lien}` : previewImage} 
                         alt="upload" 
                         className="max-w-[200px] rounded-lg shadow border border-green-500"
                       />
@@ -351,13 +338,30 @@ export function Ia() {
                                 <p className="font-semibold text-gray-800">Causes les plus probables :</p>
                                 {iaResponse.causes.map((cause, i) => (
                                   <div key={i} className="flex items-start space-x-2 p-2 bg-white rounded-md shadow-sm border border-gray-200">
-                                    <input type="checkbox" checked className="mt-1.5 h-4 w-4 bg-green-700 text-green-600 border-gray-300 rounded focus:ring-green-500"/>
+                                    <input type="checkbox" defaultChecked readOnly className="mt-1.5 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"/>
                                     <p className="text-sm text-gray-700">
                                       {/* Mise en gras demandée par l'utilisateur */}
                                       <strong>{cause.symptome} :</strong> {cause.description}
                                     </p>
                                   </div>
                                 ))}
+                              </div>
+                            )}
+
+                            {iaResponse.prevention && iaResponse.prevention.length > 0 && (
+                              <div className="space-y-1 pt-2">
+                                <p className="font-semibold text-gray-700 text-sm">🛡️ Prévention :</p>
+                                <ul className="list-disc list-inside space-y-0.5">
+                                  {iaResponse.prevention.map((p, i) => (
+                                    <li key={i} className="text-sm text-gray-600">{p}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {iaResponse.contextAfrique && (
+                              <div className="bg-yellow-50 border border-yellow-200 rounded p-2 mt-2">
+                                <p className="text-xs text-yellow-800">🌍 <strong>Contexte Cameroun/Afrique :</strong> {iaResponse.contextAfrique}</p>
                               </div>
                             )}
 

@@ -1,0 +1,43 @@
+[
+  {
+    "type": "mortality",
+    "description": "test",
+    "severity": "critical",
+    "animalType": "cattle",
+    "affectedCount": 1,
+    "location": {
+      "lat": 3.848,
+      "lon": 11.502
+    },
+    "city": null,
+    "radius": 15,
+    "reportedBy": "Utilisateur",
+    "reportedByRole": "farmer",
+    "reportedById": "1",
+    "verified": true,
+    "createdAt": "2026-05-08T10:06:13.073Z",
+    "id": "1778234773073",
+    "verifiedAt": "2026-05-09T11:53:48.245Z",
+    "verifiedBy": "admin1",
+    "updatedAt": "2026-05-09T11:53:48.245Z"
+  },
+  {
+    "type": "symptom",
+    "description": "TEST E2E - Plusieurs bovins présentent de la fièvre",
+    "severity": "high",
+    "animalType": "cattle",
+    "affectedCount": 5,
+    "location": null,
+    "city": "Garoua",
+    "radius": 10,
+    "reportedBy": "Utilisateur",
+    "reportedByRole": "farmer",
+    "reportedById": "1",
+    "verified": true,
+    "createdAt": "2026-05-09T11:50:52.570Z",
+    "id": "1778327452570",
+    "verifiedAt": "2026-05-09T11:50:53.219Z",
+    "verifiedBy": "admin1",
+    "updatedAt": "2026-05-09T11:50:53.220Z"
+  }
+]

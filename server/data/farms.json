@@ -1,0 +1,81 @@
+[
+  {
+    "ownerId": "1",
+    "name": "test",
+    "location": {},
+    "animalTypes": [],
+    "description": "",
+    "createdAt": "2026-05-08T09:44:00.551Z",
+    "id": "1778233440551"
+  },
+  {
+    "ownerId": "1",
+    "name": "test",
+    "location": {},
+    "animalTypes": [],
+    "description": "",
+    "createdAt": "2026-05-08T09:44:14.958Z",
+    "id": "1778233454959"
+  },
+  {
+    "ownerId": "1",
+    "name": "test",
+    "location": {},
+    "animalTypes": [],
+    "description": "",
+    "createdAt": "2026-05-08T10:06:37.980Z",
+    "id": "1778234797980"
+  },
+  {
+    "ownerId": "1",
+    "name": "Ferme Éleveur Jean",
+    "location": {},
+    "animalTypes": [],
+    "description": "",
+    "createdAt": "2026-05-08T10:57:54.749Z",
+    "id": "1778237874749"
+  },
+  {
+    "ownerId": "1",
+    "name": "Ferme Jean Eleveur",
+    "location": {
+      "city": "Dakar",
+      "address": "Route de Rufisque km 12",
+      "gps": "14.6937,17.4441"
+    },
+    "animalTypes": [
+      "cattle",
+      "goat"
+    ],
+    "description": "Ferme principale de Jean",
+    "createdAt": "2026-05-08T10:58:46.256Z",
+    "id": "1778237926256"
+  },
+  {
+    "ownerId": "1",
+    "name": "test",
+    "location": {},
+    "animalTypes": [],
+    "description": "",
+    "createdAt": "2026-05-08T13:33:09.137Z",
+    "id": "1778247189137"
+  },
+  {
+    "ownerId": "1",
+    "name": "test",
+    "location": {},
+    "animalTypes": [],
+    "description": "",
+    "createdAt": "2026-05-08T13:38:21.279Z",
+    "id": "1778247501279"
+  },
+  {
+    "ownerId": "1",
+    "name": "test",
+    "location": {},
+    "animalTypes": [],
+    "description": "",
+    "createdAt": "2026-05-08T14:12:51.015Z",
+    "id": "1778249571015"
+  }
+]

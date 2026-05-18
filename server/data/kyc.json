@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1778242994191",
+    "vendorId": "3",
+    "businessName": "Test Farm Supplies",
+    "businessType": "agrovet",
+    "registrationNumber": "RC/YDE/2026/001",
+    "taxId": "M12345",
+    "address": "Yaoundé",
+    "phone": "",
+    "bankAccount": "",
+    "documents": [],
+    "status": "pending",
+    "submittedAt": "2026-05-08T12:23:14.191Z"
+  }
+]

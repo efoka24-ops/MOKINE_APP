@@ -1,0 +1,80 @@
+[
+  {
+    "id": "plan_starter",
+    "name": "Starter",
+    "slug": "starter",
+    "price": 99,
+    "currency": "XAF",
+    "periodDays": 30,
+    "description": "Pour les développeurs et startups qui démarrent",
+    "badge": "Populaire",
+    "isActive": true,
+    "isPublic": true,
+    "limits": {
+      "dailyRequests": 10000,
+      "ratePerMinute": 100,
+      "sla": "99%",
+      "support": "Email 48h",
+      "maxKeys": 1
+    },
+    "endpoints": [
+      "GET /tebe/stats",
+      "GET /tebe/conditions",
+      "POST /tebe/analyze-image",
+      "POST /tebe/analyze-video",
+      "POST /tebe/contribute",
+      "GET /tebe/history"
+    ],
+    "features": [
+      "10 000 requêtes/jour",
+      "Clé API dédiée",
+      "6 endpoints + historique",
+      "SLA 99%",
+      "Support email 48h"
+    ],
+    "sortOrder": 1,
+    "createdAt": "2026-05-11T13:46:42.651Z",
+    "updatedAt": "2026-05-11T18:11:40.157Z"
+  },
+  {
+    "id": "plan_pro",
+    "name": "Pro",
+    "slug": "pro",
+    "price": 45000,
+    "currency": "XAF",
+    "periodDays": 30,
+    "description": "Pour les entreprises avec des volumes élevés",
+    "badge": null,
+    "isActive": true,
+    "isPublic": true,
+    "limits": {
+      "dailyRequests": 100000,
+      "ratePerMinute": 500,
+      "sla": "99,5%",
+      "support": "Email prioritaire 24h",
+      "maxKeys": 3
+    },
+    "endpoints": [
+      "GET /tebe/stats",
+      "GET /tebe/conditions",
+      "POST /tebe/analyze-image",
+      "POST /tebe/analyze-video",
+      "POST /tebe/contribute",
+      "GET /tebe/history",
+      "POST /tebe/batch-analyze",
+      "GET /tebe/analytics",
+      "POST /tebe/webhook/register"
+    ],
+    "features": [
+      "100 000 requêtes/jour",
+      "3 clés API (dev/test/prod)",
+      "Analyse batch 50 images",
+      "Webhooks temps réel",
+      "SLA 99,5%",
+      "Support prioritaire 24h"
+    ],
+    "sortOrder": 2,
+    "createdAt": "2026-05-11T13:46:42.651Z",
+    "updatedAt": "2026-05-11T13:46:42.651Z"
+  }
+]

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "appt1",
+    "petOwnerId": "1",
+    "veterinarianId": "2",
+    "animalId": "a1",
+    "veterinarianName": "Dr. Marie Veto",
+    "dateTime": "2026-05-10T17:13:57.906Z",
+    "reason": "Contrôle annuel",
+    "status": "scheduled",
+    "createdAt": "2026-05-07T17:13:57.906Z"
+  },
+  {
+    "id": "1778238220185",
+    "petOwnerId": "1",
+    "veterinarianId": "2",
+    "veterinarianName": "Dr. Marie Veto",
+    "animalId": "a1",
+    "animalName": "Bessie",
+    "dateTime": "2026-05-15T10:00:00.000Z",
+    "reason": "Contrôle annuel",
+    "status": "confirmed",
+    "createdAt": "2026-05-08T11:03:40.185Z",
+    "updatedAt": "2026-05-08T11:03:40.213Z"
+  },
+  {
+    "id": "1778245737771",
+    "petOwnerId": null,
+    "veterinarianId": "1778243438197",
+    "veterinarianName": "",
+    "farmerName": "Jean Éleveur Updated",
+    "animalId": "1778237198170",
+    "animalName": "Mufasa",
+    "dateTime": "2026-05-31T13:08:00.000Z",
+    "reason": "test",
+    "status": "scheduled",
+    "createdAt": "2026-05-08T13:08:57.771Z"
+  },
+  {
+    "id": "1778327197158",
+    "petOwnerId": "1",
+    "veterinarianId": "2",
+    "veterinarianName": "",
+    "farmerName": "",
+    "animalId": "a1",
+    "animalName": "",
+    "dateTime": "2026-06-15T10:00:00.000Z",
+    "reason": "TEST E2E - Contrôle vaccination",
+    "status": "completed",
+    "createdAt": "2026-05-09T11:46:37.158Z",
+    "updatedAt": "2026-05-09T11:51:06.787Z"
+  },
+  {
+    "id": "1778838575270",
+    "petOwnerId": "1",
+    "veterinarianId": "1778243438197",
+    "veterinarianName": "",
+    "farmerName": "",
+    "animalId": "a2",
+    "animalName": "",
+    "dateTime": "2026-05-15T09:49:00.000Z",
+    "reason": "",
+    "status": "scheduled",
+    "createdAt": "2026-05-15T09:49:35.270Z"
+  }
+]

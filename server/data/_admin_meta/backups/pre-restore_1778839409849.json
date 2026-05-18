@@ -1,0 +1,444 @@
+{
+  "snapshotId": "pre-restore_1778839409849",
+  "action": "pre-restore",
+  "reason": "Test restore snapshot pre-reset",
+  "createdAt": "2026-05-15T10:03:29.849Z",
+  "actor": {
+    "id": "admin1",
+    "name": "admin@mokine.com",
+    "email": "admin@mokine.com"
+  },
+  "kpis": {
+    "users": 4,
+    "farmers": 1,
+    "veterinarians": 1,
+    "vendors": 1,
+    "animals": 3,
+    "consultations": 1,
+    "prescriptions": 0,
+    "activeConsultations": 1,
+    "appointments": 1,
+    "orders": 0,
+    "revenue": 0,
+    "iotDevices": 1,
+    "sanitaryAlerts": 2
+  },
+  "files": {
+    "users": [
+      {
+        "id": "1",
+        "email": "farmer@mokine.com",
+        "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+        "name": "Jean Éleveur",
+        "phone": "+237655000001",
+        "role": "farmer",
+        "isVerified": true,
+        "farmName": "Ferme du Nord",
+        "language": "fr",
+        "createdAt": "2026-05-15T10:03:11.900Z"
+      },
+      {
+        "id": "2",
+        "email": "vet@mokine.com",
+        "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+        "name": "Dr. Marie Veto",
+        "phone": "+237655000002",
+        "role": "veterinarian",
+        "isVerified": true,
+        "licenseNumber": "VET-CM-2024-001",
+        "specialization": "Bovins & Ovins",
+        "isAvailable": true,
+        "createdAt": "2026-05-15T10:03:11.902Z"
+      },
+      {
+        "id": "3",
+        "email": "vendor@mokine.com",
+        "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+        "name": "AgroVet Express",
+        "phone": "+237655000003",
+        "role": "vendor",
+        "isVerified": true,
+        "businessName": "AgroVet Express",
+        "businessAddress": "Douala, Cameroun",
+        "createdAt": "2026-05-15T10:03:11.902Z"
+      },
+      {
+        "id": "admin1",
+        "email": "admin@mokine.com",
+        "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+        "name": "Admin Mokine",
+        "role": "admin",
+        "isVerified": true,
+        "createdAt": "2026-05-15T10:03:11.902Z"
+      }
+    ],
+    "animals": [
+      {
+        "id": "a1",
+        "ownerId": "1",
+        "name": "Bessie",
+        "type": "cattle",
+        "breed": "Holstein",
+        "birthDate": "2020-01-15",
+        "collarId": "COLLAR_001",
+        "status": "healthy",
+        "weight": 480,
+        "vaccinations": [
+          "Fièvre aphteuse 2024"
+        ],
+        "createdAt": "2026-05-15T10:03:11.902Z"
+      },
+      {
+        "id": "a2",
+        "ownerId": "1",
+        "name": "Sultan",
+        "type": "cattle",
+        "breed": "Brahman",
+        "birthDate": "2019-06-01",
+        "collarId": "COLLAR_002",
+        "status": "healthy",
+        "weight": 450,
+        "vaccinations": [
+          "Bouche-pied 2023"
+        ],
+        "createdAt": "2026-05-15T10:03:11.902Z"
+      },
+      {
+        "id": "a3",
+        "ownerId": "1",
+        "name": "Blanche",
+        "type": "goat",
+        "breed": "Alpine",
+        "birthDate": "2021-03-15",
+        "collarId": "COLLAR_003",
+        "status": "sick",
+        "weight": 55,
+        "vaccinations": [],
+        "createdAt": "2026-05-15T10:03:11.902Z"
+      }
+    ],
+    "appointments": [
+      {
+        "id": "appt1",
+        "petOwnerId": "1",
+        "veterinarianId": "2",
+        "animalId": "a1",
+        "veterinarianName": "Dr. Marie Veto",
+        "dateTime": "2026-05-18T10:03:11.902Z",
+        "reason": "Contrôle annuel",
+        "status": "scheduled",
+        "createdAt": "2026-05-15T10:03:11.902Z"
+      }
+    ],
+    "consultations": [
+      {
+        "id": "c1",
+        "farmerId": "1",
+        "farmerName": "Jean Éleveur",
+        "veterinarianId": "2",
+        "veterinarianName": "Dr. Marie Veto",
+        "animalId": "a3",
+        "animalName": "Blanche",
+        "subject": "Chèvre malade — perte d'appétit",
+        "status": "active",
+        "priority": "high",
+        "messages": [
+          {
+            "id": "m1",
+            "senderId": "1",
+            "senderName": "Jean Éleveur",
+            "content": "Bonjour docteur, ma chèvre refuse de manger depuis 2 jours",
+            "timestamp": "2026-05-15T09:03:11.905Z"
+          },
+          {
+            "id": "m2",
+            "senderId": "2",
+            "senderName": "Dr. Marie Veto",
+            "content": "Bonjour! A-t-elle d'autres symptômes? Fièvre, jetage nasal?",
+            "timestamp": "2026-05-15T09:13:11.905Z"
+          }
+        ],
+        "createdAt": "2026-05-15T08:03:11.905Z"
+      }
+    ],
+    "prescriptions": [],
+    "products": [
+      {
+        "id": "p1",
+        "vendorId": "3",
+        "vendorName": "AgroVet Express",
+        "name": "Vaccin Bouche-Pied",
+        "category": "vaccine",
+        "description": "Vaccin contre la fièvre aphteuse. Dose 5ml.",
+        "price": 2500,
+        "unit": "dose",
+        "stock": 150,
+        "imageUrl": null,
+        "isActive": true,
+        "createdAt": "2026-05-15T10:03:11.905Z"
+      },
+      {
+        "id": "p2",
+        "vendorId": "3",
+        "vendorName": "AgroVet Express",
+        "name": "Antibiotique Oxytetracycline 20%",
+        "category": "medicine",
+        "description": "Antibiothérapie large spectre. Flacon 100ml.",
+        "price": 8500,
+        "unit": "flacon",
+        "stock": 80,
+        "imageUrl": null,
+        "isActive": true,
+        "createdAt": "2026-05-15T10:03:11.905Z"
+      },
+      {
+        "id": "p3",
+        "vendorId": "3",
+        "vendorName": "AgroVet Express",
+        "name": "Vermifuge Levamisole",
+        "category": "antiparasitic",
+        "description": "Dewormer pour bovins et ovins.",
+        "price": 3200,
+        "unit": "flacon",
+        "stock": 200,
+        "imageUrl": null,
+        "isActive": true,
+        "createdAt": "2026-05-15T10:03:11.905Z"
+      },
+      {
+        "id": "p4",
+        "vendorId": "3",
+        "vendorName": "AgroVet Express",
+        "name": "Aliment Minéral Bétail",
+        "category": "nutrition",
+        "description": "Complément minéral pour bovins. Sac 25kg.",
+        "price": 15000,
+        "unit": "sac",
+        "stock": 50,
+        "imageUrl": null,
+        "isActive": true,
+        "createdAt": "2026-05-15T10:03:11.905Z"
+      },
+      {
+        "id": "p5",
+        "vendorId": "3",
+        "vendorName": "AgroVet Express",
+        "name": "Seringues vétérinaires 10ml (x20)",
+        "category": "equipment",
+        "description": "Seringues jetables pour injections.",
+        "price": 4500,
+        "unit": "boite",
+        "stock": 300,
+        "imageUrl": null,
+        "isActive": true,
+        "createdAt": "2026-05-15T10:03:11.905Z"
+      }
+    ],
+    "orders": [],
+    "payments": [],
+    "notifications": [
+      {
+        "id": "n1",
+        "userId": "1",
+        "type": "info",
+        "title": "Bienvenue sur MokineVeto",
+        "message": "Votre compte éleveur est actif. Commencez par ajouter vos animaux.",
+        "link": "/animals/add",
+        "read": false,
+        "createdAt": "2026-05-15T10:03:11.905Z"
+      }
+    ],
+    "health_records": [],
+    "alerts": [
+      {
+        "id": "al1",
+        "animalId": "a3",
+        "ownerId": "1",
+        "type": "health",
+        "severity": "high",
+        "message": "Blanche montre des signes de maladie",
+        "isRead": false,
+        "createdAt": "2026-05-15T10:03:11.905Z"
+      }
+    ],
+    "agenda": [],
+    "invoices": [],
+    "kyc": [],
+    "sales_points": [],
+    "farms": [],
+    "farm_members": [],
+    "sanitary_alerts": [
+      {
+        "id": "1",
+        "type": "epidemic",
+        "severity": "critical",
+        "description": "Foyer de fièvre aphteuse — 12 bovins affectés. Mouvement du bétail suspendu.",
+        "animalType": "cattle",
+        "affectedCount": 12,
+        "location": {
+          "lat": 3.87,
+          "lon": 11.52
+        },
+        "city": "Obala",
+        "reportedBy": "Dr. Amara Diallo",
+        "reportedByRole": "veterinarian",
+        "verified": true,
+        "createdAt": "2026-05-15T08:03:11.905Z",
+        "radius": 15
+      },
+      {
+        "id": "2",
+        "type": "symptom",
+        "severity": "high",
+        "description": "Ovins présentent des symptômes de pasteurellose — toux, fièvre > 41°C.",
+        "animalType": "sheep",
+        "affectedCount": 6,
+        "location": {
+          "lat": 3.82,
+          "lon": 11.48
+        },
+        "city": "Soa",
+        "reportedBy": "Jean-Pierre Mbarga",
+        "reportedByRole": "farmer",
+        "verified": false,
+        "createdAt": "2026-05-15T05:03:11.905Z",
+        "radius": 10
+      }
+    ],
+    "treatments": [],
+    "farm_activity_log": [],
+    "health_alerts": [],
+    "reproduction_records": [],
+    "iot_devices": [
+      {
+        "id": "iot1",
+        "animalId": "a1",
+        "ownerId": "1",
+        "type": "collar",
+        "model": "MokineCollar-v1",
+        "rfidTag": "RFID-CM-001-2026",
+        "batteryLevel": 87,
+        "isOnline": true,
+        "firmwareVersion": "1.2.4",
+        "lastSeen": "2026-05-15T10:03:11.905Z",
+        "createdAt": "2026-04-15T10:03:11.905Z"
+      }
+    ],
+    "sensor_readings": [
+      {
+        "id": "sr1",
+        "deviceId": "iot1",
+        "animalId": "a1",
+        "type": "temperature",
+        "value": 38.5,
+        "unit": "°C",
+        "normal": true,
+        "timestamp": "2026-05-15T09:03:11.906Z"
+      },
+      {
+        "id": "sr2",
+        "deviceId": "iot1",
+        "animalId": "a1",
+        "type": "activity",
+        "value": 72,
+        "unit": "steps/h",
+        "normal": true,
+        "timestamp": "2026-05-15T09:03:11.906Z"
+      },
+      {
+        "id": "sr3",
+        "deviceId": "iot1",
+        "animalId": "a1",
+        "type": "temperature",
+        "value": 40.2,
+        "unit": "°C",
+        "normal": false,
+        "alert": true,
+        "timestamp": "2026-05-15T09:33:11.906Z"
+      }
+    ],
+    "iot_alerts": [],
+    "contributions": [],
+    "api_subscriptions": [],
+    "api_plans": [
+      {
+        "id": "plan_starter",
+        "name": "Starter",
+        "slug": "starter",
+        "price": 15000,
+        "currency": "XAF",
+        "periodDays": 30,
+        "description": "Pour les développeurs et startups qui démarrent",
+        "badge": "Populaire",
+        "isActive": true,
+        "isPublic": true,
+        "limits": {
+          "dailyRequests": 10000,
+          "ratePerMinute": 100,
+          "sla": "99%",
+          "support": "Email 48h",
+          "maxKeys": 1
+        },
+        "endpoints": [
+          "GET /tebe/stats",
+          "GET /tebe/conditions",
+          "POST /tebe/analyze-image",
+          "POST /tebe/analyze-video",
+          "POST /tebe/contribute",
+          "GET /tebe/history"
+        ],
+        "features": [
+          "10 000 requêtes/jour",
+          "Clé API dédiée",
+          "6 endpoints + historique",
+          "SLA 99%",
+          "Support email 48h"
+        ],
+        "sortOrder": 1,
+        "createdAt": "2026-05-15T10:03:11.906Z",
+        "updatedAt": "2026-05-15T10:03:11.906Z"
+      },
+      {
+        "id": "plan_pro",
+        "name": "Pro",
+        "slug": "pro",
+        "price": 45000,
+        "currency": "XAF",
+        "periodDays": 30,
+        "description": "Pour les entreprises avec des volumes élevés",
+        "badge": null,
+        "isActive": true,
+        "isPublic": true,
+        "limits": {
+          "dailyRequests": 100000,
+          "ratePerMinute": 500,
+          "sla": "99,5%",
+          "support": "Email prioritaire 24h",
+          "maxKeys": 3
+        },
+        "endpoints": [
+          "GET /tebe/stats",
+          "GET /tebe/conditions",
+          "POST /tebe/analyze-image",
+          "POST /tebe/analyze-video",
+          "POST /tebe/contribute",
+          "GET /tebe/history",
+          "POST /tebe/batch-analyze",
+          "GET /tebe/analytics",
+          "POST /tebe/webhook/register"
+        ],
+        "features": [
+          "100 000 requêtes/jour",
+          "3 clés API (dev/test/prod)",
+          "Analyse batch 50 images",
+          "Webhooks temps réel",
+          "SLA 99,5%",
+          "Support prioritaire 24h"
+        ],
+        "sortOrder": 2,
+        "createdAt": "2026-05-15T10:03:11.906Z",
+        "updatedAt": "2026-05-15T10:03:11.906Z"
+      }
+    ]
+  }
+}

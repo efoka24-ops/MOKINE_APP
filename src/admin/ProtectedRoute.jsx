@@ -5,9 +5,12 @@ import { Navigate } from 'react-router-dom';
  * Vérifie que l'utilisateur est connecté et a un rôle admin
  */
 export default function ProtectedRoute({ children }) {
-  const token = localStorage.getItem('token');
-  const userRole = localStorage.getItem('userRole');
-  const userName = localStorage.getItem('userName');
+  const token = localStorage.getItem('mokine_token');
+  let userRole = null;
+  try {
+    const raw = localStorage.getItem('mokine_user');
+    if (raw) userRole = JSON.parse(raw)?.role;
+  } catch { /* ignore */ }
 
   // Si pas de token ou pas admin, redirection vers login
   if (!token) {

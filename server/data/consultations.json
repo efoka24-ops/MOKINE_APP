@@ -1,0 +1,31 @@
+[
+  {
+    "id": "c1",
+    "farmerId": "1",
+    "farmerName": "Jean Éleveur",
+    "veterinarianId": "2",
+    "veterinarianName": "Dr. Marie Veto",
+    "animalId": "a3",
+    "animalName": "Blanche",
+    "subject": "Chèvre malade — perte d'appétit",
+    "status": "active",
+    "priority": "high",
+    "messages": [
+      {
+        "id": "m1",
+        "senderId": "1",
+        "senderName": "Jean Éleveur",
+        "content": "Bonjour docteur, ma chèvre refuse de manger depuis 2 jours",
+        "timestamp": "2026-05-15T08:44:43.076Z"
+      },
+      {
+        "id": "m2",
+        "senderId": "2",
+        "senderName": "Dr. Marie Veto",
+        "content": "Bonjour! A-t-elle d'autres symptômes? Fièvre, jetage nasal?",
+        "timestamp": "2026-05-15T08:54:43.076Z"
+      }
+    ],
+    "createdAt": "2026-05-15T07:44:43.076Z"
+  }
+]

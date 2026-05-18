@@ -185,11 +185,11 @@ function Hero() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.4 }}
                             >
-                                <button onClick={() => { navigate('/visio') }} className="bg-[#178A3B] hover:bg-[#147932] transition text-white px-7 py-3 rounded-full font-semibold shadow-lg boutonherosection">
+                                <button onClick={() => { navigate('/commande') }} className="bg-[#178A3B] hover:bg-[#147932] transition text-white px-7 py-3 rounded-full font-semibold shadow-lg boutonherosection">
                                     Commander
                                 </button>
-                                <button onClick={() => { navigate('/ia/gratuit') }} className="border border-gray-600 hover:border-gray-400 transition text-white px-7 py-3 rounded-full font-semibold boutonherosection">
-                                    Tester notre IA
+                                <button onClick={() => { navigate('/mokinelab') }} className="border border-gray-600 hover:border-gray-400 transition text-white px-7 py-3 rounded-full font-semibold boutonherosection">
+                                    MokineLab
                                 </button>
                             </motion.div>
                         </motion.div>
@@ -328,13 +328,13 @@ function ContentSections() {
                         <div className="flex flex-row flex-wrap justify-start items-start mt-5 gap-x-20 gap-y-6">
                             <div className="flex flex-row justify-center items-center gap-x-2">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9244 3.97402C18.0593 5.16105 18.5087 6.79351 18.2727 8.33332H16.577C16.8315 7.21758 16.5458 5.98976 15.7197 5.12578C14.4971 3.84699 12.5472 3.84699 11.3246 5.12578L10.0003 6.5109L8.67603 5.12574C7.45341 3.84695 5.50353 3.84695 4.28091 5.12574C3.45485 5.98976 3.16907 7.21758 3.42357 8.33332H1.72794C1.49192 6.79351 1.94138 5.16101 3.07622 3.97398C4.81962 2.15054 7.56806 2.0189 9.45649 3.57918C9.60547 3.7024 9.74712 3.83423 9.88071 3.97398L10.0003 4.0991L10.1199 3.97402C10.2555 3.83219 10.3972 3.70058 10.5441 3.57918C12.4326 2.0189 15.181 2.15051 16.9244 3.97402ZM14.0683 11.6667H16.3742L10.0003 18.3333L3.62649 11.6667H5.93231L10.0003 15.9216L14.0683 11.6667ZM7.50032 4.80328L5.31782 9.16668H1.667V10.8333H6.34868L7.50032 8.53L10.0003 13.53L11.3486 10.8333H18.3336V9.16668H12.182L11.2503 7.30328L10.0003 9.8025L7.50032 4.80328Z" fill="#F9B233" />
+                                    <path fillRule="evenodd" clipRule="evenodd" d="M16.9244 3.97402C18.0593 5.16105 18.5087 6.79351 18.2727 8.33332H16.577C16.8315 7.21758 16.5458 5.98976 15.7197 5.12578C14.4971 3.84699 12.5472 3.84699 11.3246 5.12578L10.0003 6.5109L8.67603 5.12574C7.45341 3.84695 5.50353 3.84695 4.28091 5.12574C3.45485 5.98976 3.16907 7.21758 3.42357 8.33332H1.72794C1.49192 6.79351 1.94138 5.16101 3.07622 3.97398C4.81962 2.15054 7.56806 2.0189 9.45649 3.57918C9.60547 3.7024 9.74712 3.83423 9.88071 3.97398L10.0003 4.0991L10.1199 3.97402C10.2555 3.83219 10.3972 3.70058 10.5441 3.57918C12.4326 2.0189 15.181 2.15051 16.9244 3.97402ZM14.0683 11.6667H16.3742L10.0003 18.3333L3.62649 11.6667H5.93231L10.0003 15.9216L14.0683 11.6667ZM7.50032 4.80328L5.31782 9.16668H1.667V10.8333H6.34868L7.50032 8.53L10.0003 13.53L11.3486 10.8333H18.3336V9.16668H12.182L11.2503 7.30328L10.0003 9.8025L7.50032 4.80328Z" fill="#F9B233" />
                                 </svg>
                                 <span>Fréquence cardiaque</span>
                             </div>
                             <div className="flex flex-row flex-wrap justify-center items-center gap-x-2">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9244 3.97402C18.0593 5.16105 18.5087 6.79351 18.2727 8.33332H16.577C16.8315 7.21758 16.5458 5.98976 15.7197 5.12578C14.4971 3.84699 12.5472 3.84699 11.3246 5.12578L10.0003 6.5109L8.67603 5.12574C7.45341 3.84695 5.50353 3.84695 4.28091 5.12574C3.45485 5.98976 3.16907 7.21758 3.42357 8.33332H1.72794C1.49192 6.79351 1.94138 5.16101 3.07622 3.97398C4.81962 2.15054 7.56806 2.0189 9.45649 3.57918C9.60547 3.7024 9.74712 3.83423 9.88071 3.97398L10.0003 4.0991L10.1199 3.97402C10.2555 3.83219 10.3972 3.70058 10.5441 3.57918C12.4326 2.0189 15.181 2.15051 16.9244 3.97402ZM14.0683 11.6667H16.3742L10.0003 18.3333L3.62649 11.6667H5.93231L10.0003 15.9216L14.0683 11.6667ZM7.50032 4.80328L5.31782 9.16668H1.667V10.8333H6.34868L7.50032 8.53L10.0003 13.53L11.3486 10.8333H18.3336V9.16668H12.182L11.2503 7.30328L10.0003 9.8025L7.50032 4.80328Z" fill="#F9B233" />
+                                    <path fillRule="evenodd" clipRule="evenodd" d="M16.9244 3.97402C18.0593 5.16105 18.5087 6.79351 18.2727 8.33332H16.577C16.8315 7.21758 16.5458 5.98976 15.7197 5.12578C14.4971 3.84699 12.5472 3.84699 11.3246 5.12578L10.0003 6.5109L8.67603 5.12574C7.45341 3.84695 5.50353 3.84695 4.28091 5.12574C3.45485 5.98976 3.16907 7.21758 3.42357 8.33332H1.72794C1.49192 6.79351 1.94138 5.16101 3.07622 3.97398C4.81962 2.15054 7.56806 2.0189 9.45649 3.57918C9.60547 3.7024 9.74712 3.83423 9.88071 3.97398L10.0003 4.0991L10.1199 3.97402C10.2555 3.83219 10.3972 3.70058 10.5441 3.57918C12.4326 2.0189 15.181 2.15051 16.9244 3.97402ZM14.0683 11.6667H16.3742L10.0003 18.3333L3.62649 11.6667H5.93231L10.0003 15.9216L14.0683 11.6667ZM7.50032 4.80328L5.31782 9.16668H1.667V10.8333H6.34868L7.50032 8.53L10.0003 13.53L11.3486 10.8333H18.3336V9.16668H12.182L11.2503 7.30328L10.0003 9.8025L7.50032 4.80328Z" fill="#F9B233" />
                                 </svg>
                                 <span>Température</span>
                             </div>
@@ -343,8 +343,8 @@ function ContentSections() {
                         <div className="flex flex-row flex-wrap justify-start gap-x-28 items-start mt-8 gap-y-6">
                             <div className="flex flex-row justify-center items-center gap-x-2">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16.6663 8.33341C16.6663 12.4942 12.0505 16.8276 10.5005 18.1659C10.3561 18.2745 10.1803 18.3332 9.99967 18.3332C9.81901 18.3332 9.64324 18.2745 9.49884 18.1659C7.94884 16.8276 3.33301 12.4942 3.33301 8.33341C3.33301 6.5653 4.03539 4.86961 5.28563 3.61937C6.53587 2.36913 8.23156 1.66675 9.99967 1.66675C11.7678 1.66675 13.4635 2.36913 14.7137 3.61937C15.964 4.86961 16.6663 6.5653 16.6663 8.33341Z" stroke="#F9B233" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M10 10.8335C11.3807 10.8335 12.5 9.71421 12.5 8.3335C12.5 6.95278 11.3807 5.8335 10 5.8335C8.61929 5.8335 7.5 6.95278 7.5 8.3335C7.5 9.71421 8.61929 10.8335 10 10.8335Z" stroke="#F9B233" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M16.6663 8.33341C16.6663 12.4942 12.0505 16.8276 10.5005 18.1659C10.3561 18.2745 10.1803 18.3332 9.99967 18.3332C9.81901 18.3332 9.64324 18.2745 9.49884 18.1659C7.94884 16.8276 3.33301 12.4942 3.33301 8.33341C3.33301 6.5653 4.03539 4.86961 5.28563 3.61937C6.53587 2.36913 8.23156 1.66675 9.99967 1.66675C11.7678 1.66675 13.4635 2.36913 14.7137 3.61937C15.964 4.86961 16.6663 6.5653 16.6663 8.33341Z" stroke="#F9B233" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M10 10.8335C11.3807 10.8335 12.5 9.71421 12.5 8.3335C12.5 6.95278 11.3807 5.8335 10 5.8335C8.61929 5.8335 7.5 6.95278 7.5 8.3335C7.5 9.71421 8.61929 10.8335 10 10.8335Z" stroke="#F9B233" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 <span>Géolocalisation</span>
                             </div>
@@ -359,7 +359,7 @@ function ContentSections() {
                         </div>
 
                         <div className="mt-10">
-                            <button className="bg-[#178A3B] text-white px-8 py-2 rounded-md">Commander</button>
+                            <button onClick={() => navigate('/commande')} className="bg-[#178A3B] text-white px-8 py-2 rounded-md">Commander</button>
                         </div>
                     </div>
                 </div>
@@ -433,10 +433,10 @@ function ContentSections() {
 
         <div className="mt-6">
           <button
-            onClick={() => navigate("/ia/gratuit")}
+            onClick={() => navigate("/mokinelab")}
             className="bg-[#178A3B] text-white px-4 py-2 rounded-md"
           >
-            Tester notre IA
+            Découvrir MokineLab
           </button>
         </div>
       </div>
@@ -526,7 +526,7 @@ function ContentSections() {
                         
                         {/* Bouton CTA optionnel */}
                         <div className="pt-4">
-                            <button className="bg-[#178A3B] hover:bg-[#147932] text-white px-6 py-3 rounded-lg font-semibold transition duration-300 shadow-md hover:shadow-lg">
+                            <button onClick={() => navigate('/commande')} className="bg-[#178A3B] hover:bg-[#147932] text-white px-6 py-3 rounded-lg font-semibold transition duration-300 shadow-md hover:shadow-lg">
                                 Commander maintenant
                             </button>
                         </div>

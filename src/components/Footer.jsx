@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-6">
        
          <div className="relative -top-4">
-          <img src={logo} className="w-40 h-12" style={{aspectRatio: '1080 / 423', objectFit: 'cover'}} alt="Mokine" />
+          <img src={logo} className="h-14 w-auto object-contain" alt="MokineVet" />
         </div>
 
         <div>
@@ -18,9 +18,26 @@ export default function Footer() {
         <div>
           <h5 className="font-semibold">Liens</h5>
           <ul className="mt-3 text-sm space-y-2">
-            <li>À propos</li>
-            <li>Fonctionnalités</li>
-            <li>FAQ</li>
+            <li><a href="#about" className="hover:text-green-300 transition">À propos</a></li>
+            <li><a href="#solution" className="hover:text-green-300 transition">Fonctionnalités</a></li>
+            <li><a href="#faq" className="hover:text-green-300 transition">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h5 className="font-semibold">Nos produits</h5>
+          <ul className="mt-3 text-sm space-y-2">
+            <li>
+              <a href="/mokineveto" className="hover:text-green-300 transition flex items-center gap-1.5">
+                🩺 <span>MokineVeto</span>
+              </a>
+            </li>
+            <li>
+              <a href="/mokinelab" className="hover:text-purple-300 transition flex items-center gap-1.5">
+                🧬 <span>MokineLab</span>
+                <span className="text-xs bg-purple-500 text-white px-1.5 py-0.5 rounded-full font-medium">IA</span>
+              </a>
+            </li>
           </ul>
         </div>
 

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1778237470569",
+    "animalId": "a1",
+    "ownerId": "1",
+    "treatmentType": "vaccination",
+    "productName": "Vaccin PPCB",
+    "dosage": "5ml",
+    "administrationMode": "injection",
+    "startDate": "2026-05-08T00:00:00.000Z",
+    "duration": "1 jour",
+    "veterinarianName": "Dr. Marie Veto",
+    "notes": "Rappel annuel",
+    "nextDueDate": "2026-08-08T00:00:00.000Z",
+    "status": "active",
+    "createdAt": "2026-05-08T10:51:10.569Z"
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "id": "1778828084145",
+    "vendorId": "3",
+    "name": "PV QA 2",
+    "address": "Douala Bonapriso",
+    "phone": "+237699000222",
+    "gps": null,
+    "openingHours": "Lun-Ven 8h-18h",
+    "isActive": true,
+    "createdAt": "2026-05-15T06:54:44.145Z"
+  }
+]

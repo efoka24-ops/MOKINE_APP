@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1778238165706",
+    "buyerId": "1",
+    "buyerName": "Client",
+    "items": [
+      {
+        "productId": "p1",
+        "productName": "Vaccin Bouche-Pied",
+        "quantity": 3,
+        "unitPrice": 2500,
+        "subtotal": 7500
+      }
+    ],
+    "totalAmount": 7500,
+    "deliveryAddress": "Route Rufisque km12, Dakar",
+    "paymentMethod": "mobile_money",
+    "paymentPhone": "",
+    "paymentRef": null,
+    "status": "confirmed",
+    "paymentStatus": "paid",
+    "createdAt": "2026-05-08T11:02:45.706Z",
+    "paidAt": "2026-05-08T11:03:00.268Z",
+    "updatedAt": "2026-05-08T11:03:00.268Z"
+  }
+]

@@ -7,7 +7,9 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config jest.config.cjs",
+    "test:watch": "jest --config jest.config.cjs --watch",
+    "test:coverage": "jest --config jest.config.cjs --coverage"
   },
   "keywords": [
     "mokine",
@@ -18,19 +20,41 @@
   "author": "Mokine Team",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
+    "aws-sdk": "^2.1500.0",
+    "axios": "^1.4.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.0",
-    "axios": "^1.4.0",
-    "multer": "^1.4.5-lts.1",
-    "validator": "^13.9.0",
+    "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.5.1",
     "express-validator": "^7.0.0",
+    "firebase-admin": "^12.0.0",
     "helmet": "^7.0.0",
-    "morgan": "^1.10.0"
+    "hpp": "^0.2.3",
+    "jimp": "^0.22.4",
+    "joi": "^17.10.0",
+    "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.2",
+    "pdfkit": "^0.13.0",
+    "pg": "^8.11.0",
+    "qrcode": "^1.5.3",
+    "sharp": "^0.33.0",
+    "slugify": "^1.6.6",
+    "socket.io": "^4.7.0",
+    "twilio": "^4.0.0",
+    "uuid": "^9.0.0",
+    "validator": "^13.9.0",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2"
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.5",
+    "babel-jest": "^30.3.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2",
+    "supertest": "^6.3.3"
   }
 }

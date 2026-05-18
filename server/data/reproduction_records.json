@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1778237688472",
+    "animalId": "a2",
+    "ownerId": "1",
+    "event": "mating",
+    "date": "2026-05-01T00:00:00.000Z",
+    "partnerName": "Taurus",
+    "gestationStatus": "pregnant",
+    "expectedBirthDate": "2026-11-01T00:00:00.000Z",
+    "notes": "Saillie naturelle",
+    "createdAt": "2026-05-08T10:54:48.472Z"
+  }
+]
