@@ -14,7 +14,7 @@ export default function Footer() {
 
         <div>
           <h4 className="font-bold text-xl">Mokine</h4>
-          <p className="mt-2 text-sm">Connectez vos bovins. Surveillez leur santé. Optimisez votre élevage.</p>
+          <p className="mt-2 text-sm">{t('home.content.footer_tagline')}</p>
         </div>
 
         <div>
