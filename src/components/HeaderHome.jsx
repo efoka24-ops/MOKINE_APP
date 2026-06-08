@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../assets/logo.png';
+import LanguageSelector from './LanguageSelector';
 
 export default function HeaderHome() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -63,15 +64,7 @@ export default function HeaderHome() {
                         Se connecter
                     </button>
                     {/* Selecteur de langue */}
-                    <select
-                        defaultValue="en"
-                        className={`ml-4 p-2 rounded-md text-sm cursor-pointer
-                                   ${isScrolled ? 'bg-white border-gray-300 text-gray-800' : 'bg-transparent border-gray-400 text-white'}
-                                   focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors duration-300`}
-                    >
-                        <option value="en">English</option>
-                        <option value="fr">Français</option>
-                    </select>
+                    <LanguageSelector />
                 </nav>
 
                 {/* Mobile menu button */}
@@ -106,14 +99,10 @@ export default function HeaderHome() {
                         <button className="mt-4 bg-[#178A3B] text-white px-4 py-2 rounded-md text-sm hover:bg-[#147932]">
                             Se connecter
                         </button>
-                         {/* Selecteur de langue mobile */}
-                        <select
-                            defaultValue="en"
-                            className="mt-4 p-2 w-full rounded-md text-sm cursor-pointer border border-gray-300 text-gray-700"
-                        >
-                            <option value="en">English</option>
-                            <option value="fr">Français</option>
-                        </select>
+                        {/* Selecteur de langue mobile */}
+                        <div className="mt-2">
+                            <LanguageSelector />
+                        </div>
                     </nav>
                 </div>
             </div>

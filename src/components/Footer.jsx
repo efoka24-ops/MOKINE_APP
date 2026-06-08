@@ -41,11 +41,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div>
-          <h5 className="font-semibold">Contact</h5>
-          <p className="mt-3 text-sm">infos@trugroup.cm</p>
-          <p className="text-sm">Garoua, Cameroun</p>
-        </div>
       </div>
 
       <div className="border-t border-white/20 text-center py-4 text-sm">© {new Date().getFullYear()} Mokine. Tous droits réservés.</div>
