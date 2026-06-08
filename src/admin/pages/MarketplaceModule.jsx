@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { CheckCircle, XCircle, AlertCircle, FileText, Store } from 'lucide-react';
+import { CheckCircle, XCircle, AlertCircle, FileText, Store, Package, Truck } from 'lucide-react';
 import { marketVendors, marketKYC, marketOrders } from '../../API';
 
 /**
@@ -7,10 +7,16 @@ import { marketVendors, marketKYC, marketOrders } from '../../API';
  * Gestion des fournisseurs, KYC, commandes
  */
 export default function MarketplaceAdminModule() {
+  const toText = (value, fallback = 'N/A') => {
+    if (typeof value === 'string' || typeof value === 'number') return String(value);
+    return fallback;
+  };
+
   const [activeTab, setActiveTab] = useState('vendors');
   const [vendors, setVendors] = useState([]);
   const [kycQueue, setKycQueue] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [orderStats, setOrderStats] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -20,11 +26,22 @@ export default function MarketplaceAdminModule() {
       const [vendorRes, kycRes, ordersRes, kycStatsRes] = await Promise.all([
         marketVendors.getPending(),
         marketKYC.getPending(),
-        marketOrders.getStats(),
+        marketOrders.getMyOrders(),
         marketKYC.getStats(),
       ]);
       setVendors(Array.isArray(vendorRes?.data?.vendors) ? vendorRes.data.vendors : []);
       setKycQueue(Array.isArray(kycRes?.data?.kyc) ? kycRes.data.kyc : []);
+      setOrders(Array.isArray(ordersRes?.data?.orders) ? ordersRes.data.orders : []);
+      const orderStatsRes = await marketOrders.getStats();
+      const orderStatsData = orderStatsRes?.data;
+      setOrderStats(orderStatsData && typeof orderStatsData === 'object' ? orderStatsData : {
+        total: 0,
+        pending: 0,
+        paid: 0,
+        shipped: 0,
+        delivered: 0,
+        totalRevenue: 0,
+      });
       const statsData = kycStatsRes?.data;
       setStats(statsData && typeof statsData === 'object' && Object.keys(statsData).length > 0 
         ? statsData 
@@ -33,6 +50,8 @@ export default function MarketplaceAdminModule() {
       console.error('Erreur:', err);
       setVendors([]);
       setKycQueue([]);
+      setOrders([]);
+      setOrderStats({ total: 0, pending: 0, paid: 0, shipped: 0, delivered: 0, totalRevenue: 0 });
       setStats({ total: 0, underReview: 0, approved: 0, rejected: 0 });
     } finally {
       setLoading(false);
@@ -87,6 +106,18 @@ export default function MarketplaceAdminModule() {
     }
   };
 
+  const handleOrderShipping = async (orderId, deliveryStatus) => {
+    try {
+      await marketOrders.updateShipping(orderId, {
+        status: deliveryStatus,
+        trackingNumber: deliveryStatus === 'shipped' ? `TRK-${Date.now()}` : undefined,
+      });
+      loadData();
+    } catch (err) {
+      console.error('Erreur:', err);
+    }
+  };
+
   if (loading) return <div className="flex items-center justify-center py-12"><div className="animate-spin">⏳</div></div>;
 
   return (
@@ -121,11 +152,41 @@ export default function MarketplaceAdminModule() {
         </div>
       )}
 
+      {orderStats && typeof orderStats === 'object' && (
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+          <div className="bg-white border border-gray-200 rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-gray-900">{orderStats.total || 0}</p>
+            <p className="text-xs text-gray-600 mt-1">Commandes</p>
+          </div>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-yellow-700">{orderStats.pending || 0}</p>
+            <p className="text-xs text-yellow-700 mt-1">En attente</p>
+          </div>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-blue-700">{orderStats.paid || 0}</p>
+            <p className="text-xs text-blue-700 mt-1">Payées</p>
+          </div>
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-orange-700">{orderStats.shipped || 0}</p>
+            <p className="text-xs text-orange-700 mt-1">Expédiées</p>
+          </div>
+          <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-green-700">{orderStats.delivered || 0}</p>
+            <p className="text-xs text-green-700 mt-1">Livrées</p>
+          </div>
+          <div className="bg-gray-900 text-white rounded-lg p-3 text-center">
+            <p className="text-xl font-bold">{Number(orderStats.totalRevenue || 0).toLocaleString('fr-FR')} F</p>
+            <p className="text-xs opacity-80 mt-1">CA payé</p>
+          </div>
+        </div>
+      )}
+
       {/* Tabs */}
       <div className="flex gap-2">
         {[
           { id: 'vendors', label: '🏪 Fournisseurs', icon: Store },
           { id: 'kyc', label: '📄 KYC', icon: FileText },
+          { id: 'orders', label: '📦 Commandes', icon: Package },
         ].map(tab => (
           <button
             key={tab.id}
@@ -156,7 +217,7 @@ export default function MarketplaceAdminModule() {
                   <div>
                     <h3 className="font-bold text-gray-900 text-lg">{vendor.name}</h3>
                     <p className="text-sm text-gray-600 mt-1">
-                      Candidat: {vendor.userName} | Email: {vendor.userEmail}
+                      Candidat: {toText(vendor.userName)} | Email: {toText(vendor.userEmail)}
                     </p>
                   </div>
                   <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
@@ -167,15 +228,15 @@ export default function MarketplaceAdminModule() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm bg-gray-50 p-4 rounded">
                   <div>
                     <p className="text-gray-600">Type d'affaires</p>
-                    <p className="font-semibold text-gray-900">{vendor.businessType}</p>
+                    <p className="font-semibold text-gray-900">{toText(vendor.businessType)}</p>
                   </div>
                   <div>
                     <p className="text-gray-600">Téléphone</p>
-                    <p className="font-semibold text-gray-900">{vendor.phone}</p>
+                    <p className="font-semibold text-gray-900">{toText(vendor.phone)}</p>
                   </div>
                   <div>
                     <p className="text-gray-600">Adresse</p>
-                    <p className="font-semibold text-gray-900">{vendor.address.substring(0, 20)}...</p>
+                    <p className="font-semibold text-gray-900">{toText(vendor.address, '').slice(0, 20)}...</p>
                   </div>
                   <div>
                     <p className="text-gray-600">Catégories</p>
@@ -184,7 +245,7 @@ export default function MarketplaceAdminModule() {
                 </div>
 
                 <p className="text-sm text-gray-700 mb-4 bg-blue-50 p-3 rounded">
-                  {vendor.description}
+                  {toText(vendor.description, '')}
                 </p>
 
                 <div className="flex gap-2">
@@ -220,9 +281,9 @@ export default function MarketplaceAdminModule() {
               <div key={kyc.id} className="bg-white border border-gray-200 rounded-lg p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="font-bold text-gray-900 text-lg">{kyc.vendor?.name}</h3>
+                    <h3 className="font-bold text-gray-900 text-lg">{toText(kyc.vendor?.name, '')}</h3>
                     <p className="text-sm text-gray-600 mt-1">
-                      Vendeur: {kyc.vendor?.userName}
+                      Vendeur: {toText(kyc.vendor?.userName, '')}
                     </p>
                   </div>
                   <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
@@ -263,7 +324,7 @@ export default function MarketplaceAdminModule() {
                 {kyc.comments && (
                   <div className="bg-blue-50 p-3 rounded mb-4">
                     <p className="text-sm text-blue-900">
-                      <strong>Notes:</strong> {kyc.comments}
+                      <strong>Notes:</strong> {toText(kyc.comments, '')}
                     </p>
                   </div>
                 )}
@@ -280,6 +341,63 @@ export default function MarketplaceAdminModule() {
                     className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2 font-medium"
                   >
                     <XCircle size={18} /> Rejeter
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Orders Tab */}
+      {activeTab === 'orders' && (
+        <div className="space-y-4">
+          {orders.length === 0 ? (
+            <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
+              <Package size={48} className="text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-600 font-medium">Aucune commande</p>
+            </div>
+          ) : (
+            orders.map(order => (
+              <div key={order.id} className="bg-white border border-gray-200 rounded-lg p-6">
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-lg">Commande {String(order.id || '').slice(-8).toUpperCase()}</h3>
+                    <p className="text-sm text-gray-600 mt-1">Acheteur: {toText(order.buyerName)} | Tél: {toText(order.buyerPhone)}</p>
+                    <p className="text-sm text-gray-600">Adresse: {toText(order.deliveryAddress)}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xl font-bold text-gray-900">{Number(order.totalPrice || 0).toLocaleString('fr-FR')} FCFA</p>
+                    <p className="text-xs text-gray-600">Paiement: {toText(order.paymentStatus, 'unpaid')}</p>
+                    <p className="text-xs text-gray-600">Livraison: {toText(order.deliveryStatus, 'not_shipped')}</p>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 border border-gray-200 rounded p-3 mb-4">
+                  <p className="text-sm text-gray-700 mb-2 font-medium">Articles</p>
+                  <div className="space-y-1">
+                    {(Array.isArray(order.items) ? order.items : []).map((item, index) => (
+                      <p key={`${order.id}-${index}`} className="text-sm text-gray-700">
+                        {toText(item.productName || item.name, 'Produit')} x{item.quantity || 0} - {Number(item.subtotal || 0).toLocaleString('fr-FR')} FCFA
+                      </p>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => handleOrderShipping(order.id, 'shipped')}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm font-medium"
+                    disabled={order.deliveryStatus === 'shipped' || order.deliveryStatus === 'delivered'}
+                  >
+                    <Truck size={16} /> Marquer expédiée
+                  </button>
+                  <button
+                    onClick={() => handleOrderShipping(order.id, 'delivered')}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center gap-2 text-sm font-medium"
+                    disabled={order.deliveryStatus === 'delivered'}
+                  >
+                    <CheckCircle size={16} /> Marquer livrée
                   </button>
                 </div>
               </div>

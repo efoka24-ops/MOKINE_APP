@@ -9,7 +9,6 @@ const MODULE_TITLES = {
   '/admin/box':       'MokineBox — Objets Connectés',
   '/admin/market':    'MokineMarket — Marketplace',
   '/admin/lab':       'MokineLab — Intelligence Artificielle',
-  '/admin/field':     'MokineField — Gestion Terrain',
   '/admin/system':    'Système & Configuration',
 };
 

@@ -144,7 +144,7 @@ export default function AdminDashboard() {
   const charts = analytics?.charts || {};
   const distributions = analytics?.distributions || {};
 
-  const MODULE_PATHS = { veto: '/admin/veto', box: '/admin/box', market: '/admin/market', lab: '/admin/lab', field: '/admin/field' };
+  const MODULE_PATHS = { veto: '/admin/veto', box: '/admin/box', market: '/admin/market', lab: '/admin/lab' };
 
   return (
     <AdminLayout>
@@ -192,7 +192,7 @@ export default function AdminDashboard() {
               <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Fermes enregistrées</p>
                 <p className="text-3xl font-bold text-orange-600">{kpis.totalFarms || 0}</p>
-                <p className="text-xs text-gray-400 mt-1">MokineField</p>
+                <p className="text-xs text-gray-400 mt-1">Gestion des fermes</p>
               </div>
             </div>
 

@@ -282,5 +282,15 @@
     "link": "/consultation",
     "read": false,
     "createdAt": "2026-05-15T09:42:53.704Z"
+  },
+  {
+    "id": "1780919109928",
+    "userId": "1780908150395",
+    "type": "consultation",
+    "title": "Consultation créée",
+    "message": "Votre demande de consultation pour \"Bessie\" a été envoyée aux vétérinaires.",
+    "link": "/consultation",
+    "read": false,
+    "createdAt": "2026-06-08T11:45:09.928Z"
   }
 ]

@@ -7,6 +7,11 @@ import { marketOrders } from '../API';
  * Historique, statuts, livraison, annulation
  */
 export default function OrderDashboard() {
+  const toText = (value, fallback = '') => {
+    if (typeof value === 'string' || typeof value === 'number') return String(value);
+    return fallback;
+  };
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
@@ -124,7 +129,7 @@ export default function OrderDashboard() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-gray-900">{order.totalPrice.toLocaleString('fr-FR')} FCFA</p>
+                  <p className="text-lg font-bold text-gray-900">{Number(order.totalPrice || 0).toLocaleString('fr-FR')} FCFA</p>
                   <p className="text-xs text-gray-600">{STATUS_CONFIG[order.status]?.label}</p>
                 </div>
               </div>
@@ -133,7 +138,7 @@ export default function OrderDashboard() {
               <div className="bg-white/50 rounded p-3 mb-3 space-y-1">
                 {order.items?.slice(0, 3).map((item, i) => (
                   <p key={i} className="text-sm text-gray-700">
-                    • {item.productName} <span className="text-gray-600">x{item.quantity}</span>
+                    • {toText(item.productName, 'Produit')} <span className="text-gray-600">x{item.quantity}</span>
                   </p>
                 ))}
                 {order.items?.length > 3 && (

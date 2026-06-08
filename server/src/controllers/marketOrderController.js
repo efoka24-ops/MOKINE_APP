@@ -11,11 +11,24 @@ export const getMyOrders = async (req, res) => {
     const { status } = req.query;
     
     let orders = await db.market_orders.all?.() || [];
-    orders = orders.filter(o => o.buyerId === req.user.id);
+
+    if (req.user.role === 'admin') {
+      // admin sees all marketplace orders
+    } else if (req.user.role === 'vendor') {
+      // vendor sees orders containing their own products
+      const vendorProducts = await db.market_products.filter?.(p => p.fournisseurId === req.user.id) || [];
+      const vendorProductIds = vendorProducts.map(p => p.id);
+      orders = orders.filter(o => (o.items || []).some(item => vendorProductIds.includes(item.productId)));
+    } else {
+      // buyer sees only own orders
+      orders = orders.filter(o => o.buyerId === req.user.id);
+    }
 
     if (status) {
       orders = orders.filter(o => o.status === status);
     }
+
+    orders = orders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
     res.json({ orders });
   } catch (e) { res.status(500).json({ error: e.message }); }

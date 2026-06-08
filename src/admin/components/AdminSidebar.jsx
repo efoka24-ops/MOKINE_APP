@@ -3,7 +3,7 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Stethoscope, Users, Dog, MessageSquare, FileText, Calendar,
   AlertTriangle, Radio, Package, ShoppingCart, Building2, ClipboardCheck,
-  FlaskConical, Wheat, MapPin, Activity, Settings, CreditCard, Bell,
+  FlaskConical, Activity, Settings, CreditCard, Bell,
   ChevronDown, ChevronRight, LogOut, X, Menu,
 } from 'lucide-react';
 
@@ -68,18 +68,6 @@ const MODULES = [
     ],
   },
   {
-    id: 'field',
-    label: 'MokineField',
-    icon: Wheat,
-    color: 'text-orange-300',
-    badge: '🌾',
-    children: [
-      { label: 'Fermes', icon: Wheat, path: '/admin/field' },
-      { label: 'Membres', icon: Users, path: '/admin/field?tab=members' },
-      { label: 'Activité', icon: Activity, path: '/admin/field?tab=activity' },
-    ],
-  },
-  {
     id: 'system',
     label: 'Système',
     icon: Settings,
@@ -97,7 +85,7 @@ const MODULES = [
 export default function AdminSidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [expanded, setExpanded] = useState({ veto: true, system: false, box: false, market: false, lab: false, field: false });
+  const [expanded, setExpanded] = useState({ veto: true, system: false, box: false, market: false, lab: false });
 
   const toggle = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
 

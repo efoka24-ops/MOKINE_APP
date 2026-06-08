@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@capacitor/android": "^8.3.4",
+    "@capacitor/cli": "^8.3.4",
+    "@capacitor/core": "^8.3.4",
     "@google/genai": "^1.21.0",
     "@heroicons/react": "^2.2.0",
     "@tanstack/react-query": "^5.85.6",
@@ -33,10 +36,17 @@
     "dev": "react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:mobile": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "cd server && npm run dev",
-    "start:all": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run server\""
+    "start:all": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run server\"",
+    "cap:sync": "npx cap sync android",
+    "cap:copy": "npx cap copy android",
+    "android:add": "npx cap add android",
+    "android:open": "npx cap open android",
+    "android:build": "npm run build:mobile && npx cap sync android",
+    "android:apk:debug": "npm run android:build && cd android && gradlew.bat assembleDebug"
   },
   "eslintConfig": {
     "extends": [

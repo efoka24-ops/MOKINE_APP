@@ -7,6 +7,11 @@ import { marketKYC } from '../API';
  * Licence commerciale, ID fiscal, compte bancaire, pièces d'identité, preuve d'adresse
  */
 export default function KYCForm() {
+  const toText = (value, fallback = '') => {
+    if (typeof value === 'string' || typeof value === 'number') return String(value);
+    return fallback;
+  };
+
   const [kycStatus, setKycStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -142,8 +147,8 @@ export default function KYCForm() {
               </p>
               <p className="text-sm text-gray-700 mt-1">
                 {kycStatus.kycData.status === 'rejected' && kycStatus.kycData.rejectionReason
-                  ? `Raison: ${kycStatus.kycData.rejectionReason}`
-                  : kycStatus.kycData.comments || 'Vos documents sont en cours d\'examen'}
+                  ? `Raison: ${toText(kycStatus.kycData.rejectionReason)}`
+                  : toText(kycStatus.kycData.comments, 'Vos documents sont en cours d\'examen')}
               </p>
               {kycStatus.kycData.reviewedAt && (
                 <p className="text-xs text-gray-600 mt-2">

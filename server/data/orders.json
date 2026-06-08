@@ -22,5 +22,27 @@
     "createdAt": "2026-05-08T11:02:45.706Z",
     "paidAt": "2026-05-08T11:03:00.268Z",
     "updatedAt": "2026-05-08T11:03:00.268Z"
+  },
+  {
+    "id": "1780919043416",
+    "buyerId": "1780908150395",
+    "buyerName": "Client",
+    "items": [
+      {
+        "productId": "p5",
+        "productName": "Seringues vétérinaires 10ml (x20)",
+        "quantity": 1,
+        "unitPrice": 4500,
+        "subtotal": 4500
+      }
+    ],
+    "totalAmount": 4500,
+    "deliveryAddress": "ZTB",
+    "paymentMethod": "mobile_money",
+    "paymentPhone": "691227149",
+    "paymentRef": "OM-1780919043416",
+    "status": "pending",
+    "paymentStatus": "awaiting_confirmation",
+    "createdAt": "2026-06-08T11:44:03.416Z"
   }
 ]

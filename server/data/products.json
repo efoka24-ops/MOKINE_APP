@@ -65,10 +65,11 @@
     "description": "Seringues jetables pour injections.",
     "price": 4500,
     "unit": "boite",
-    "stock": 300,
+    "stock": 299,
     "imageUrl": null,
     "isActive": true,
-    "createdAt": "2026-05-07T17:13:57.906Z"
+    "createdAt": "2026-05-07T17:13:57.906Z",
+    "updatedAt": "2026-06-08T11:44:03.416Z"
   },
   {
     "id": "1778238126599",

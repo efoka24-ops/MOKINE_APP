@@ -7,6 +7,11 @@ import { marketProducts } from '../API';
  * Vaccins, médicaments, équipements avec filtres et recherche
  */
 export default function ProductCatalog() {
+  const toText = (value, fallback = '') => {
+    if (typeof value === 'string' || typeof value === 'number') return String(value);
+    return fallback;
+  };
+
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -107,7 +112,7 @@ export default function ProductCatalog() {
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                {cat.icon} {cat.label.split(' ')[0]}
+                {toText(cat.icon, '')} {toText(cat.label, '').split(' ')[0]}
               </button>
             ))}
           </div>
@@ -148,8 +153,8 @@ export default function ProductCatalog() {
               <div className="p-4 space-y-3">
                 <div>
                   <p className="text-xs text-gray-500 uppercase font-semibold">{product.category}</p>
-                  <h3 className="font-bold text-gray-900 text-sm">{product.name}</h3>
-                  <p className="text-xs text-gray-600 mt-1">{product.description}</p>
+                  <h3 className="font-bold text-gray-900 text-sm">{toText(product.name)}</h3>
+                  <p className="text-xs text-gray-600 mt-1">{toText(product.description)}</p>
                 </div>
 
                 {/* Avis */}
@@ -169,12 +174,12 @@ export default function ProductCatalog() {
                 )}
 
                 {/* Fournisseur */}
-                <p className="text-xs text-gray-500">Par {product.fournisseurName}</p>
+                <p className="text-xs text-gray-500">Par {toText(product.fournisseurName)}</p>
 
                 {/* Prix et stock */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-lg font-bold text-green-600">{product.price.toLocaleString('fr-FR')} FCFA</p>
+                    <p className="text-lg font-bold text-green-600">{Number(product.price || 0).toLocaleString('fr-FR')} FCFA</p>
                     <p className="text-xs text-gray-600">
                       {product.stock > 0 ? `${product.stock} en stock` : 'Rupture de stock'}
                     </p>
