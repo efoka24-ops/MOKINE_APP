@@ -31,7 +31,7 @@ export const registerRules = [
     .matches(/[A-Z]/).withMessage('Le mot de passe doit contenir au moins une majuscule.')
     .matches(/[0-9]/).withMessage('Le mot de passe doit contenir au moins un chiffre.'),
   body('name').trim().isLength({ min: 2, max: 100 }).escape().withMessage('Nom invalide.'),
-  body('role').optional().isIn(['farmer', 'vet', 'vendor']).withMessage('Rôle invalide.'),
+  body('role').optional().isIn(['farmer', 'vet', 'vendor', 'veterinarian']).withMessage('Rôle invalide.'),
 ];
 
 export const forgotPasswordRules = [

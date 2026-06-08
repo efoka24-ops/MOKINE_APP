@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { tebe } from '../API.js';
+import { useI18n } from '../i18n/index.js';
+import LanguageSelector from '../components/LanguageSelector';
 
 // ─── Identité graphique Mokine ────────────────────────────────────────────────
 const PRIMARY   = '#178A3B';
@@ -74,6 +76,7 @@ function ProgressBar({ value, max }) {
 
 // ─── Scanner interactif ───────────────────────────────────────────────────────
 function ScanSection() {
+  const { t } = useI18n();
   const [animalType, setAnimalType]   = useState('cattle');
   const [imageFile, setImageFile]     = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -123,7 +126,7 @@ function ScanSection() {
             style={{ background: PRIMARY_B, color: PRIMARY_D }}>
             🧬 Propulsé par Tebe IA v0.3
           </div>
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Diagnostic visuel instantané</h2>
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-3">{t('lab.scan_title')}</h2>
           <p className="text-gray-500 max-w-lg mx-auto">Gratuit, sans compte requis. Résultat en moins de 3 secondes.</p>
         </div>
 
@@ -295,6 +298,7 @@ function ScanSection() {
 
 // ─── Catalogue des maladies ───────────────────────────────────────────────────
 function DiseasesCatalogue() {
+  const { t } = useI18n();
   const [conditions, setConditions] = useState([]);
   const [selected, setSelected]     = useState(null);
   const [loading, setLoading]       = useState(true);
@@ -319,7 +323,7 @@ function DiseasesCatalogue() {
     <section id="catalogue" className="py-20 px-4 bg-gray-50">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Catalogue des maladies détectables</h2>
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-3">{t('lab.catalogue_title')}</h2>
           <p className="text-gray-500 max-w-lg mx-auto">7 pathologies majeures avec noms locaux et protocoles de traitement</p>
         </div>
 
@@ -379,6 +383,7 @@ function DiseasesCatalogue() {
 
 // ─── Contribuer au dataset ────────────────────────────────────────────────────
 function ContributeSection({ stats }) {
+  const { t } = useI18n();
   const [conditions, setConditions] = useState([]);
   const [form, setForm]             = useState({ animalType: 'cattle', condition: '', vetValidated: false });
   const [imagePreview, setImagePreview] = useState(null);
@@ -428,7 +433,7 @@ function ContributeSection({ stats }) {
           <div className="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
             🤝 Rejoignez la communauté Tebe
           </div>
-          <h2 className="text-3xl font-extrabold text-white mb-3">Aider à entraîner Tebe IA</h2>
+          <h2 className="text-3xl font-extrabold text-white mb-3">{t('lab.contribute_title')}</h2>
           <p className="text-green-100 max-w-lg mx-auto">
             Chaque photo annotée nous rapproche du modèle MobileNet v1.0. Votre contribution est visible en temps réel.
           </p>
@@ -546,6 +551,7 @@ function ContributeSection({ stats }) {
 
 // ─── Transparence modèle ──────────────────────────────────────────────────────
 function ModelTransparency({ stats }) {
+  const { t } = useI18n();
   const models = stats?.models || [];
   const statusMap = {
     production: ['bg-green-100 text-green-700', 'Production'],
@@ -557,7 +563,7 @@ function ModelTransparency({ stats }) {
     <section id="modele" className="py-20 px-4 bg-white">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Transparence — Nos modèles IA</h2>
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-3">{t('lab.model_title')}</h2>
           <p className="text-gray-500 max-w-lg mx-auto">
             Nous publions publiquement l'état de nos modèles, leur précision et la progression de l'entraînement.
           </p>
@@ -631,6 +637,7 @@ function ModelTransparency({ stats }) {
 export default function MokineLabPage() {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
+  const { t } = useI18n();
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -655,12 +662,13 @@ export default function MokineLabPage() {
             </span>
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
-            <a href="#scan"       className="transition hover:text-green-600">Scanner</a>
-            <a href="#catalogue"  className="transition hover:text-green-600">Maladies</a>
-            <a href="#contribuer" className="transition hover:text-green-600">Contribuer</a>
-            <a href="#modele"     className="transition hover:text-green-600">Modèle IA</a>
+            <a href="#scan"       className="transition hover:text-green-600">{t('lab.nav.scan')}</a>
+            <a href="#catalogue"  className="transition hover:text-green-600">{t('lab.nav.catalogue')}</a>
+            <a href="#contribuer" className="transition hover:text-green-600">{t('lab.nav.contribute')}</a>
+            <a href="#modele"     className="transition hover:text-green-600">{t('lab.nav.model')}</a>
           </div>
           <div className="flex items-center gap-3">
+            <LanguageSelector compact />
             <a href="/mokineveto" className="text-sm text-gray-500 hover:text-green-600 transition hidden sm:block">
               MokineVeto →
             </a>
@@ -668,13 +676,13 @@ export default function MokineLabPage() {
               <button onClick={() => navigate('/dashboard')}
                 className="px-4 py-2 text-white text-sm rounded-lg transition"
                 style={{ background: PRIMARY }}>
-                Mon espace →
+                {t('lab.nav.dashboard')}
               </button>
             ) : (
               <button onClick={() => navigate('/register')}
                 className="px-4 py-2 text-white text-sm rounded-lg transition"
                 style={{ background: PRIMARY }}>
-                S'inscrire
+                {t('lab.nav.register')}
               </button>
             )}
           </div>
@@ -687,15 +695,13 @@ export default function MokineLabPage() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full mb-6"
             style={{ background: PRIMARY_B, color: PRIMARY_D }}>
-            🧬 Intelligence Artificielle · Diagnostic Visuel Animal
+            {t('lab.badge')}
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5 leading-tight">
-            Diagnostiquez vos animaux<br />
-            <span style={{ color: PRIMARY }}>en 3 secondes avec l'IA</span>
+            {t('lab.hero_title')}<br />
+            <span style={{ color: PRIMARY }}>{t('lab.hero_title2')}</span>
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-            MokineLab est la plateforme ouverte de diagnostic vétérinaire IA. Gratuit, sans compte, accessible à tous les éleveurs d'Afrique centrale.
-          </p>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">{t('lab.hero_desc')}</p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
             <a href="#scan"
@@ -748,7 +754,7 @@ export default function MokineLabPage() {
       <section id="features" className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-800 mb-3">Ce que MokineLab vous offre</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-3">{t('lab.features_title')}</h2>
             <p className="text-gray-500 max-w-xl mx-auto">
               Une plateforme ouverte dédiée à l'IA vétérinaire — accessibilité maximale, zéro friction
             </p>
@@ -772,7 +778,7 @@ export default function MokineLabPage() {
       {/* ── Comment ça marche ── */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-800 text-center mb-12">Comment ça marche ?</h2>
+          <h2 className="text-3xl font-bold text-gray-800 text-center mb-12">{t('lab.how_title')}</h2>
           <div className="grid sm:grid-cols-3 gap-8">
             {STEPS.map(s => (
               <div key={s.step} className="text-center">
