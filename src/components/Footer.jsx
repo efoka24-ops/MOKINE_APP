@@ -1,12 +1,14 @@
 import React from "react";
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.png';
+import { useI18n } from '../i18n/index.js';
 
 export default function Footer() {
+  const { t } = useI18n();
   return (
     <footer className="bg-[#0f5f33] text-white mt-16">
       <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-6">
-       
-         <div className="relative -top-4">
+
+        <div className="relative -top-4">
           <img src={logo} className="h-14 w-auto object-contain" alt="MokineVet" />
         </div>
 
@@ -16,16 +18,16 @@ export default function Footer() {
         </div>
 
         <div>
-          <h5 className="font-semibold">Liens</h5>
+          <h5 className="font-semibold">{t('home.footer.links')}</h5>
           <ul className="mt-3 text-sm space-y-2">
-            <li><a href="#about" className="hover:text-green-300 transition">À propos</a></li>
-            <li><a href="#solution" className="hover:text-green-300 transition">Fonctionnalités</a></li>
-            <li><a href="#faq" className="hover:text-green-300 transition">FAQ</a></li>
+            <li><a href="#about" className="hover:text-green-300 transition">{t('home.footer.about_link')}</a></li>
+            <li><a href="#solution" className="hover:text-green-300 transition">{t('home.footer.features_link')}</a></li>
+            <li><a href="#faq" className="hover:text-green-300 transition">{t('home.footer.faq_link')}</a></li>
           </ul>
         </div>
 
         <div>
-          <h5 className="font-semibold">Nos produits</h5>
+          <h5 className="font-semibold">{t('home.footer.products')}</h5>
           <ul className="mt-3 text-sm space-y-2">
             <li>
               <a href="/mokineveto" className="hover:text-green-300 transition flex items-center gap-1.5">
@@ -43,7 +45,9 @@ export default function Footer() {
 
       </div>
 
-      <div className="border-t border-white/20 text-center py-4 text-sm">© {new Date().getFullYear()} Mokine. Tous droits réservés.</div>
+      <div className="border-t border-white/20 text-center py-4 text-sm">
+        © {new Date().getFullYear()} Mokine. {t('home.footer.rights')}
+      </div>
     </footer>
   );
 }

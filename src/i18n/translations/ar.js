@@ -8,5 +8,17 @@ export default {
   tebe: { title: 'تشخيص Tebe بالذكاء الاصطناعي', subtitle: 'تحليل بصري مدعوم بالذكاء الاصطناعي', upload_photo: 'التقاط أو اختيار صورة', upload_video: 'تسجيل فيديو', analyze: 'تحليل', analyzing: 'جاري التحليل...', result: 'نتيجة التشخيص', confidence: 'الموثوقية', severity: { none: 'طبيعي', low: 'خفيف', medium: 'متوسط', high: 'خطير', critical: 'حرج' }, consult_vet: 'استشر طبيباً بيطرياً', auto_care: 'يمكن العلاج الذاتي', disclaimer: 'هذا التشخيص استرشادي. استشر طبيباً بيطرياً للتأكيد.' },
   iot: { title: 'أجهزة الاستشعار والأطواق', devices: 'الأجهزة', online: 'متصل', offline: 'غير متصل', battery: 'البطارية', temperature: 'الحرارة', activity: 'النشاط', alerts: 'تنبيهات الأجهزة', normal: 'طبيعي', alert: 'تنبيه', register_device: 'تسجيل جهاز' },
   offline: { offline: 'غير متصل', syncing: 'جاري المزامنة...', synced: 'تمت المزامنة', pending_actions: 'إجراءات معلقة: {{count}}' },
-  common: { save: 'حفظ', cancel: 'إلغاء', confirm: 'تأكيد', delete: 'حذف', edit: 'تعديل', loading: 'جار التحميل...', error: 'خطأ', success: 'نجاح', close: 'إغلاق', back: 'رجوع', next: 'التالي', yes: 'نعم', no: 'لا', search: 'بحث', filter: 'تصفية', date: 'التاريخ', actions: 'الإجراءات', details: 'التفاصيل', required: 'مطلوب' }
+  common: { save: 'حفظ', cancel: 'إلغاء', confirm: 'تأكيد', delete: 'حذف', edit: 'تعديل', loading: 'جار التحميل...', error: 'خطأ', success: 'نجاح', close: 'إغلاق', back: 'رجوع', next: 'التالي', yes: 'نعم', no: 'لا', search: 'بحث', filter: 'تصفية', date: 'التاريخ', actions: 'الإجراءات', details: 'التفاصيل', required: 'مطلوب' },
+  home: {
+    nav: { home: 'الرئيسية', about: 'حولنا', solution: 'الحل', why: 'لماذا نحن', contact: 'اتصل بنا', login: 'تسجيل الدخول' },
+    hero: {
+      subtitle: 'تجمع Mokine Box جميع بيانات حيواناتك وترسلها مباشرة إلى تطبيقك، حتى في المناطق النائية.',
+      btn_order: 'اطلب الآن', btn_lab: 'MokineLab',
+      slide1: 'Mokine box: مزرعتك متصلة في الوقت الفعلي',
+      slide2: 'Mokine collar: طوق واحد، ألف معلومة',
+      slide3: 'Mokine app: قطيعك في جيبك',
+    },
+    contact: { title: 'معلومات', address_label: 'العنوان', phone_label: 'الهاتف', email_label: 'البريد الإلكتروني', form_title: 'أرسل لنا رسالة', name: 'الاسم', email: 'البريد الإلكتروني', subject: 'الموضوع', message: 'رسالتك', send: 'إرسال', sending: 'جاري الإرسال...', success: '✅ تم إرسال الرسالة بنجاح!', error: '❌ خطأ في الإرسال. حاول مجدداً.' },
+    footer: { rights: 'جميع الحقوق محفوظة.', links: 'روابط', products: 'منتجاتنا', about_link: 'حولنا', features_link: 'المميزات', faq_link: 'الأسئلة الشائعة' },
+  }
 };

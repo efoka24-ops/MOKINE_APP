@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useI18n } from './i18n/index.js';
 import Slider from "react-slick";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -117,6 +118,7 @@ function Hero() {
     const [nav1, setNav1] = useState(null);
     const [nav2, setNav2] = useState(null);
     const navigate = useNavigate();
+    const { t } = useI18n();
 
     useEffect(() => {
         if (textSlider.current && imgSlider.current) {
@@ -164,15 +166,13 @@ function Hero() {
                         >
                             <h2 className="text-sm md:text-md uppercase tracking-widest text-[#178A3B] font-bold mb-2">Mokine</h2>
                             <Slider {...sliderSettings} ref={textSlider}>
-                                {HERO_TEXTS.map((t, i) => (
+                                {[t('home.hero.slide1'), t('home.hero.slide2'), t('home.hero.slide3')].map((slide, i) => (
                                     <div key={i}>
                                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold leading-tight tracking-tight">
-                                            {t}
+                                            {slide}
                                         </h1>
                                         <p className="mt-4 md:mt-6 text-gray-300 max-w-md md:max-w-xl text-lg">
-                                            La Mokine Box centralise toutes les données de vos animaux et
-                                            les transmet directement sur votre application, même en zone
-                                            reculée.
+                                            {t('home.hero.subtitle')}
                                         </p>
                                     </div>
                                 ))}
@@ -186,10 +186,10 @@ function Hero() {
                                 transition={{ duration: 0.8, delay: 0.4 }}
                             >
                                 <button onClick={() => { navigate('/commande') }} className="bg-[#178A3B] hover:bg-[#147932] transition text-white px-7 py-3 rounded-full font-semibold shadow-lg boutonherosection">
-                                    Commander
+                                    {t('home.hero.btn_order')}
                                 </button>
                                 <button onClick={() => { navigate('/mokinelab') }} className="border border-gray-600 hover:border-gray-400 transition text-white px-7 py-3 rounded-full font-semibold boutonherosection">
-                                    MokineLab
+                                    {t('home.hero.btn_lab')}
                                 </button>
                             </motion.div>
                         </motion.div>
@@ -225,6 +225,7 @@ function Hero() {
 /* Reproduced sections after hero based on your second image */
 function ContentSections() {
     const navigate = useNavigate();
+    const { t } = useI18n();
     const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
     const [contactStatus, setContactStatus] = useState('');
 
@@ -649,22 +650,22 @@ function ContentSections() {
                 <section id="contact" className="max-w-6xl mx-auto px-4 mt-12 mb-20">
                     <div className="bg-white rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="md:col-span-1 bg-[#e6f6ea] p-6 rounded-lg">
-                            <h4 className="font-bold">Informations</h4>
-                            <p className="mt-3 text-sm">Adresse: Garoua, Cameroun</p>
-                            <p className="text-sm mt-2">Téléphone: 678758976</p>
-                            <p className="text-sm mt-2">Email: infos@trugroup.cm</p>
+                            <h4 className="font-bold">{t('home.contact.title')}</h4>
+                            <p className="mt-3 text-sm">{t('home.contact.address_label')}: Garoua, Cameroun</p>
+                            <p className="text-sm mt-2">{t('home.contact.phone_label')}: 678758976</p>
+                            <p className="text-sm mt-2">{t('home.contact.email_label')}: infos@trugroup.cm</p>
                         </div>
                         <div className="md:col-span-2">
-                            <h4 className="font-bold">Envoyez-nous un message</h4>
+                            <h4 className="font-bold">{t('home.contact.form_title')}</h4>
                             <form onSubmit={handleContactSubmit} className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input className="border rounded p-3" placeholder="Nom" value={contactForm.name} onChange={e => setContactForm(f => ({ ...f, name: e.target.value }))} required />
-                                <input className="border rounded p-3" placeholder="Email" type="email" value={contactForm.email} onChange={e => setContactForm(f => ({ ...f, email: e.target.value }))} required />
-                                <input className="border rounded p-3 md:col-span-2" placeholder="Sujet" value={contactForm.subject} onChange={e => setContactForm(f => ({ ...f, subject: e.target.value }))} />
-                                <textarea className="border rounded p-3 md:col-span-2" placeholder="Votre message" rows={5} value={contactForm.message} onChange={e => setContactForm(f => ({ ...f, message: e.target.value }))} required />
-                                {contactStatus === 'success' && <p className="md:col-span-2 text-green-600 text-sm">✅ Message envoyé avec succès !</p>}
-                                {contactStatus === 'error' && <p className="md:col-span-2 text-red-500 text-sm">❌ Erreur lors de l'envoi. Réessayez.</p>}
+                                <input className="border rounded p-3" placeholder={t('home.contact.name')} value={contactForm.name} onChange={e => setContactForm(f => ({ ...f, name: e.target.value }))} required />
+                                <input className="border rounded p-3" placeholder={t('home.contact.email')} type="email" value={contactForm.email} onChange={e => setContactForm(f => ({ ...f, email: e.target.value }))} required />
+                                <input className="border rounded p-3 md:col-span-2" placeholder={t('home.contact.subject')} value={contactForm.subject} onChange={e => setContactForm(f => ({ ...f, subject: e.target.value }))} />
+                                <textarea className="border rounded p-3 md:col-span-2" placeholder={t('home.contact.message')} rows={5} value={contactForm.message} onChange={e => setContactForm(f => ({ ...f, message: e.target.value }))} required />
+                                {contactStatus === 'success' && <p className="md:col-span-2 text-green-600 text-sm">{t('home.contact.success')}</p>}
+                                {contactStatus === 'error' && <p className="md:col-span-2 text-red-500 text-sm">{t('home.contact.error')}</p>}
                                 <button type="submit" disabled={contactStatus === 'loading'} className="bg-[#178A3B] text-white px-4 py-3 rounded-md md:col-span-2 disabled:opacity-60">
-                                    {contactStatus === 'loading' ? 'Envoi en cours...' : 'Envoyer'}
+                                    {contactStatus === 'loading' ? t('home.contact.sending') : t('home.contact.send')}
                                 </button>
                             </form>
                         </div>

@@ -18,5 +18,18 @@ export default {
   // Offline
   offline: { offline: 'Hors ligne', syncing: 'Synchronisation...', synced: 'Synchronisé', pending_actions: 'Actions en attente: {{count}}' },
   // Common
-  common: { save: 'Enregistrer', cancel: 'Annuler', confirm: 'Confirmer', delete: 'Supprimer', edit: 'Modifier', loading: 'Chargement...', error: 'Erreur', success: 'Succès', close: 'Fermer', back: 'Retour', next: 'Suivant', yes: 'Oui', no: 'Non', search: 'Rechercher', filter: 'Filtrer', date: 'Date', actions: 'Actions', details: 'Détails', required: 'Requis' }
+  common: { save: 'Enregistrer', cancel: 'Annuler', confirm: 'Confirmer', delete: 'Supprimer', edit: 'Modifier', loading: 'Chargement...', error: 'Erreur', success: 'Succès', close: 'Fermer', back: 'Retour', next: 'Suivant', yes: 'Oui', no: 'Non', search: 'Rechercher', filter: 'Filtrer', date: 'Date', actions: 'Actions', details: 'Détails', required: 'Requis' },
+  // Page d'accueil
+  home: {
+    nav: { home: 'Accueil', about: 'À propos', solution: 'Solution', why: 'Pourquoi', contact: 'Contact', login: 'Se connecter' },
+    hero: {
+      subtitle: 'La Mokine Box centralise toutes les données de vos animaux et les transmet directement sur votre application, même en zone reculée.',
+      btn_order: 'Commander', btn_lab: 'MokineLab',
+      slide1: 'Mokine box : votre ferme connectée en temps réel',
+      slide2: 'Mokine collar : un collier, milles informations',
+      slide3: 'Mokine app : votre troupeau dans votre poche',
+    },
+    contact: { title: 'Informations', address_label: 'Adresse', phone_label: 'Téléphone', email_label: 'Email', form_title: 'Envoyez-nous un message', name: 'Nom', email: 'Email', subject: 'Sujet', message: 'Votre message', send: 'Envoyer', sending: 'Envoi en cours...', success: '✅ Message envoyé avec succès !', error: '❌ Erreur lors de l\'envoi. Réessayez.' },
+    footer: { rights: 'Tous droits réservés.', links: 'Liens', products: 'Nos produits', about_link: 'À propos', features_link: 'Fonctionnalités', faq_link: 'FAQ' },
+  }
 };

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../assets/logo.png';
 import LanguageSelector from './LanguageSelector';
+import { useI18n } from '../i18n/index.js';
 
 export default function HeaderHome() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const navigate = useNavigate();
+    const { t } = useI18n();
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
@@ -52,16 +54,16 @@ export default function HeaderHome() {
 
                 {/* Desktop nav */}
                 <nav className={`hidden md:flex gap-6 text-sm items-center`}>
-                    <a href="#" className={`${textClasses} ${navTextClasses}`}>Accueil</a>
-                    <a href="/#about" className={`${textClasses} ${navTextClasses}`}>À propos</a>
-                    <a href="/#solution" className={`${textClasses} ${navTextClasses}`}>Solution</a>
-                    <a href="/#why" className={`${textClasses} ${navTextClasses}`}>Pourquoi</a>
-                    <a href="/#contact" className={`${textClasses} ${navTextClasses}`}>Contact</a>
-                    <button 
-                        onClick={() => navigate('/login')} 
+                    <a href="#" className={`${textClasses} ${navTextClasses}`}>{t('home.nav.home')}</a>
+                    <a href="/#about" className={`${textClasses} ${navTextClasses}`}>{t('home.nav.about')}</a>
+                    <a href="/#solution" className={`${textClasses} ${navTextClasses}`}>{t('home.nav.solution')}</a>
+                    <a href="/#why" className={`${textClasses} ${navTextClasses}`}>{t('home.nav.why')}</a>
+                    <a href="/#contact" className={`${textClasses} ${navTextClasses}`}>{t('home.nav.contact')}</a>
+                    <button
+                        onClick={() => navigate('/login')}
                         className="ml-4 bg-[#178A3B] text-white px-4 py-2 rounded-md text-sm transition-colors hover:bg-[#147932]"
                     >
-                        Se connecter
+                        {t('home.nav.login')}
                     </button>
                     {/* Selecteur de langue */}
                     <LanguageSelector />
@@ -91,13 +93,13 @@ export default function HeaderHome() {
                     onClick={e => e.stopPropagation()}
                 >
                     <nav className="flex flex-col gap-4 text-gray-700">
-                        <Link to="/" onClick={handleLinkClick} className="hover:text-[#178A3B]">Accueil</Link>
-                        <Link to="/about" onClick={handleLinkClick} className="hover:text-[#178A3B]">À propos</Link>
-                        <Link to="/solution" onClick={handleLinkClick} className="hover:text-[#178A3B]">Solution</Link>
-                        <Link to="/why" onClick={handleLinkClick} className="hover:text-[#178A3B]">Pourquoi</Link>
-                        <Link to="/contact" onClick={handleLinkClick} className="hover:text-[#178A3B]">Contact</Link>
-                        <button className="mt-4 bg-[#178A3B] text-white px-4 py-2 rounded-md text-sm hover:bg-[#147932]">
-                            Se connecter
+                        <Link to="/" onClick={handleLinkClick} className="hover:text-[#178A3B]">{t('home.nav.home')}</Link>
+                        <Link to="/#about" onClick={handleLinkClick} className="hover:text-[#178A3B]">{t('home.nav.about')}</Link>
+                        <Link to="/#solution" onClick={handleLinkClick} className="hover:text-[#178A3B]">{t('home.nav.solution')}</Link>
+                        <Link to="/#why" onClick={handleLinkClick} className="hover:text-[#178A3B]">{t('home.nav.why')}</Link>
+                        <Link to="/#contact" onClick={handleLinkClick} className="hover:text-[#178A3B]">{t('home.nav.contact')}</Link>
+                        <button onClick={() => navigate('/login')} className="mt-4 bg-[#178A3B] text-white px-4 py-2 rounded-md text-sm hover:bg-[#147932]">
+                            {t('home.nav.login')}
                         </button>
                         {/* Selecteur de langue mobile */}
                         <div className="mt-2">
