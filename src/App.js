@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useI18n } from './i18n/index.js';
+import { useSettings } from './hooks/useSettings.js';
 import Slider from "react-slick";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -227,6 +228,7 @@ function Hero() {
 function ContentSections() {
     const navigate = useNavigate();
     const { t } = useI18n();
+    const settings = useSettings();
     const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
     const [contactStatus, setContactStatus] = useState('');
 
@@ -592,9 +594,9 @@ function ContentSections() {
                     <div className="bg-white rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="md:col-span-1 bg-[#e6f6ea] p-6 rounded-lg">
                             <h4 className="font-bold">{t('home.contact.title')}</h4>
-                            <p className="mt-3 text-sm">{t('home.contact.address_label')}: Garoua, Cameroun</p>
-                            <p className="text-sm mt-2">{t('home.contact.phone_label')}: 678758976</p>
-                            <p className="text-sm mt-2">{t('home.contact.email_label')}: infos@trugroup.cm</p>
+                            <p className="mt-3 text-sm">{t('home.contact.address_label')}: {settings.business_address}</p>
+                            <p className="text-sm mt-2">{t('home.contact.phone_label')}: {settings.business_phone}</p>
+                            <p className="text-sm mt-2">{t('home.contact.email_label')}: {settings.business_email}</p>
                         </div>
                         <div className="md:col-span-2">
                             <h4 className="font-bold">{t('home.contact.form_title')}</h4>

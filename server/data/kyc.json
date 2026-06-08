@@ -10,7 +10,10 @@
     "phone": "",
     "bankAccount": "",
     "documents": [],
-    "status": "pending",
-    "submittedAt": "2026-05-08T12:23:14.191Z"
+    "status": "approved",
+    "submittedAt": "2026-05-08T12:23:14.191Z",
+    "reviewedAt": "2026-06-08T13:42:05.532Z",
+    "reviewedBy": "admin1",
+    "updatedAt": "2026-06-08T13:42:05.532Z"
   }
 ]

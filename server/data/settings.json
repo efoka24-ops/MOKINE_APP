@@ -1,0 +1,65 @@
+[
+  {
+    "id": "1",
+    "key": "app_name",
+    "value": "Mokine",
+    "group": "brand",
+    "label": "Nom de l'application"
+  },
+  {
+    "id": "2",
+    "key": "business_name",
+    "value": "CM TRU GROUP",
+    "group": "business",
+    "label": "Raison sociale"
+  },
+  {
+    "id": "3",
+    "key": "business_address",
+    "value": "Garoua, Cameroun",
+    "group": "business",
+    "label": "Adresse"
+  },
+  {
+    "id": "4",
+    "key": "business_phone",
+    "value": "678758976",
+    "group": "business",
+    "label": "Téléphone"
+  },
+  {
+    "id": "5",
+    "key": "business_email",
+    "value": "infos@trugroup.cm",
+    "group": "business",
+    "label": "Email"
+  },
+  {
+    "id": "6",
+    "key": "support_email",
+    "value": "infos@trugroup.cm",
+    "group": "business",
+    "label": "Email support"
+  },
+  {
+    "id": "7",
+    "key": "currency",
+    "value": "XAF",
+    "group": "payment",
+    "label": "Devise"
+  },
+  {
+    "id": "8",
+    "key": "country_code",
+    "value": "CM",
+    "group": "payment",
+    "label": "Code pays"
+  },
+  {
+    "id": "9",
+    "key": "easy_transact_service_code",
+    "value": "DEPOSIT",
+    "group": "payment",
+    "label": "Code service Easy Transact"
+  }
+]

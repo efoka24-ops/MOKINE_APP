@@ -1,59 +1,87 @@
-import React, { useState } from 'react';
-import { CreditCard, Lock, ArrowRight, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { CreditCard, Lock, ArrowRight, ArrowLeft, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { payments as paymentsAPI } from '../API';
 import { useAuth } from '../context/AuthContext';
 
-const PLAN_CONFIG = {
-  standard: { name: 'Standard', price: 5000, priceLabel: '5.000', period: '/mois', ia: '/ia/standard' },
-  entreprise: { name: 'Entreprise', price: 45000, priceLabel: '45.000', period: '/an', ia: '/ia/entreprise' },
-};
-
 const COUNTRIES = [
-  { code: 'CM', name: 'Cameroun', prefix: '+237' },
+  { code: 'CM', name: 'Cameroun',      prefix: '+237' },
   { code: 'CI', name: "Côte d'Ivoire", prefix: '+225' },
-  { code: 'SN', name: 'Sénégal', prefix: '+221' },
-  { code: 'ML', name: 'Mali', prefix: '+223' },
+  { code: 'SN', name: 'Sénégal',       prefix: '+221' },
+  { code: 'ML', name: 'Mali',          prefix: '+223' },
 ];
 
-export function PaymentPage({ onBack }) {
-  const { plan: planParam } = useParams();
+export function PaymentPage() {
+  const { plan: planSlug } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const plan = PLAN_CONFIG[planParam] || PLAN_CONFIG.standard;
 
-  const [form, setForm] = useState({
-    payorName: user?.name || '',
-    phoneNumber: '',
-    country: 'CM',
-    agreeTerms: false,
-  });
+  const [plan, setPlan] = useState(null);
+  const [loadingPlan, setLoadingPlan] = useState(true);
+  const [form, setForm] = useState({ payorName: user?.name || '', phoneNumber: '', country: 'CM', agreeTerms: false });
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(null); // 'success' | 'error' | null
+  const [status, setStatus] = useState(null); // 'success' | 'error' | 'redirect'
   const [errorMsg, setErrorMsg] = useState('');
+  const [checkoutUrl, setCheckoutUrl] = useState('');
+
+  useEffect(() => {
+    fetch(`/api/subscription-plans/${planSlug || 'standard'}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) setPlan(data); setLoadingPlan(false); })
+      .catch(() => setLoadingPlan(false));
+  }, [planSlug]);
 
   const set = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
   const handlePayment = async (e) => {
     e.preventDefault();
-    if (!form.agreeTerms) return;
-    if (!form.phoneNumber || form.phoneNumber.length < 8) {
-      setErrorMsg('Veuillez entrer un numéro de téléphone valide.');
-      return;
-    }
+    if (!form.agreeTerms) { setErrorMsg('Veuillez accepter les conditions.'); return; }
+    if (!form.phoneNumber || form.phoneNumber.length < 8) { setErrorMsg('Numéro de téléphone invalide.'); return; }
+    if (!plan) return;
+
     setLoading(true);
     setErrorMsg('');
+
+    const countryObj = COUNTRIES.find(c => c.code === form.country);
+    const fullPhone = `${countryObj.prefix}${form.phoneNumber.replace(/^0+/, '')}`;
+    const vendorRef = `MOKINE-${plan.slug.toUpperCase()}-${Date.now()}`;
+    const frontendUrl = window.location.origin;
+
     try {
-      const countryObj = COUNTRIES.find(c => c.code === form.country);
-      const fullPhone = `${countryObj.prefix}${form.phoneNumber.replace(/^0+/, '')}`;
+      // 1. Try Easy Transact checkout link (preferred)
+      const etRes = await fetch('/api/payment/easytransact/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+        body: JSON.stringify({
+          description: `Abonnement Mokine ${plan.name}`,
+          vendor_reference: vendorRef,
+          amount: String(plan.price),
+          success_url: `${frontendUrl}/payment/success?plan=${plan.slug}&ref=${vendorRef}`,
+          cancel_url: `${frontendUrl}/payment/cancel`,
+        }),
+      });
+
+      if (etRes.ok) {
+        const etData = await etRes.json();
+        // Easy Transact returns a checkout_url
+        if (etData.checkout_url || etData.payment_url || etData.redirect_url) {
+          const url = etData.checkout_url || etData.payment_url || etData.redirect_url;
+          setCheckoutUrl(url);
+          setStatus('redirect');
+          return;
+        }
+      }
+
+      // 2. Fallback: record payment locally (Camoo or direct)
       await paymentsAPI.process({
         amount: plan.price,
         paymentMethod: 'mobile_money',
         payorName: form.payorName,
         phone: fullPhone,
         country: form.country,
-        plan: planParam || 'standard',
-        currency: 'XAF',
+        plan: plan.slug,
+        currency: plan.currency || 'XAF',
+        vendor_reference: vendorRef,
       });
       setStatus('success');
     } catch (err) {
@@ -63,6 +91,40 @@ export function PaymentPage({ onBack }) {
       setLoading(false);
     }
   };
+
+  if (loadingPlan) {
+    return <div className="flex justify-center items-center min-h-screen"><Loader className="w-8 h-8 animate-spin text-green-600" /></div>;
+  }
+
+  if (!plan) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="bg-white rounded-2xl shadow p-8 text-center">
+          <p className="text-red-500 mb-4">Plan introuvable.</p>
+          <button onClick={() => navigate('/abonnement')} className="text-green-600 underline">Voir les plans</button>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to Easy Transact checkout page
+  if (status === 'redirect' && checkoutUrl) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full text-center">
+          <div className="text-5xl mb-4">💳</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Redirection vers le paiement</h2>
+          <p className="text-gray-600 mb-6">Vous allez être redirigé vers la page de paiement sécurisée Easy Transact.</p>
+          <a href={checkoutUrl} className="block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl mb-3">
+            Procéder au paiement →
+          </a>
+          <button onClick={() => navigate('/abonnement')} className="text-sm text-gray-500 hover:text-gray-700">
+            ← Retour aux abonnements
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (status === 'success') {
     return (
@@ -74,8 +136,7 @@ export function PaymentPage({ onBack }) {
             Un message de confirmation a été envoyé au <strong>{form.phoneNumber}</strong>.
           </p>
           <p className="text-sm text-gray-500 mb-6">Veuillez valider le paiement sur votre téléphone.</p>
-          <button onClick={() => navigate(plan.ia)}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl">
+          <button onClick={() => navigate('/dashboard')} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl">
             Accéder à mon espace {plan.name}
           </button>
         </div>
@@ -83,87 +144,86 @@ export function PaymentPage({ onBack }) {
     );
   }
 
+  const countryObj = COUNTRIES.find(c => c.code === form.country) || COUNTRIES[0];
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl p-8">
-        <div className="flex justify-between items-center mb-6">
-          <button onClick={onBack || (() => navigate(-1))} className="text-gray-500 hover:text-gray-800">
-            <ArrowLeft size={24} />
-          </button>
-          <h2 className="text-2xl font-bold text-gray-800 text-center flex-1">Paiement Mobile Money</h2>
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+        <button onClick={() => navigate('/abonnement')} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-6">
+          <ArrowLeft className="w-4 h-4" /> Retour
+        </button>
+
+        {/* Plan summary */}
+        <div className="bg-green-50 rounded-xl p-4 mb-6 flex justify-between items-center">
+          <div>
+            <p className="font-bold text-gray-800">Plan {plan.name}</p>
+            <p className="text-sm text-gray-500">{plan.period}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-extrabold text-green-700">{plan.priceLabel} FCFA</p>
+          </div>
         </div>
 
-        {/* Récap plan */}
-        <div className="mb-6 text-center bg-green-50 rounded-xl p-4">
-          <p className="text-gray-600">Plan <span className="font-semibold text-green-700">{plan.name}</span></p>
-          <p className="text-4xl font-extrabold text-gray-900 mt-1">
-            {plan.priceLabel} <span className="text-lg font-medium text-gray-500">FCFA{plan.period}</span>
-          </p>
-        </div>
+        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <CreditCard className="w-5 h-5 text-green-600" /> Paiement Mobile Money
+        </h2>
 
-        {errorMsg && (
-          <div className="mb-4 flex items-center gap-2 bg-red-50 text-red-700 px-4 py-3 rounded-lg text-sm">
-            <AlertCircle size={16} /> {errorMsg}
+        {status === 'error' && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+            <AlertCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-red-600">{errorMsg}</p>
           </div>
         )}
 
-        <div className="bg-gray-50 p-5 rounded-xl border border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-800">Orange Money / MTN MoMo</h3>
-            <CreditCard size={20} className="text-orange-500" />
+        <form onSubmit={handlePayment} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+            <input value={form.payorName} onChange={e => set('payorName', e.target.value)} required
+              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent" />
           </div>
 
-          <form onSubmit={handlePayment} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
-              <input type="text" value={form.payorName} onChange={e => set('payorName', e.target.value)}
-                placeholder="Votre nom" required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none" />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Pays</label>
+            <select value={form.country} onChange={e => set('country', e.target.value)}
+              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500">
+              {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name} ({c.prefix})</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Numéro Mobile Money</label>
+            <div className="flex">
+              <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                {countryObj.prefix}
+              </span>
+              <input type="tel" value={form.phoneNumber} onChange={e => set('phoneNumber', e.target.value.replace(/\D/g, ''))}
+                placeholder="6XXXXXXXX" required
+                className="flex-1 border border-gray-300 rounded-r-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent" />
             </div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Pays</label>
-              <select value={form.country} onChange={e => set('country', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none">
-                {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name} ({c.prefix})</option>)}
-              </select>
-            </div>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" checked={form.agreeTerms} onChange={e => set('agreeTerms', e.target.checked)}
+              className="mt-1 h-4 w-4 text-green-600 rounded border-gray-300" />
+            <span className="text-sm text-gray-600">
+              J'accepte les <a href="/terms" className="text-green-600 underline">conditions d'utilisation</a> et la politique de confidentialité.
+            </span>
+          </label>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Numéro Mobile Money</label>
-              <div className="flex">
-                <span className="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-sm text-gray-600">
-                  {COUNTRIES.find(c => c.code === form.country)?.prefix}
-                </span>
-                <input type="tel" value={form.phoneNumber} onChange={e => set('phoneNumber', e.target.value)}
-                  placeholder="6XX XXX XXX" required
-                  className="flex-1 border border-gray-300 rounded-r-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none" />
-              </div>
-            </div>
+          <button type="submit" disabled={loading || !form.agreeTerms}
+            className="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition disabled:opacity-60">
+            {loading ? <Loader className="w-5 h-5 animate-spin" /> : <Lock className="w-5 h-5" />}
+            {loading ? 'Traitement...' : `Payer ${plan.priceLabel} FCFA`}
+            {!loading && <ArrowRight className="w-4 h-4" />}
+          </button>
+        </form>
 
-            <div className="flex items-start gap-2 pt-1">
-              <input type="checkbox" id="terms" checked={form.agreeTerms} onChange={e => set('agreeTerms', e.target.checked)}
-                className="mt-1 h-4 w-4 text-green-600 border-gray-300 rounded" />
-              <label htmlFor="terms" className="text-sm text-gray-700">
-                J'accepte les <a href="#" className="text-green-600 hover:underline">conditions d'utilisation</a>
-              </label>
-            </div>
-
-            <button type="submit" disabled={!form.agreeTerms || loading}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-60 transition-colors">
-              {loading ? (
-                <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" />
-              ) : (
-                <><Lock size={18} /><span>Payer {plan.priceLabel} FCFA</span><ArrowRight size={18} /></>
-              )}
-            </button>
-          </form>
-        </div>
-
-        <p className="text-xs text-gray-400 text-center mt-4 flex items-center justify-center gap-1">
-          <Lock size={12} /> Paiement sécurisé — MokineVeto ne stocke pas vos données bancaires.
+        <p className="text-center text-xs text-gray-400 mt-4 flex items-center justify-center gap-1">
+          <Lock className="w-3 h-3" /> Paiement sécurisé via Easy Transact
         </p>
       </div>
     </div>
   );
 }
+
+export default PaymentPage;

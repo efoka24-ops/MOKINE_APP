@@ -32,10 +32,13 @@ export const processPayment = async (req, res) => {
 
     await db.payments.insert(payment);
 
-    // Update user subscription plan when payment is for a plan
+    // Update user subscription — duration fetched from subscription_plans table
     if (plan && plan !== 'gratuit') {
-      const PLAN_DURATIONS = { standard: 30, premium: 90, entreprise: 365 };
-      const days = PLAN_DURATIONS[plan] || 30;
+      let days = 30;
+      try {
+        const planRow = await db.subscription_plans.findOne(p => p.slug === plan);
+        if (planRow?.periodDays) days = planRow.periodDays;
+      } catch {}
       const expiry = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
       await db.users.update(req.user.id, { subscriptionPlan: plan, subscriptionExpiry: expiry });
     }

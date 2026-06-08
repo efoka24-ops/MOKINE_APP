@@ -671,3 +671,142 @@ CREATE INDEX idx_consultation_requests_animal_id ON consultation_requests(animal
 CREATE INDEX idx_orders_order_number ON orders(order_number);
 CREATE INDEX idx_products_sku ON products(sku);
 CREATE INDEX idx_prescriptions_prescription_number ON prescriptions(prescription_number);
+
+-- ============================================================================
+-- SETTINGS & CONFIGURATION  (v3 — added 2026-06)
+-- ============================================================================
+
+-- JSONB collection (used by document-store layer)
+CREATE TABLE IF NOT EXISTS settings (
+  id   TEXT PRIMARY KEY,
+  data JSONB NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_settings_key ON settings ((data->>'key'));
+CREATE INDEX        IF NOT EXISTS idx_settings_group ON settings ((data->>'group'));
+
+-- Relational version (alternative for direct SQL queries)
+CREATE TABLE IF NOT EXISTS app_settings (
+  id          SERIAL PRIMARY KEY,
+  key         VARCHAR(100) NOT NULL UNIQUE,
+  value       TEXT         NOT NULL,
+  group_name  VARCHAR(50)  DEFAULT 'general',
+  label       VARCHAR(255),
+  updated_at  TIMESTAMPTZ  DEFAULT NOW()
+);
+
+INSERT INTO app_settings (key, value, group_name, label) VALUES
+  ('app_name',                    'Mokine',           'brand',    'Nom de l''application'),
+  ('business_name',               'CM TRU GROUP',     'business', 'Raison sociale'),
+  ('business_address',            'Garoua, Cameroun', 'business', 'Adresse'),
+  ('business_phone',              '678758976',        'business', 'Téléphone'),
+  ('business_email',              'infos@trugroup.cm','business', 'Email'),
+  ('support_email',               'infos@trugroup.cm','business', 'Email support'),
+  ('currency',                    'XAF',              'payment',  'Devise'),
+  ('country_code',                'CM',               'payment',  'Code pays'),
+  ('easy_transact_service_code',  'DEPOSIT',          'payment',  'Code service Easy Transact')
+ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW();
+
+-- ============================================================================
+-- SUBSCRIPTION PLANS  (v3 — added 2026-06)
+-- ============================================================================
+
+-- JSONB collection
+CREATE TABLE IF NOT EXISTS subscription_plans (
+  id   TEXT PRIMARY KEY,
+  data JSONB NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_subscription_plans_slug ON subscription_plans ((data->>'slug'));
+
+-- Relational version
+CREATE TABLE IF NOT EXISTS sub_plans (
+  id           SERIAL PRIMARY KEY,
+  slug         VARCHAR(50)    NOT NULL UNIQUE,
+  name         VARCHAR(100)   NOT NULL,
+  price        DECIMAL(12,2)  NOT NULL DEFAULT 0,
+  price_label  VARCHAR(20),
+  currency     VARCHAR(3)     NOT NULL DEFAULT 'XAF',
+  period       VARCHAR(50),
+  period_days  INTEGER        NOT NULL DEFAULT 30,
+  description  TEXT,
+  features     JSONB          DEFAULT '[]',
+  badge        VARCHAR(50),
+  color        VARCHAR(100),
+  is_active    BOOLEAN        NOT NULL DEFAULT TRUE,
+  sort_order   INTEGER        NOT NULL DEFAULT 0,
+  created_at   TIMESTAMPTZ    DEFAULT NOW(),
+  updated_at   TIMESTAMPTZ    DEFAULT NOW()
+);
+
+INSERT INTO sub_plans (slug, name, price, price_label, currency, period, period_days, description, features, badge, color, sort_order) VALUES
+  ('gratuit',    'Gratuit',    0,     '0',      'XAF', 'par mois',    30,  'Parfait pour découvrir.',                     '["5 prédiagnostics image","5 prédiagnostics texte","Fonctionnalités de base","Support standard"]',          NULL,       'border-gray-200',   1),
+  ('standard',   'Standard',   5000,  '5.000',  'XAF', 'par mois',    30,  'Accès illimité pour usage régulier.',         '["Images illimitées","Texte illimité","Voix illimité","Support prioritaire"]',                              'Populaire','border-green-400',  2),
+  ('premium',    'Premium',    12000, '12.000', 'XAF', 'par 3 mois',  90,  'Meilleur rapport qualité-prix.',             '["Tout Standard","Avant-premières","Support 24/7","Consultation vétérinaire prioritaire"]',                  NULL,       'border-blue-400',   3),
+  ('entreprise', 'Entreprise', 45000, '45.000', 'XAF', 'par an',      365, 'Solution complète pour professionnels.',     '["Tout Premium","Assistance dédiée","Facturation personnalisée","Accès API"]',                              NULL,       'border-purple-400', 4)
+ON CONFLICT (slug) DO UPDATE SET
+  price = EXCLUDED.price, period_days = EXCLUDED.period_days,
+  features = EXCLUDED.features, updated_at = NOW();
+
+-- ============================================================================
+-- PAYMENT TRANSACTIONS (Easy Transact)  (v3 — added 2026-06)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS payment_transactions (
+  id                     SERIAL PRIMARY KEY,
+  user_id                TEXT          REFERENCES users(id) ON DELETE SET NULL,
+  vendor_reference       VARCHAR(100)  NOT NULL UNIQUE,
+  plan_slug              VARCHAR(50),
+  amount                 DECIMAL(12,2) NOT NULL,
+  currency               VARCHAR(3)    NOT NULL DEFAULT 'XAF',
+  payment_method         VARCHAR(50)   DEFAULT 'mobile_money',
+  payor_name             VARCHAR(255),
+  phone_number           VARCHAR(30),
+  country_code           VARCHAR(5),
+  gateway                VARCHAR(50)   DEFAULT 'easy_transact',
+  gateway_ref            VARCHAR(255),
+  checkout_url           TEXT,
+  status                 VARCHAR(30)   NOT NULL DEFAULT 'INITIATED'
+                           CHECK (status IN ('INITIATED','PENDING','COMPLETED','FAILED','CANCELLED')),
+  webhook_payload        JSONB,
+  created_at             TIMESTAMPTZ   DEFAULT NOW(),
+  completed_at           TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS idx_payment_tx_user   ON payment_transactions(user_id);
+CREATE INDEX IF NOT EXISTS idx_payment_tx_status ON payment_transactions(status);
+CREATE INDEX IF NOT EXISTS idx_payment_tx_vendor ON payment_transactions(vendor_reference);
+
+-- ============================================================================
+-- CONTRIBUTIONS & API PLANS  (v3 — added 2026-06)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS contributions (
+  id   TEXT PRIMARY KEY,
+  data JSONB NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_contributions_user ON contributions ((data->>'userId'));
+
+CREATE TABLE IF NOT EXISTS api_subscriptions (
+  id   TEXT PRIMARY KEY,
+  data JSONB NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_api_subs_user ON api_subscriptions ((data->>'userId'));
+CREATE INDEX IF NOT EXISTS idx_api_subs_plan ON api_subscriptions ((data->>'planId'));
+
+CREATE TABLE IF NOT EXISTS api_plans (
+  id   TEXT PRIMARY KEY,
+  data JSONB NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_api_plans_slug ON api_plans ((data->>'slug'));
+
+-- ============================================================================
+-- END OF SCHEMA v3
+-- schema: mokine_prod | charset: UTF-8 | timezone: UTC
+-- Apply with: psql -U mokine_user -d mokine -f schema.sql
+-- ============================================================================

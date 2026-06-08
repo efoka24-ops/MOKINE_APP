@@ -44,5 +44,27 @@
     "status": "pending",
     "paymentStatus": "awaiting_confirmation",
     "createdAt": "2026-06-08T11:44:03.416Z"
+  },
+  {
+    "id": "1780926252227",
+    "buyerId": "1780908150395",
+    "buyerName": "Client",
+    "items": [
+      {
+        "productId": "1778238126599",
+        "productName": "Concentré minéral bovins",
+        "quantity": 1,
+        "unitPrice": 12000,
+        "subtotal": 12000
+      }
+    ],
+    "totalAmount": 12000,
+    "deliveryAddress": "teste",
+    "paymentMethod": "mobile_money",
+    "paymentPhone": "691227149",
+    "paymentRef": "OM-1780926252227",
+    "status": "pending",
+    "paymentStatus": "awaiting_confirmation",
+    "createdAt": "2026-06-08T13:44:12.227Z"
   }
 ]

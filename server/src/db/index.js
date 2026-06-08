@@ -173,6 +173,23 @@ export const SEEDS = {
   iot_alerts: [],
   contributions: [],
   api_subscriptions: [],
+  settings: [
+    { id: '1', key: 'app_name',              value: 'Mokine',             group: 'brand',    label: "Nom de l'application" },
+    { id: '2', key: 'business_name',         value: 'CM TRU GROUP',       group: 'business', label: 'Raison sociale' },
+    { id: '3', key: 'business_address',      value: 'Garoua, Cameroun',   group: 'business', label: 'Adresse' },
+    { id: '4', key: 'business_phone',        value: '678758976',          group: 'business', label: 'Téléphone' },
+    { id: '5', key: 'business_email',        value: 'infos@trugroup.cm',  group: 'business', label: 'Email' },
+    { id: '6', key: 'support_email',         value: 'infos@trugroup.cm',  group: 'business', label: 'Email support' },
+    { id: '7', key: 'currency',              value: 'XAF',                group: 'payment',  label: 'Devise' },
+    { id: '8', key: 'country_code',          value: 'CM',                 group: 'payment',  label: 'Code pays' },
+    { id: '9', key: 'easy_transact_service_code', value: 'DEPOSIT',       group: 'payment',  label: 'Code service Easy Transact' },
+  ],
+  subscription_plans: [
+    { id: 'sp_gratuit',    slug: 'gratuit',    name: 'Gratuit',    price: 0,     priceLabel: '0',      currency: 'XAF', period: 'par mois',    periodDays: 30,  description: 'Parfait pour découvrir.',          features: ["5 prédiagnostics d'image", "5 prédiagnostics texte", "Fonctionnalités de base", "Support standard"],                         color: 'border-gray-200',   badge: null,       isActive: true, sortOrder: 1 },
+    { id: 'sp_standard',   slug: 'standard',   name: 'Standard',   price: 5000,  priceLabel: '5.000',  currency: 'XAF', period: 'par mois',    periodDays: 30,  description: 'Accès illimité régulier.',         features: ["Images illimitées", "Texte illimité", "Voix illimité", "Support prioritaire"],                                               color: 'border-green-400',  badge: 'Populaire', isActive: true, sortOrder: 2 },
+    { id: 'sp_premium',    slug: 'premium',    name: 'Premium',    price: 12000, priceLabel: '12.000', currency: 'XAF', period: 'par 3 mois',  periodDays: 90,  description: 'Meilleur rapport qualité-prix.',   features: ["Tout Standard", "Avant-premières", "Support 24/7", "Consultation vétérinaire prioritaire"],                                 color: 'border-blue-400',   badge: null,       isActive: true, sortOrder: 3 },
+    { id: 'sp_entreprise', slug: 'entreprise', name: 'Entreprise', price: 45000, priceLabel: '45.000', currency: 'XAF', period: 'par an',      periodDays: 365, description: 'Solution complète professionnels.', features: ["Tout Premium", "Assistance dédiée", "Facturation personnalisée", "Accès API"],                                             color: 'border-purple-400', badge: null,       isActive: true, sortOrder: 4 },
+  ],
 
   api_plans: [
     {
@@ -291,9 +308,11 @@ const db = {
   iot_devices:     makeCollection('iot_devices'),
   sensor_readings: makeCollection('sensor_readings'),
   iot_alerts:      makeCollection('iot_alerts'),
-  contributions:      makeCollection('contributions'),
-  api_subscriptions:  makeCollection('api_subscriptions'),
-  api_plans:          makeCollection('api_plans'),
+  contributions:        makeCollection('contributions'),
+  api_subscriptions:    makeCollection('api_subscriptions'),
+  api_plans:            makeCollection('api_plans'),
+  settings:             makeCollection('settings'),
+  subscription_plans:   makeCollection('subscription_plans'),
 };
 
 console.log(`[DB] Using ${isProd ? 'PostgreSQL' : 'JSON files'} backend`);

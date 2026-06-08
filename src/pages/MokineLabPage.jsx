@@ -870,7 +870,7 @@ export default function MokineLabPage() {
       {/* ── Footer ── */}
       <footer className="py-8 px-4 bg-gray-900 text-gray-400 text-center text-sm">
         <p className="font-semibold text-white mb-1">🧬 MokineLab — Intelligence Artificielle Vétérinaire</p>
-        <p>Plateforme ouverte de diagnostic animal · Yaoundé, Cameroun</p>
+        <p>Plateforme ouverte de diagnostic animal · Garoua, Cameroun</p>
         <p className="mt-2">
           <a href="/mokineveto" className="hover:text-green-400 transition">MokineVeto</a>
           <span className="mx-2">·</span>
@@ -880,7 +880,7 @@ export default function MokineLabPage() {
           <span className="mx-2">·</span>
           <a href="/mokinelab/commercial" className="hover:text-green-400 transition font-medium">🔑 Usage Commercial</a>
           <span className="mx-2">·</span>
-          <span>contact@mokine.cm</span>
+          <span>infos@trugroup.cm</span>
         </p>
         <p className="mt-2 text-xs text-gray-600">
           © {new Date().getFullYear()} Mokine · Tebe IA v0.3-rule-based · Dataset {847}/1000

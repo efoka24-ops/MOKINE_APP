@@ -80,9 +80,10 @@
     "description": "Supplément minéral pour bovins",
     "price": 12000,
     "unit": "sac 25kg",
-    "stock": 50,
+    "stock": 49,
     "imageUrl": null,
     "isActive": true,
-    "createdAt": "2026-05-08T11:02:06.599Z"
+    "createdAt": "2026-05-08T11:02:06.599Z",
+    "updatedAt": "2026-06-08T13:44:12.227Z"
   }
 ]

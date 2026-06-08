@@ -1,0 +1,86 @@
+[
+  {
+    "id": "sp_gratuit",
+    "slug": "gratuit",
+    "name": "Gratuit",
+    "price": 0,
+    "priceLabel": "0",
+    "currency": "XAF",
+    "period": "par mois",
+    "periodDays": 30,
+    "description": "Parfait pour découvrir nos services.",
+    "features": [
+      "5 prédiagnostics d'image (pieds, bouche, peau)",
+      "5 prédiagnostics par texte",
+      "Accès limité aux fonctionnalités de base",
+      "Support standard"
+    ],
+    "color": "border-gray-200",
+    "badge": null,
+    "isActive": true,
+    "sortOrder": 1
+  },
+  {
+    "id": "sp_standard",
+    "slug": "standard",
+    "name": "Standard",
+    "price": 5000,
+    "priceLabel": "5.000",
+    "currency": "XAF",
+    "period": "par mois",
+    "periodDays": 30,
+    "description": "Accès illimité pour une utilisation régulière.",
+    "features": [
+      "Accès illimité aux 3 modèles d'image",
+      "Prédiagnostic par texte illimité",
+      "Prédiagnostic par voix illimité",
+      "Support prioritaire"
+    ],
+    "color": "border-green-400",
+    "badge": "Populaire",
+    "isActive": true,
+    "sortOrder": 2
+  },
+  {
+    "id": "sp_premium",
+    "slug": "premium",
+    "name": "Premium",
+    "price": 12000,
+    "priceLabel": "12.000",
+    "currency": "XAF",
+    "period": "par 3 mois",
+    "periodDays": 90,
+    "description": "Le meilleur rapport qualité-prix.",
+    "features": [
+      "Tout le plan Standard",
+      "Nouvelles fonctionnalités en avant-première",
+      "Support 24/7",
+      "Consultation prioritaire vétérinaire"
+    ],
+    "color": "border-blue-400",
+    "badge": null,
+    "isActive": true,
+    "sortOrder": 3
+  },
+  {
+    "id": "sp_entreprise",
+    "slug": "entreprise",
+    "name": "Entreprise",
+    "price": 45000,
+    "priceLabel": "45.000",
+    "currency": "XAF",
+    "period": "par an",
+    "periodDays": 365,
+    "description": "La solution complète pour les professionnels.",
+    "features": [
+      "Tout le plan Premium",
+      "Assistance dédiée",
+      "Facturation personnalisée",
+      "Accès API (intégration)"
+    ],
+    "color": "border-purple-400",
+    "badge": null,
+    "isActive": true,
+    "sortOrder": 4
+  }
+]

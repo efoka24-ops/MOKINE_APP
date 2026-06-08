@@ -4,7 +4,9 @@
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\YCXL3291\\\\Documents\\\\mokine\" -Recurse -File)",
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(Sort-Object)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(git add *)",
+      "Bash(git push *)"
     ]
   }
 }

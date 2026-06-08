@@ -32,6 +32,7 @@ import iotRoutes from './routes/iotRoutes.js';
 import sanitaryAlertRoutes from './routes/sanitaryAlertRoutes.js';
 import farmRoutes from './routes/farmRoutes.js';
 import easyTransactRoutes from './routes/easyTransactRoutes.js';
+import settingsRoutes from './routes/settingsRoutes.js';
 import { sendContactFormEmail } from './services/emailService.js';
 
 // Load .env from server/ using absolute path so CWD doesn't matter
@@ -130,6 +131,7 @@ app.use('/api/iot', iotRoutes);
 app.use('/api/alerts/sanitary', sanitaryAlertRoutes);
 app.use('/api/farms', farmRoutes);
 app.use('/api/payment/easytransact', easyTransactRoutes);
+app.use('/api', settingsRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'Server is running', timestamp: new Date() });
