@@ -2,6 +2,21 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const detectCity = async (setter) => {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${coords.latitude}&lon=${coords.longitude}&format=json`,
+        { headers: { 'Accept-Language': 'fr' } }
+      );
+      const data = await res.json();
+      const city = data.address?.city || data.address?.town || data.address?.village || data.address?.county || '';
+      if (city) setter(city);
+    } catch {}
+  }, () => {});
+};
+
 const LANGUAGES = [
   { code: 'fr',  label: 'Français',  flag: '🇫🇷' },
   { code: 'ful', label: 'Fulfuldé',  flag: '🌍' },
@@ -245,8 +260,15 @@ export default function RegisterPage() {
               </select>
             </div>
 
-            <input value={formData.domicile} onChange={e => set('domicile', e.target.value)}
-              placeholder="Village / Ville de résidence" className="input-field" />
+            <div className="flex gap-2">
+              <input value={formData.domicile} onChange={e => { set('domicile', e.target.value); set('city', e.target.value); }}
+                placeholder="Village / Ville de résidence" className="input-field flex-1" />
+              <button type="button" title="Détecter ma ville"
+                onClick={() => detectCity(v => { set('domicile', v); set('city', v); })}
+                className="px-3 py-2 text-lg bg-green-50 border border-gray-300 rounded-lg hover:bg-green-100 transition">
+                📍
+              </button>
+            </div>
 
             {/* Farmer-specific */}
             {formData.role === 'farmer' && (
@@ -329,10 +351,17 @@ export default function RegisterPage() {
 
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Zone d'intervention</label>
-              <input value={formData.city} onChange={e => set('city', e.target.value)}
-                placeholder="Ville principale (ex: Yaoundé)" className="input-field mb-2" />
+              <div className="flex gap-2 mb-2">
+                <input value={formData.city} onChange={e => set('city', e.target.value)}
+                  placeholder="Ville principale (ex: Garoua)" className="input-field flex-1" />
+                <button type="button" title="Détecter ma ville"
+                  onClick={() => detectCity(v => set('city', v))}
+                  className="px-3 py-2 text-lg bg-green-50 border border-gray-300 rounded-lg hover:bg-green-100 transition">
+                  📍
+                </button>
+              </div>
               <input value={formData.zone} onChange={e => set('zone', e.target.value)}
-                placeholder="Région / zone couverte (ex: Centre, Est...)" className="input-field" />
+                placeholder="Région / zone couverte (ex: Nord, Adamaoua...)" className="input-field" />
             </div>
 
             <div>

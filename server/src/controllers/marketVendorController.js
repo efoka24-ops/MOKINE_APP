@@ -13,6 +13,17 @@ export const getVendors = async (req, res) => {
     let vendors = await db.market_fournisseurs.all?.() || [];
     vendors = vendors.filter(v => v.status === 'approved');
 
+    // Zone filtering: if caller has a city, show only vendors from the same city
+    const callerCity = req.user?.city || req.query.city;
+    if (callerCity) {
+      const normalize = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+      const nc = normalize(callerCity);
+      const zoneVendors = vendors.filter(v =>
+        normalize(v.city) === nc || normalize(v.ville) === nc || normalize(v.location) === nc
+      );
+      if (zoneVendors.length > 0) vendors = zoneVendors;
+    }
+
     if (search) {
       const q = search.toLowerCase();
       vendors = vendors.filter(v =>

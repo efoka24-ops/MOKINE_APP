@@ -44,7 +44,7 @@ export const SEEDS = {
       password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
       name: 'AgroVet Express', phone: '+237655000003', role: 'vendor',
       isVerified: true, businessName: 'AgroVet Express',
-      businessAddress: 'Douala, Cameroun', createdAt: new Date().toISOString(),
+      businessAddress: 'Garoua, Cameroun', createdAt: new Date().toISOString(),
     },
     {
       id: 'admin1', email: 'admin@mokine.com',

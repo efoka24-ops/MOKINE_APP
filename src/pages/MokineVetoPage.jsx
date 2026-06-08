@@ -191,7 +191,7 @@ export default function MokineVetoPage() {
       {/* Footer */}
       <footer className="py-8 px-4 bg-gray-900 text-gray-400 text-center text-sm">
         <p>© 2026 MokineVeto — Plateforme de santé animale connectée</p>
-        <p className="mt-1">Yaoundé, Cameroun · contact@mokineveto.cm</p>
+        <p className="mt-1">Garoua, Cameroun · infos@trugroup.cm</p>
       </footer>
     </div>
   );

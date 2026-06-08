@@ -3,14 +3,18 @@ import fr from './translations/fr.js';
 import ff from './translations/ff.js';
 import ha from './translations/ha.js';
 import wo from './translations/wo.js';
+import en from './translations/en.js';
+import ar from './translations/ar.js';
 
-const TRANSLATIONS = { fr, ff, ha, wo };
+const TRANSLATIONS = { fr, ff, ha, wo, en, ar };
 
 export const LANGUAGES = [
-  { code: 'fr', label: 'Français', flag: '🇫🇷', nativeName: 'Français' },
-  { code: 'ff', label: 'Fulfuldé', flag: '🌍', nativeName: 'Fulfulde' },
-  { code: 'ha', label: 'Haoussa', flag: '🌍', nativeName: 'Hausa' },
-  { code: 'wo', label: 'Wolof', flag: '🌍', nativeName: 'Wolof' }
+  { code: 'fr', label: 'Français',  flag: '🇫🇷', nativeName: 'Français', rtl: false },
+  { code: 'ff', label: 'Fulfuldé',  flag: '🌍',  nativeName: 'Fulfulde', rtl: false },
+  { code: 'ha', label: 'Haoussa',   flag: '🌍',  nativeName: 'Hausa',    rtl: false },
+  { code: 'wo', label: 'Wolof',     flag: '🌍',  nativeName: 'Wolof',    rtl: false },
+  { code: 'en', label: 'Anglais',   flag: '🇬🇧', nativeName: 'English',  rtl: false },
+  { code: 'ar', label: 'Arabe',     flag: '🌙',  nativeName: 'العربية',  rtl: true  },
 ];
 
 const I18nContext = createContext(null);
@@ -36,6 +40,9 @@ export const I18nProvider = ({ children }) => {
     if (TRANSLATIONS[newLang]) {
       setLang(newLang);
       localStorage.setItem('mokine_lang', newLang);
+      const isRtl = LANGUAGES.find(l => l.code === newLang)?.rtl;
+      document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+      document.documentElement.lang = newLang;
     }
   }, []);
 

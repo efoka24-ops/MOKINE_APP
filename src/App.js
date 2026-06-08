@@ -225,6 +225,26 @@ function Hero() {
 /* Reproduced sections after hero based on your second image */
 function ContentSections() {
     const navigate = useNavigate();
+    const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
+    const [contactStatus, setContactStatus] = useState('');
+
+    const handleContactSubmit = async (e) => {
+        e.preventDefault();
+        setContactStatus('loading');
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(contactForm),
+            });
+            const data = await res.json();
+            setContactStatus(res.ok ? 'success' : 'error');
+            if (res.ok) setContactForm({ name: '', email: '', subject: '', message: '' });
+        } catch {
+            setContactStatus('error');
+        }
+    };
+
     const steps = [
         { title: "Commander la Mokine Box", text: "Recevez votre Mokine Box contenant le collier connecté." },
         { title: "Installer le collier sur l'animal", text: "Fixez le collier sur l'animal pour un suivi en continu." },
@@ -630,18 +650,22 @@ function ContentSections() {
                     <div className="bg-white rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="md:col-span-1 bg-[#e6f6ea] p-6 rounded-lg">
                             <h4 className="font-bold">Informations</h4>
-                            <p className="mt-3 text-sm">Adresse: Douala - Cameroun</p>
-                            <p className="text-sm mt-2">Téléphone: +237 655 62 41 68</p>
-                            <p className="text-sm mt-2">Email: mokine@gmail.com</p>
+                            <p className="mt-3 text-sm">Adresse: Garoua, Cameroun</p>
+                            <p className="text-sm mt-2">Téléphone: 678758976</p>
+                            <p className="text-sm mt-2">Email: infos@trugroup.cm</p>
                         </div>
                         <div className="md:col-span-2">
                             <h4 className="font-bold">Envoyez-nous un message</h4>
-                            <form className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input className="border rounded p-3" placeholder="Nom" />
-                                <input className="border rounded p-3" placeholder="Email" />
-                                <input className="border rounded p-3 md:col-span-2" placeholder="Sujet" />
-                                <textarea className="border rounded p-3 md:col-span-2" placeholder="Votre message" rows={5} />
-                                <button className="bg-[#178A3B] text-white px-4 py-3 rounded-md md:col-span-2">Envoyer</button>
+                            <form onSubmit={handleContactSubmit} className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input className="border rounded p-3" placeholder="Nom" value={contactForm.name} onChange={e => setContactForm(f => ({ ...f, name: e.target.value }))} required />
+                                <input className="border rounded p-3" placeholder="Email" type="email" value={contactForm.email} onChange={e => setContactForm(f => ({ ...f, email: e.target.value }))} required />
+                                <input className="border rounded p-3 md:col-span-2" placeholder="Sujet" value={contactForm.subject} onChange={e => setContactForm(f => ({ ...f, subject: e.target.value }))} />
+                                <textarea className="border rounded p-3 md:col-span-2" placeholder="Votre message" rows={5} value={contactForm.message} onChange={e => setContactForm(f => ({ ...f, message: e.target.value }))} required />
+                                {contactStatus === 'success' && <p className="md:col-span-2 text-green-600 text-sm">✅ Message envoyé avec succès !</p>}
+                                {contactStatus === 'error' && <p className="md:col-span-2 text-red-500 text-sm">❌ Erreur lors de l'envoi. Réessayez.</p>}
+                                <button type="submit" disabled={contactStatus === 'loading'} className="bg-[#178A3B] text-white px-4 py-3 rounded-md md:col-span-2 disabled:opacity-60">
+                                    {contactStatus === 'loading' ? 'Envoi en cours...' : 'Envoyer'}
+                                </button>
                             </form>
                         </div>
                     </div>

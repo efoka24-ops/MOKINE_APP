@@ -1,0 +1,175 @@
+import nodemailer from 'nodemailer';
+
+const getTransporter = () => nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'mx-dc03.ewodi.net',
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  secure: process.env.SMTP_SECURE === 'true',
+  auth: {
+    user: process.env.SMTP_USER || 'infos@trugroup.cm',
+    pass: process.env.SMTP_PASS,
+  },
+  tls: { rejectUnauthorized: false },
+});
+
+const FROM = `"${process.env.SMTP_FROM_NAME || 'Mokine'}" <${process.env.SMTP_FROM_EMAIL || 'infos@trugroup.cm'}>`;
+const APP_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+const baseHtml = (content) => `
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{margin:0;padding:0;font-family:Arial,sans-serif;background:#f4f4f4;color:#333}
+  .wrap{max-width:600px;margin:32px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+  .header{background:#178A3B;padding:24px 32px;text-align:center}
+  .header h1{color:#fff;margin:0;font-size:22px}
+  .body{padding:32px}
+  .body p{line-height:1.7;margin:0 0 16px}
+  .btn{display:inline-block;margin:16px 0;padding:12px 28px;background:#178A3B;color:#fff;text-decoration:none;border-radius:8px;font-weight:bold}
+  .footer{background:#f9f9f9;padding:16px 32px;text-align:center;font-size:12px;color:#888;border-top:1px solid #eee}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header"><h1>🐄 Mokine</h1></div>
+  <div class="body">${content}</div>
+  <div class="footer">© ${new Date().getFullYear()} Mokine — CM TRU GROUP · Garoua, Cameroun · infos@trugroup.cm</div>
+</div>
+</body></html>`;
+
+const send = async ({ to, subject, html }) => {
+  try {
+    const transporter = getTransporter();
+    await transporter.sendMail({ from: FROM, to, subject, html });
+  } catch (err) {
+    console.error('[Email] Échec envoi à', to, '—', err.message);
+  }
+};
+
+// ── Welcome email after registration ──────────────────────────────────────
+export const sendWelcomeEmail = async (user) => {
+  const roleLabel = { farmer: 'Éleveur', veterinarian: 'Vétérinaire', vendor: 'Fournisseur' }[user.role] || user.role;
+  await send({
+    to: user.email,
+    subject: '🎉 Bienvenue sur Mokine !',
+    html: baseHtml(`
+      <p>Bonjour <strong>${user.name}</strong>,</p>
+      <p>Nous sommes ravis de vous accueillir sur <strong>Mokine</strong>, la plateforme de santé animale connectée.</p>
+      <p>Votre compte <strong>${roleLabel}</strong> a été créé avec succès.</p>
+      <p>Vous pouvez dès maintenant accéder à votre tableau de bord :</p>
+      <a href="${APP_URL}/dashboard" class="btn">Accéder à mon espace →</a>
+      <p>Si vous avez des questions, écrivez-nous à <a href="mailto:infos@trugroup.cm">infos@trugroup.cm</a>.</p>
+      <p>À bientôt,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
+// ── Farm invitation email ──────────────────────────────────────────────────
+export const sendFarmInvitationEmail = async ({ to, inviterName, farmName, inviteLink }) => {
+  await send({
+    to,
+    subject: `🐄 Invitation à rejoindre la ferme "${farmName}"`,
+    html: baseHtml(`
+      <p>Bonjour,</p>
+      <p><strong>${inviterName}</strong> vous invite à rejoindre la ferme <strong>${farmName}</strong> sur Mokine.</p>
+      <p>Cliquez sur le bouton ci-dessous pour accepter l'invitation :</p>
+      <a href="${APP_URL}${inviteLink}" class="btn">Rejoindre la ferme →</a>
+      <p>Ce lien est valable 7 jours. Si vous n'avez pas de compte, vous pouvez en créer un gratuitement.</p>
+      <p>À bientôt,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
+// ── Appointment confirmation ───────────────────────────────────────────────
+export const sendAppointmentEmail = async ({ to, userName, vetName, dateTime, reason }) => {
+  const date = new Date(dateTime).toLocaleString('fr-FR', { dateStyle: 'full', timeStyle: 'short' });
+  await send({
+    to,
+    subject: '📅 Rendez-vous vétérinaire confirmé',
+    html: baseHtml(`
+      <p>Bonjour <strong>${userName}</strong>,</p>
+      <p>Votre rendez-vous avec <strong>Dr. ${vetName}</strong> est confirmé.</p>
+      <p><strong>Date :</strong> ${date}<br><strong>Motif :</strong> ${reason}</p>
+      <a href="${APP_URL}/dashboard" class="btn">Voir mes rendez-vous →</a>
+      <p>À bientôt,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
+// ── Consultation status update ─────────────────────────────────────────────
+export const sendConsultationUpdateEmail = async ({ to, userName, status, vetName }) => {
+  const labels = { accepted: 'acceptée', refused: 'refusée', closed: 'terminée' };
+  const label = labels[status] || status;
+  await send({
+    to,
+    subject: `🩺 Consultation ${label}`,
+    html: baseHtml(`
+      <p>Bonjour <strong>${userName}</strong>,</p>
+      <p>Votre demande de consultation a été <strong>${label}</strong>${vetName ? ` par Dr. ${vetName}` : ''}.</p>
+      <a href="${APP_URL}/dashboard" class="btn">Voir ma consultation →</a>
+      <p>À bientôt,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
+// ── Order status email ─────────────────────────────────────────────────────
+export const sendOrderStatusEmail = async ({ to, userName, orderRef, status }) => {
+  const labels = { pending: 'reçue', confirmed: 'confirmée', shipped: 'expédiée', delivered: 'livrée', cancelled: 'annulée' };
+  const label = labels[status] || status;
+  await send({
+    to,
+    subject: `🛒 Commande #${orderRef} ${label}`,
+    html: baseHtml(`
+      <p>Bonjour <strong>${userName}</strong>,</p>
+      <p>Votre commande <strong>#${orderRef}</strong> a été <strong>${label}</strong>.</p>
+      <a href="${APP_URL}/dashboard" class="btn">Suivre ma commande →</a>
+      <p>À bientôt,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
+// ── Password reset email ───────────────────────────────────────────────────
+export const sendPasswordResetEmail = async ({ to, userName, resetLink }) => {
+  await send({
+    to,
+    subject: '🔐 Réinitialisation de votre mot de passe Mokine',
+    html: baseHtml(`
+      <p>Bonjour <strong>${userName}</strong>,</p>
+      <p>Nous avons reçu une demande de réinitialisation de votre mot de passe.</p>
+      <a href="${resetLink}" class="btn">Réinitialiser mon mot de passe →</a>
+      <p>Ce lien expire dans 1 heure. Si vous n'avez pas fait cette demande, ignorez cet email.</p>
+      <p>À bientôt,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
+// ── KYC status email ───────────────────────────────────────────────────────
+export const sendKycStatusEmail = async ({ to, userName, status, reason }) => {
+  const approved = status === 'approved';
+  await send({
+    to,
+    subject: `📋 Vérification KYC ${approved ? 'approuvée' : 'refusée'}`,
+    html: baseHtml(`
+      <p>Bonjour <strong>${userName}</strong>,</p>
+      <p>Votre vérification KYC a été <strong>${approved ? 'approuvée ✅' : 'refusée ❌'}</strong>.</p>
+      ${!approved && reason ? `<p><strong>Motif :</strong> ${reason}</p>` : ''}
+      ${!approved ? '<p>Vous pouvez soumettre à nouveau vos documents depuis votre espace.</p>' : '<p>Votre compte est maintenant pleinement actif.</p>'}
+      <a href="${APP_URL}/dashboard" class="btn">Accéder à mon espace →</a>
+      <p>À bientôt,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
+// ── Contact form (message reçu depuis le site) ─────────────────────────────
+export const sendContactFormEmail = async ({ senderName, senderEmail, subject, message }) => {
+  await send({
+    to: process.env.SMTP_FROM_EMAIL || 'infos@trugroup.cm',
+    subject: `[Mokine Contact] ${subject}`,
+    html: baseHtml(`
+      <p><strong>De :</strong> ${senderName} (${senderEmail})</p>
+      <p><strong>Sujet :</strong> ${subject}</p>
+      <p><strong>Message :</strong></p>
+      <p style="white-space:pre-wrap">${message}</p>
+    `),
+  });
+};

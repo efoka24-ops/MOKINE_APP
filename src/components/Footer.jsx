@@ -43,8 +43,8 @@ export default function Footer() {
 
         <div>
           <h5 className="font-semibold">Contact</h5>
-          <p className="mt-3 text-sm">mokine@gmail.com</p>
-          <p className="text-sm">+237 655 62 41 68</p>
+          <p className="mt-3 text-sm">infos@trugroup.cm</p>
+          <p className="text-sm">Garoua, Cameroun</p>
         </div>
       </div>
 

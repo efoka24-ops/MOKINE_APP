@@ -1,4 +1,5 @@
 import db from '../db/index.js';
+import { sendFarmInvitationEmail } from '../services/emailService.js';
 
 // GET /api/farms  — fermes du user (propriétaire ou membre)
 export const getFarms = async (req, res) => {
@@ -60,7 +61,16 @@ export const inviteMember = async (req, res) => {
       userId: null,
       createdAt: new Date().toISOString(),
     });
-    res.status(201).json({ message: 'Invitation envoyée', invitation, inviteLink: `/farm/join/${invitation.token}` });
+    const inviteLink = `/farm/join/${invitation.token}`;
+    if (email) {
+      sendFarmInvitationEmail({
+        to: email,
+        inviterName: req.user.name,
+        farmName: farm.name,
+        inviteLink,
+      }).catch(() => {});
+    }
+    res.status(201).json({ message: 'Invitation envoyée', invitation, inviteLink });
   } catch (e) { res.status(500).json({ error: e.message }); }
 };
 

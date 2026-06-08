@@ -31,6 +31,8 @@ import { getPublicApiPlans } from './controllers/admin/adminController.js';
 import iotRoutes from './routes/iotRoutes.js';
 import sanitaryAlertRoutes from './routes/sanitaryAlertRoutes.js';
 import farmRoutes from './routes/farmRoutes.js';
+import easyTransactRoutes from './routes/easyTransactRoutes.js';
+import { sendContactFormEmail } from './services/emailService.js';
 
 // Load .env from server/ using absolute path so CWD doesn't matter
 // override:true ensures server/.env wins over any root-level .env already loaded
@@ -127,9 +129,18 @@ app.get('/api/plans', getPublicApiPlans);
 app.use('/api/iot', iotRoutes);
 app.use('/api/alerts/sanitary', sanitaryAlertRoutes);
 app.use('/api/farms', farmRoutes);
+app.use('/api/payment/easytransact', easyTransactRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'Server is running', timestamp: new Date() });
+});
+
+// Contact form endpoint
+app.post('/api/contact', async (req, res) => {
+  const { name, email, subject, message } = req.body;
+  if (!name || !email || !message) return res.status(400).json({ error: 'Champs requis manquants' });
+  await sendContactFormEmail({ senderName: name, senderEmail: email, subject: subject || 'Contact', message });
+  res.json({ message: 'Message envoyé avec succès !' });
 });
 
 app.use((req, res) => {
