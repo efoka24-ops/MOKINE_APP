@@ -31,7 +31,7 @@ import { getPublicApiPlans } from './controllers/admin/adminController.js';
 import iotRoutes from './routes/iotRoutes.js';
 import sanitaryAlertRoutes from './routes/sanitaryAlertRoutes.js';
 import farmRoutes from './routes/farmRoutes.js';
-import easyTransactRoutes from './routes/easyTransactRoutes.js';
+import camooPaymentRoutes from './routes/camooPaymentRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import { sendContactFormEmail } from './services/emailService.js';
 
@@ -130,7 +130,7 @@ app.get('/api/plans', getPublicApiPlans);
 app.use('/api/iot', iotRoutes);
 app.use('/api/alerts/sanitary', sanitaryAlertRoutes);
 app.use('/api/farms', farmRoutes);
-app.use('/api/payment/easytransact', easyTransactRoutes);
+app.use('/api/payment/camoo', paymentLimiter, camooPaymentRoutes);
 app.use('/api', settingsRoutes);
 
 app.get('/api/health', (req, res) => {

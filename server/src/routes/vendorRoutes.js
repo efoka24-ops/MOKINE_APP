@@ -1,5 +1,6 @@
 import express from 'express';
 import * as vendorController from '../controllers/vendorController.js';
+import { generatePaymentReceiptPDF } from '../controllers/pdfController.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -29,5 +30,8 @@ router.post('/payment/:id/webhook', vendorController.confirmMobileMoneyWebhook);
 // Points de vente
 router.post('/sales-points', verifyToken, vendorController.createSalesPoint);
 router.get('/sales-points', verifyToken, vendorController.getSalesPoints);
+
+// Reçu de paiement PDF
+router.get('/payment-receipt/:paymentId', verifyToken, generatePaymentReceiptPDF);
 
 export default router;

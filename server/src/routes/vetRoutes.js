@@ -1,5 +1,6 @@
 import express from 'express';
 import * as vetController from '../controllers/vetController.js';
+import { generatePaymentReceiptPDF } from '../controllers/pdfController.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -42,5 +43,8 @@ router.post('/referral', verifyToken, vetController.referColleague);
 
 // Support / FAQ
 router.get('/support/faq', vetController.getSupportFAQ);
+
+// Reçu de paiement PDF
+router.get('/payment-receipt/:paymentId', verifyToken, generatePaymentReceiptPDF);
 
 export default router;

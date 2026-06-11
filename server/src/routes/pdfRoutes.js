@@ -9,4 +9,7 @@ router.get('/prescription/:id/verify', pdfController.verifyPrescription);
 // Alias for frontend API.js compatibility
 router.get('/verify/:id', pdfController.verifyPrescription);
 
+// Reçu de paiement (accessible à tous les rôles authentifiés)
+router.get('/payment-receipt/:paymentId', verifyToken, pdfController.generatePaymentReceiptPDF);
+
 export default router;

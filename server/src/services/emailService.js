@@ -160,6 +160,59 @@ export const sendKycStatusEmail = async ({ to, userName, status, reason }) => {
   });
 };
 
+// ── Reçu de paiement (cashout Camoo confirmé) ─────────────────────────────
+export const sendPaymentReceiptEmail = async ({ to, userName, amount, currency = 'XAF', network, transactionId, externalRef, planName, completedAt, paymentId }) => {
+  const date = completedAt
+    ? new Date(completedAt).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })
+    : new Date().toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
+  const pdfLink = paymentId ? `${APP_URL.replace('3000', '5000')}/api/pdf/payment-receipt/${paymentId}` : null;
+  await send({
+    to,
+    subject: `✅ Reçu de paiement — ${amount.toLocaleString('fr-FR')} ${currency}`,
+    html: baseHtml(`
+      <p>Bonjour <strong>${userName}</strong>,</p>
+      <p>Nous confirmons la réception de votre paiement. Voici votre reçu :</p>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr style="background:#f4f4f4"><td style="padding:10px 14px;font-weight:bold">Montant</td><td style="padding:10px 14px">${amount.toLocaleString('fr-FR')} ${currency}</td></tr>
+        ${planName ? `<tr><td style="padding:10px 14px;font-weight:bold">Abonnement</td><td style="padding:10px 14px">${planName}</td></tr>` : ''}
+        ${network  ? `<tr style="background:#f4f4f4"><td style="padding:10px 14px;font-weight:bold">Réseau</td><td style="padding:10px 14px;text-transform:capitalize">${network}</td></tr>` : ''}
+        <tr><td style="padding:10px 14px;font-weight:bold">Date</td><td style="padding:10px 14px">${date}</td></tr>
+        ${transactionId ? `<tr style="background:#f4f4f4"><td style="padding:10px 14px;font-weight:bold">Réf. transaction</td><td style="padding:10px 14px;font-family:monospace;font-size:12px">${transactionId}</td></tr>` : ''}
+        ${externalRef  ? `<tr><td style="padding:10px 14px;font-weight:bold">Réf. commande</td><td style="padding:10px 14px;font-family:monospace;font-size:12px">${externalRef}</td></tr>` : ''}
+      </table>
+      <p style="color:#178A3B;font-weight:bold">Votre abonnement est maintenant actif. 🎉</p>
+      <a href="${APP_URL}/dashboard" class="btn">Accéder à mon espace →</a>
+      ${pdfLink ? `
+      <div style="margin:20px 0;padding:16px;background:#f0faf4;border:1px solid #178A3B;border-radius:8px;text-align:center">
+        <p style="margin:0 0 10px;font-weight:bold;color:#178A3B">📄 Télécharger votre reçu en PDF</p>
+        <a href="${pdfLink}" style="display:inline-block;padding:10px 24px;background:#178A3B;color:#fff;text-decoration:none;border-radius:6px;font-weight:bold">
+          Télécharger le reçu PDF →
+        </a>
+      </div>` : ''}
+      <p>Conservez ce reçu pour vos archives. Pour toute question : <a href="mailto:infos@trugroup.cm">infos@trugroup.cm</a></p>
+      <p>Merci de votre confiance,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
+// ── Notification d'initiation de paiement ─────────────────────────────────
+export const sendPaymentInitiatedEmail = async ({ to, userName, amount, currency = 'XAF', phone, planName, externalRef }) => {
+  await send({
+    to,
+    subject: `⏳ Paiement en attente — ${amount.toLocaleString('fr-FR')} ${currency}`,
+    html: baseHtml(`
+      <p>Bonjour <strong>${userName}</strong>,</p>
+      <p>Une demande de paiement de <strong>${amount.toLocaleString('fr-FR')} ${currency}</strong> a été envoyée sur votre téléphone <strong>${phone}</strong>.</p>
+      ${planName ? `<p><strong>Abonnement :</strong> ${planName}</p>` : ''}
+      <p style="background:#fff8e1;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:4px">
+        📱 Veuillez valider la demande sur votre téléphone pour confirmer le paiement.
+      </p>
+      ${externalRef ? `<p style="font-size:12px;color:#888">Réf : <code>${externalRef}</code></p>` : ''}
+      <p>À bientôt,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
 // ── Contact form (message reçu depuis le site) ─────────────────────────────
 export const sendContactFormEmail = async ({ senderName, senderEmail, subject, message }) => {
   await send({

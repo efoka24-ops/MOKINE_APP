@@ -139,6 +139,13 @@ export const payments = {
   getCommercialDashboard: (apiKey) => apiClient.get('/payments/commercial/dashboard', { headers: { 'X-API-Key': apiKey } }),
 };
 
+// ========== CAMOO PAYMENT ENDPOINTS ==========
+export const camooPayment = {
+  cashout: (data) => apiClient.post('/payment/camoo/cashout', data),
+  verify: (id) => apiClient.get('/payment/camoo/verify', { params: { id } }),
+  getAccount: () => apiClient.get('/payment/camoo/account'),
+};
+
 // ========== IA ENDPOINTS ==========
 export const ia = {
   getQuestionnaire: () => apiClient.get('/ia/questionnaire'),
@@ -273,6 +280,12 @@ export const smsAuth = {
 export const pdf = {
   getPrescription: (id) => `${API_BASE_URL}/pdf/prescription/${id}`,
   verifyPrescription: (id) => apiClient.get(`/pdf/verify/${id}`),
+  // Reçu de paiement — URL directe (téléchargement navigateur)
+  getPaymentReceiptUrl: (paymentId) => `${API_BASE_URL}/pdf/payment-receipt/${paymentId}`,
+  // Endpoints par rôle
+  getVetReceiptUrl:    (paymentId) => `${API_BASE_URL}/vet/payment-receipt/${paymentId}`,
+  getFarmerReceiptUrl: (paymentId) => `${API_BASE_URL}/payments/receipt/${paymentId}`,
+  getVendorReceiptUrl: (paymentId) => `${API_BASE_URL}/vendor/payment-receipt/${paymentId}`,
 };
 
 // ========== VET ENDPOINTS ==========

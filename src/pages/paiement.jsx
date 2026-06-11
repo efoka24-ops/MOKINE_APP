@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CreditCard, Lock, ArrowRight, ArrowLeft, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { payments as paymentsAPI } from '../API';
+import { payments as paymentsAPI, camooPayment as camooAPI } from '../API';
 import { useAuth } from '../context/AuthContext';
 
 const COUNTRIES = [
@@ -20,9 +20,10 @@ export function PaymentPage() {
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [form, setForm] = useState({ payorName: user?.name || '', phoneNumber: '', country: 'CM', agreeTerms: false });
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(null); // 'success' | 'error' | 'redirect'
+  const [status, setStatus] = useState(null); // 'pending' | 'success' | 'error'
   const [errorMsg, setErrorMsg] = useState('');
-  const [checkoutUrl, setCheckoutUrl] = useState('');
+  const [camooTxId, setCamooTxId] = useState('');
+  const [vendorRef, setVendorRef] = useState('');
 
   useEffect(() => {
     fetch(`/api/subscription-plans/${planSlug || 'standard'}`)
@@ -44,49 +45,46 @@ export function PaymentPage() {
 
     const countryObj = COUNTRIES.find(c => c.code === form.country);
     const fullPhone = `${countryObj.prefix}${form.phoneNumber.replace(/^0+/, '')}`;
-    const vendorRef = `MOKINE-${plan.slug.toUpperCase()}-${Date.now()}`;
-    const frontendUrl = window.location.origin;
+    const ref = `MOKINE-${plan.slug.toUpperCase()}-${Date.now()}`;
 
     try {
-      // 1. Try Easy Transact checkout link (preferred)
-      const etRes = await fetch('/api/payment/easytransact/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
-        body: JSON.stringify({
-          description: `Abonnement Mokine ${plan.name}`,
-          vendor_reference: vendorRef,
-          amount: String(plan.price),
-          success_url: `${frontendUrl}/payment/success?plan=${plan.slug}&ref=${vendorRef}`,
-          cancel_url: `${frontendUrl}/payment/cancel`,
-        }),
-      });
-
-      if (etRes.ok) {
-        const etData = await etRes.json();
-        // Easy Transact returns a checkout_url
-        if (etData.checkout_url || etData.payment_url || etData.redirect_url) {
-          const url = etData.checkout_url || etData.payment_url || etData.redirect_url;
-          setCheckoutUrl(url);
-          setStatus('redirect');
-          return;
-        }
-      }
-
-      // 2. Fallback: record payment locally (Camoo or direct)
-      await paymentsAPI.process({
+      const { data } = await camooAPI.cashout({
         amount: plan.price,
-        paymentMethod: 'mobile_money',
-        payorName: form.payorName,
-        phone: fullPhone,
-        country: form.country,
+        phone_number: fullPhone,
         plan: plan.slug,
-        currency: plan.currency || 'XAF',
-        vendor_reference: vendorRef,
+        external_reference: ref,
+        shopping_cart_details: {
+          customerName: form.payorName,
+          description: `Abonnement Mokine ${plan.name}`,
+          langKey: 'fr',
+        },
       });
-      setStatus('success');
+
+      const txId = data?.cashOut?.id;
+      setCamooTxId(txId || '');
+      setVendorRef(ref);
+      setStatus('pending');
+
+      // Redirect to success page so user knows to validate on phone
+      navigate(`/payment/success?plan=${plan.slug}&ref=${ref}${txId ? `&id=${txId}` : ''}`);
     } catch (err) {
-      setErrorMsg(err.response?.data?.error || 'Erreur lors du paiement. Veuillez réessayer.');
-      setStatus('error');
+      // Fallback: record payment locally if Camoo fails
+      try {
+        await paymentsAPI.process({
+          amount: plan.price,
+          paymentMethod: 'mobile_money',
+          payorName: form.payorName,
+          phone: fullPhone,
+          country: form.country,
+          plan: plan.slug,
+          currency: plan.currency || 'XAF',
+          vendor_reference: ref,
+        });
+        setStatus('success');
+      } catch {
+        setErrorMsg(err.response?.data?.error || 'Erreur lors du paiement. Veuillez réessayer.');
+        setStatus('error');
+      }
     } finally {
       setLoading(false);
     }
@@ -102,25 +100,6 @@ export function PaymentPage() {
         <div className="bg-white rounded-2xl shadow p-8 text-center">
           <p className="text-red-500 mb-4">Plan introuvable.</p>
           <button onClick={() => navigate('/abonnement')} className="text-green-600 underline">Voir les plans</button>
-        </div>
-      </div>
-    );
-  }
-
-  // Redirect to Easy Transact checkout page
-  if (status === 'redirect' && checkoutUrl) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-        <div className="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full text-center">
-          <div className="text-5xl mb-4">💳</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Redirection vers le paiement</h2>
-          <p className="text-gray-600 mb-6">Vous allez être redirigé vers la page de paiement sécurisée Easy Transact.</p>
-          <a href={checkoutUrl} className="block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl mb-3">
-            Procéder au paiement →
-          </a>
-          <button onClick={() => navigate('/abonnement')} className="text-sm text-gray-500 hover:text-gray-700">
-            ← Retour aux abonnements
-          </button>
         </div>
       </div>
     );
@@ -219,7 +198,7 @@ export function PaymentPage() {
         </form>
 
         <p className="text-center text-xs text-gray-400 mt-4 flex items-center justify-center gap-1">
-          <Lock className="w-3 h-3" /> Paiement sécurisé via Easy Transact
+          <Lock className="w-3 h-3" /> Paiement sécurisé via Camoo
         </p>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import express from 'express';
 import * as paymentController from '../controllers/paymentController.js';
+import { generatePaymentReceiptPDF } from '../controllers/pdfController.js';
 import { verifyToken, verifyApiKey, requireAdmin } from '../middleware/authMiddleware.js';
 import { validate, paymentRules } from '../middleware/validation.js';
 
@@ -17,5 +18,8 @@ router.get('/commercial/webhook',   paymentController.camooWebhook);
 router.get('/commercial/dashboard', verifyApiKey, paymentController.getCommercialDashboard);
 // Admin: Camoo account balance (requires valid admin JWT)
 router.get('/commercial/balance',   verifyToken, requireAdmin, paymentController.getCamooBalance);
+
+// Reçu de paiement PDF (éleveur / farmer)
+router.get('/receipt/:paymentId', verifyToken, generatePaymentReceiptPDF);
 
 export default router;

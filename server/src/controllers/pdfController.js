@@ -116,6 +116,132 @@ export const generatePrescriptionPDF = async (req, res) => {
   }
 };
 
+// ── Reçu de paiement PDF ──────────────────────────────────────────────────
+export const generatePaymentReceiptPDF = async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+
+    // Chercher par id ou external_reference
+    let payment = await db.payments.findById(paymentId).catch(() => null);
+    if (!payment) {
+      const records = await db.payments.filter(p => p.external_reference === paymentId || p.camooId === paymentId);
+      payment = records[0];
+    }
+    if (!payment) return res.status(404).json({ error: 'Paiement non trouvé' });
+
+    // Vérification d'appartenance (admin peut tout voir)
+    if (req.user.role !== 'admin' && payment.userId !== req.user.id) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    const user = await db.users.findById(payment.userId).catch(() => null);
+    const planRows = payment.plan ? await db.subscription_plans.filter(p => p.slug === payment.plan).catch(() => []) : [];
+    const planName = planRows[0]?.name || payment.plan || '—';
+
+    const date = payment.completedAt
+      ? new Date(payment.completedAt).toLocaleString('fr-FR', { dateStyle: 'full', timeStyle: 'short' })
+      : new Date(payment.createdAt).toLocaleString('fr-FR', { dateStyle: 'full', timeStyle: 'short' });
+
+    const GREEN = '#178A3B';
+    const DARK  = '#1a1a1a';
+    const GREY  = '#555555';
+    const LGREY = '#f5f5f5';
+
+    const doc = new PDFDocument({ margin: 50, size: 'A4' });
+    const chunks = [];
+    doc.on('data', c => chunks.push(c));
+    doc.on('end', () => {
+      const buf = Buffer.concat(chunks);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="recu_mokine_${payment.id}.pdf"`);
+      res.setHeader('Content-Length', buf.length);
+      res.send(buf);
+    });
+
+    const W = doc.page.width;
+
+    // ── Header ────────────────────────────────────────────────
+    doc.rect(0, 0, W, 90).fill(GREEN);
+    doc.fill('#fff').fontSize(24).font('Helvetica-Bold')
+       .text('🐄 MOKINE', 50, 18, { align: 'center' });
+    doc.fontSize(10).font('Helvetica')
+       .text('Plateforme de Santé Animale Connectée — CM TRU GROUP', 50, 50, { align: 'center' })
+       .text('infos@trugroup.cm  |  Garoua, Cameroun', 50, 65, { align: 'center' });
+
+    doc.rect(0, 90, W, 4).fill(GREEN);
+
+    // ── Titre reçu ────────────────────────────────────────────
+    doc.fill(GREEN).fontSize(20).font('Helvetica-Bold')
+       .text('REÇU DE PAIEMENT', 50, 115, { align: 'center' });
+
+    const statusLabel = payment.status === 'completed' ? '✅ CONFIRMÉ' : '⏳ EN ATTENTE';
+    const statusColor = payment.status === 'completed' ? GREEN : '#f59e0b';
+    doc.fill(statusColor).fontSize(12).font('Helvetica-Bold')
+       .text(statusLabel, 50, 142, { align: 'center' });
+
+    doc.moveTo(50, 165).lineTo(W - 50, 165).strokeColor('#dddddd').lineWidth(1).stroke();
+
+    // ── Montant mis en avant ──────────────────────────────────
+    doc.rect(50, 178, W - 100, 70).fill(LGREY).stroke('#e0e0e0');
+    doc.fill(GREEN).fontSize(32).font('Helvetica-Bold')
+       .text(`${(payment.amount || 0).toLocaleString('fr-FR')} ${payment.currency || 'XAF'}`, 50, 190, { align: 'center' });
+    if (payment.fees) {
+      doc.fill(GREY).fontSize(10).font('Helvetica')
+         .text(`Frais : ${payment.fees} ${payment.currency || 'XAF'}  |  Net reçu : ${(payment.amount - payment.fees).toLocaleString('fr-FR')} ${payment.currency || 'XAF'}`, 50, 232, { align: 'center' });
+    }
+
+    // ── Tableau des détails ───────────────────────────────────
+    let y = 270;
+    const rows = [
+      ['Abonnement',       planName],
+      ['Réseau',           (payment.network || '—').toUpperCase()],
+      ['Téléphone',        payment.phone || '—'],
+      ['Méthode',          payment.paymentMethod === 'camoo' ? 'Mobile Money (Camoo)' : payment.paymentMethod || '—'],
+      ['Date',             date],
+      ['Réf. transaction', payment.camooId || '—'],
+      ['Réf. commande',    payment.external_reference || payment.id],
+    ];
+
+    rows.forEach(([label, value], i) => {
+      const bg = i % 2 === 0 ? '#ffffff' : LGREY;
+      doc.rect(50, y, W - 100, 26).fill(bg).stroke('#e8e8e8');
+      doc.fill(GREY).fontSize(10).font('Helvetica-Bold').text(label, 65, y + 8);
+      doc.fill(DARK).fontSize(10).font('Helvetica').text(String(value), 250, y + 8, { width: W - 310 });
+      y += 26;
+    });
+
+    // ── Titulaire ─────────────────────────────────────────────
+    y += 20;
+    doc.moveTo(50, y).lineTo(W - 50, y).strokeColor('#dddddd').lineWidth(1).stroke();
+    y += 14;
+    doc.fill(GREEN).fontSize(12).font('Helvetica-Bold').text('TITULAIRE', 50, y);
+    y += 18;
+    doc.fill(DARK).fontSize(11).font('Helvetica')
+       .text(user?.name || '—', 50, y)
+       .text(user?.email || '—', 50, y + 16)
+       .text(user?.phone || '—', 50, y + 32);
+
+    // ── Mention légale ────────────────────────────────────────
+    y += 70;
+    doc.rect(50, y, W - 100, 42).fill('#e8f5e9').stroke(GREEN);
+    doc.fill(GREEN).fontSize(10).font('Helvetica-Bold')
+       .text('Ce reçu constitue une preuve de paiement officielle.', 65, y + 8);
+    doc.fill(GREY).fontSize(9).font('Helvetica')
+       .text('Conservez ce document pour vos archives. Pour toute réclamation : infos@trugroup.cm', 65, y + 24);
+
+    // ── Footer ────────────────────────────────────────────────
+    doc.rect(0, doc.page.height - 45, W, 45).fill('#f9f9f9');
+    doc.moveTo(0, doc.page.height - 45).lineTo(W, doc.page.height - 45).strokeColor('#e0e0e0').stroke();
+    doc.fill('#aaaaaa').fontSize(8).font('Helvetica')
+       .text(`Mokine © ${new Date().getFullYear()} — CM TRU GROUP · Garoua, Cameroun`, 50, doc.page.height - 32, { align: 'center' })
+       .text(`Document généré le ${new Date().toLocaleString('fr-FR')}`, 50, doc.page.height - 18, { align: 'center' });
+
+    doc.end();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // GET /api/pdf/prescription/:id/verify — vérifier authenticité
 export const verifyPrescription = async (req, res) => {
   try {

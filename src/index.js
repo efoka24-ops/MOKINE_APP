@@ -12,6 +12,8 @@ import { Ia } from './pages/Ia';
 import LoginPage from './pages/login';
 import { SubscriptionPlans } from './pages/abonnement';
 import { PaymentPage } from './pages/paiement';
+import { PaymentSuccess } from './pages/PaymentSuccess';
+import { PaymentCancel } from './pages/PaymentCancel';
 import Priere from './pages/visioconference';
 import Dashboard from './pages/Dashboard';
 import RendezVous from './pages/RendezVous';
@@ -88,6 +90,8 @@ root.render(
         <Route path='/ia/:plan' element={ <Ia />}/>
         <Route path='/abonnement' element={ <SubscriptionPlans />}/>
         <Route path='/paiement/:plan' element={ <PaymentPage />}/>
+        <Route path='/payment/success' element={ <PaymentSuccess />}/>
+        <Route path='/payment/cancel' element={ <PaymentCancel />}/>
         <Route path='/visio' element={ <Priere />}/>
         <Route path='/login' element={ <LoginPage />}/>
         <Route path='/register' element={ <Register />}/>
