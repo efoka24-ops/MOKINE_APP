@@ -132,11 +132,6 @@ export default function LoginPage() {
           {/* EMAIL MODE */}
           {mode === 'email' && (
             <>
-              <div className="mt-3 bg-green-50 border border-green-200 text-green-700 text-xs px-3 py-2 rounded-lg">
-                <strong>Comptes de test:</strong><br />
-                farmer@mokine.com | vet@mokine.com | vendor@mokine.com | admin@mokine.com<br />
-                <em>Mot de passe: password</em>
-              </div>
               <form className="mt-4 space-y-3" onSubmit={handleSubmit}>
                 <input
                   name="email" type="email" autoComplete="email" required

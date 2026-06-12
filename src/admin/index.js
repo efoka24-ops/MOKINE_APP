@@ -4,6 +4,7 @@ export { default as VetoModule } from './pages/VetoModule.jsx';
 export { default as BoxModule } from './pages/BoxModule.jsx';
 export { default as MarketModule } from './pages/MarketModule.jsx';
 export { default as LabModule } from './pages/LabModule.jsx';
+export { default as FieldModule } from './pages/FieldModule.jsx';
 export { default as SystemModule } from './pages/SystemModule.jsx';
 
 // Legacy page exports (kept for backward compat, redirect to new modules)
