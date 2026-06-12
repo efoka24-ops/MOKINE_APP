@@ -22,5 +22,21 @@
     "country": "SN",
     "status": "completed",
     "transactionDate": "2026-05-08T12:23:14.226Z"
+  },
+  {
+    "id": "MOKINE-STANDARD-1781005489361",
+    "camooId": "19a3246b-606d-4c37-987d-0205cfab29e3",
+    "userId": "1780932181773",
+    "plan": "standard",
+    "amount": 100,
+    "phone": "+237691227149",
+    "network": "orange",
+    "external_reference": "MOKINE-STANDARD-1781005489361",
+    "status": "completed",
+    "paymentMethod": "camoo",
+    "currency": "XAF",
+    "createdAt": "2026-06-09T11:44:54.412Z",
+    "completedAt": "2026-06-09T11:48:25.711Z",
+    "updatedAt": "2026-06-09T11:48:25.711Z"
   }
 ]

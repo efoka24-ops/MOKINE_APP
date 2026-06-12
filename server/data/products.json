@@ -85,5 +85,20 @@
     "isActive": true,
     "createdAt": "2026-05-08T11:02:06.599Z",
     "updatedAt": "2026-06-08T13:44:12.227Z"
+  },
+  {
+    "id": "1781006211438",
+    "vendorId": "3",
+    "vendorName": "Vendeur",
+    "name": "test",
+    "category": "medicine",
+    "description": "TEST",
+    "price": 100,
+    "unit": "flacon",
+    "stock": "2",
+    "imageUrl": null,
+    "isActive": true,
+    "createdAt": "2026-06-09T11:56:51.438Z",
+    "updatedAt": "2026-06-09T11:57:20.649Z"
   }
 ]

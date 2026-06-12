@@ -282,5 +282,43 @@
     "farmCategories": [],
     "farmRole": "",
     "createdAt": "2026-06-08T13:47:49.076Z"
+  },
+  {
+    "id": "1780932181773",
+    "email": "emm.foka@gmail.com",
+    "password": "$2a$10$0y9osmp9ViswiXUTIR413.jyiYBhfYA71vzbCrIiTE8kkZwViUDHC",
+    "name": "Ziegoube FOKA Emmanuel",
+    "phone": "67875897654",
+    "role": "farmer",
+    "isVerified": true,
+    "farmName": "",
+    "licenseNumber": "",
+    "specialization": "",
+    "ovn_number": "",
+    "businessName": "",
+    "language": "fr",
+    "zone": "",
+    "city": "GAROUA",
+    "languages": [],
+    "transport": [],
+    "availableDays": [],
+    "availableFrom": "08:00",
+    "availableTo": "18:00",
+    "dob": "2026-06-17",
+    "gender": "male",
+    "domicile": "GAROUA",
+    "farmCategories": [
+      "cattle",
+      "sheep",
+      "goat",
+      "chicken",
+      "pig",
+      "fish"
+    ],
+    "farmRole": "owner",
+    "createdAt": "2026-06-08T15:23:01.773Z",
+    "updatedAt": "2026-06-09T11:48:25.713Z",
+    "subscriptionPlan": "standard",
+    "subscriptionExpiry": "2026-07-09T11:48:25.713Z"
   }
 ]

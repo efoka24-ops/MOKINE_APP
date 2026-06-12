@@ -54,6 +54,7 @@
       "react-app/jest"
     ]
   },
+  "proxy": "http://localhost:5000",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -67,6 +68,7 @@
     ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.2.1",
     "playwright": "^1.60.0",

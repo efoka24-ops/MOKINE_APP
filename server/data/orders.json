@@ -16,12 +16,13 @@
     "deliveryAddress": "Route Rufisque km12, Dakar",
     "paymentMethod": "mobile_money",
     "paymentPhone": "",
-    "paymentRef": null,
+    "paymentRef": "OM-1781006279316-H5SD4J",
     "status": "confirmed",
-    "paymentStatus": "paid",
+    "paymentStatus": "awaiting_confirmation",
     "createdAt": "2026-05-08T11:02:45.706Z",
     "paidAt": "2026-05-08T11:03:00.268Z",
-    "updatedAt": "2026-05-08T11:03:00.268Z"
+    "updatedAt": "2026-06-09T11:57:59.316Z",
+    "paymentProvider": "orange_money"
   },
   {
     "id": "1780919043416",
