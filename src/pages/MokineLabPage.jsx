@@ -127,7 +127,7 @@ function ScanSection() {
             🧬 Propulsé par Tebe IA v0.3
           </div>
           <h2 className="text-3xl font-extrabold text-gray-900 mb-3">{t('lab.scan_title')}</h2>
-          <p className="text-gray-500 max-w-lg mx-auto">Gratuit, sans compte requis. Résultat en moins de 3 secondes.</p>
+          <p className="text-gray-500 max-w-lg mx-auto">Réservé aux membres Mokine. Résultat en moins de 3 secondes.</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg border border-green-100 overflow-hidden">
@@ -633,6 +633,153 @@ function ModelTransparency({ stats }) {
   );
 }
 
+// ─── Landing gate pour visiteurs non connectés ───────────────────────────────
+function LabLandingGate({ navigate, collected, target, pct }) {
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm"
+              style={{ background: PRIMARY }}>M</div>
+            <span className="font-bold text-gray-800 text-lg">
+              Mokine<span style={{ color: PRIMARY }}>Lab</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <a href="/mokineveto" className="text-sm text-gray-500 hover:text-green-600 transition hidden sm:block">
+              MokineVeto →
+            </a>
+            <button onClick={() => navigate('/login')}
+              className="text-sm text-gray-600 hover:text-green-700 font-medium transition">
+              Se connecter
+            </button>
+            <button onClick={() => navigate('/register')}
+              className="px-4 py-2 text-white text-sm rounded-lg font-semibold transition"
+              style={{ background: PRIMARY }}>
+              Créer un compte
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="pt-32 pb-20 px-4"
+        style={{ background: `linear-gradient(135deg, ${PRIMARY_L} 0%, #ffffff 50%, ${PRIMARY_L} 100%)` }}>
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full mb-6"
+            style={{ background: PRIMARY_B, color: PRIMARY_D }}>
+            🧬 Intelligence Artificielle Vétérinaire
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5 leading-tight">
+            Diagnostiquez vos animaux<br />
+            <span style={{ color: PRIMARY }}>grâce à l'IA Tebe</span>
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
+            MokineLab est la plateforme d'IA vétérinaire de Mokine. Scan photo, questionnaire symptômes,
+            catalogue de pathologies et contribution au dataset — réservés aux membres Mokine.
+          </p>
+
+          {/* Stats rapides */}
+          <div className="flex justify-center gap-8 mb-10 flex-wrap">
+            {[
+              { value: `${collected}+`, label: 'Images dataset' },
+              { value: '7',             label: 'Maladies détectables' },
+              { value: `${pct}%`,       label: 'Objectif v1.0 atteint' },
+            ].map(s => (
+              <div key={s.label} className="text-center">
+                <p className="text-2xl font-extrabold" style={{ color: PRIMARY }}>{s.value}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA principal */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button onClick={() => navigate('/register')}
+              className="px-10 py-4 text-white font-bold rounded-xl shadow-lg text-base transition-all"
+              style={{ background: `linear-gradient(135deg, ${PRIMARY}, ${PRIMARY_D})`, boxShadow: `0 8px 25px ${PRIMARY}50` }}>
+              Créer mon compte gratuit →
+            </button>
+            <button onClick={() => navigate('/login')}
+              className="px-10 py-4 font-semibold rounded-xl border-2 text-base transition-all hover:bg-green-50"
+              style={{ borderColor: PRIMARY, color: PRIMARY }}>
+              J'ai déjà un compte
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Fonctionnalités (preview) */}
+      <section className="py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-800 mb-3">Ce qui vous attend dans MokineLab</h2>
+            <p className="text-gray-500 max-w-xl mx-auto">
+              Créez votre compte Mokine pour débloquer toutes les fonctionnalités
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {FEATURES.map(f => (
+              <div key={f.title}
+                className="bg-white border border-gray-100 rounded-xl p-6 hover:shadow-md hover:border-green-200 transition-all relative">
+                <div className="absolute top-3 right-3">
+                  <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-green-100 text-green-700">Membres</span>
+                </div>
+                <div className="text-3xl mb-3">{f.icon}</div>
+                <h3 className="font-semibold text-gray-800 mb-2">{f.title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Comment accéder */}
+      <section className="py-16 px-4 bg-gray-50">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-800 mb-12">Comment accéder à MokineLab ?</h2>
+          <div className="grid sm:grid-cols-3 gap-8">
+            {[
+              { step: '1', icon: '📝', title: 'Créez votre compte', desc: 'Inscrivez-vous sur Mokine en 2 minutes avec votre numéro de téléphone ou email.' },
+              { step: '2', icon: '✅', title: 'Validez votre profil', desc: 'Renseignez votre type d\'exploitation et vos animaux pour personnaliser MokineLab.' },
+              { step: '3', icon: '🧬', title: 'Accédez à MokineLab', desc: 'Scan IA, questionnaire symptômes, catalogue de maladies — tout est débloqué.' },
+            ].map(s => (
+              <div key={s.step} className="text-center">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4 text-white"
+                  style={{ background: PRIMARY }}>{s.step}</div>
+                <div className="text-3xl mb-2">{s.icon}</div>
+                <h3 className="font-semibold text-gray-800 mb-2">{s.title}</h3>
+                <p className="text-sm text-gray-500">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => navigate('/register')}
+            className="mt-10 px-10 py-4 text-white font-bold rounded-xl text-base transition-all"
+            style={{ background: PRIMARY }}>
+            Commencer maintenant →
+          </button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 px-4 bg-gray-900 text-gray-400 text-center text-sm">
+        <p className="font-semibold text-white mb-1">🧬 MokineLab — Intelligence Artificielle Vétérinaire</p>
+        <p>Plateforme réservée aux membres Mokine · Garoua, Cameroun</p>
+        <p className="mt-2">
+          <a href="/mokineveto" className="hover:text-green-400 transition">MokineVeto</a>
+          <span className="mx-2">·</span>
+          <a href="/" className="hover:text-white transition">Accueil Mokine</a>
+          <span className="mx-2">·</span>
+          <span>infos@trugroup.cm</span>
+        </p>
+        <p className="mt-2 text-xs text-gray-600">© {new Date().getFullYear()} Mokine · MokineLab</p>
+      </footer>
+    </div>
+  );
+}
+
 // ─── Page principale ──────────────────────────────────────────────────────────
 export default function MokineLabPage() {
   const navigate = useNavigate();
@@ -647,6 +794,10 @@ export default function MokineLabPage() {
   const collected = stats?.dataset?.collected || 847;
   const target    = stats?.dataset?.target || 1000;
   const pct       = ((collected / target) * 100).toFixed(1);
+
+  if (!isAuthenticated) {
+    return <LabLandingGate navigate={navigate} collected={collected} target={target} pct={pct} />;
+  }
 
   return (
     <div className="min-h-screen bg-white">
