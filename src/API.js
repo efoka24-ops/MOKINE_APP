@@ -70,7 +70,7 @@ export const consultations = {
   getById: (id) => apiClient.get(`/consultations/${id}`),
   create: (data) => apiClient.post('/consultations', data),
   update: (id, data) => apiClient.put(`/consultations/${id}`, data),
-  accept: (id, data = {}) => apiClient.patch(`/consultations/${id}/accept`, data),
+  accept: (id) => apiClient.patch(`/consultations/${id}/accept`),
   sendMessage: (id, data) => apiClient.post(`/consultations/${id}/messages`, data),
   close: (id, data) => apiClient.patch(`/consultations/${id}/close`, data),
   getPrescriptions: () => apiClient.get('/consultations/prescriptions'),
@@ -123,27 +123,11 @@ export const notifications = {
   delete: (id) => apiClient.delete(`/notifications/${id}`),
 };
 
-// ========== PUBLIC ENDPOINTS (no auth required) ==========
-export const publicApi = {
-  getPlans: () => apiClient.get('/plans'),
-};
-
 // ========== PAYMENTS ENDPOINTS ==========
 export const payments = {
   process: (data) => apiClient.post('/payments/process', data),
   getHistory: () => apiClient.get('/payments/history'),
   refund: (data) => apiClient.post('/payments/refund', data),
-  // Commercial API subscriptions
-  initiateCommercial: (data) => apiClient.post('/payments/commercial/initiate', data),
-  verifyCommercial: (subscriptionId) => apiClient.get('/payments/commercial/verify', { params: { subscriptionId } }),
-  getCommercialDashboard: (apiKey) => apiClient.get('/payments/commercial/dashboard', { headers: { 'X-API-Key': apiKey } }),
-};
-
-// ========== CAMOO PAYMENT ENDPOINTS ==========
-export const camooPayment = {
-  cashout: (data) => apiClient.post('/payment/camoo/cashout', data),
-  verify: (id) => apiClient.get('/payment/camoo/verify', { params: { id } }),
-  getAccount: () => apiClient.get('/payment/camoo/account'),
 };
 
 // ========== IA ENDPOINTS ==========
@@ -220,14 +204,6 @@ export const admin = {
   approveContribution: (id) => apiClient.patch(`/admin/lab/contributions/${id}/approve`),
   rejectContribution: (id, reason) => apiClient.patch(`/admin/lab/contributions/${id}/reject`, { reason }),
 
-  // ── Plans API (admin) ─────────────────────────────────────────────────────
-  getApiPlans: () => apiClient.get('/admin/lab/plans'),
-  createApiPlan: (data) => apiClient.post('/admin/lab/plans', data),
-  updateApiPlan: (id, data) => apiClient.put(`/admin/lab/plans/${id}`, data),
-  toggleApiPlan: (id) => apiClient.patch(`/admin/lab/plans/${id}/toggle`),
-  deleteApiPlan: (id) => apiClient.delete(`/admin/lab/plans/${id}`),
-  getApiSubscriptions: () => apiClient.get('/admin/lab/subscriptions'),
-
   // ── MokineField ───────────────────────────────────────────────────────────
   getFarms: () => apiClient.get('/admin/field/farms'),
   getFarmMembers: () => apiClient.get('/admin/field/members'),
@@ -248,10 +224,6 @@ export const admin = {
 
   getSystemSettings: () => apiClient.get('/admin/system/settings'),
   updateSystemSettings: (data) => apiClient.put('/admin/system/settings', data),
-  getDatabaseBackups: () => apiClient.get('/admin/system/database/backups'),
-  resetDatabase: (data) => apiClient.post('/admin/system/database/reset', data),
-  restoreDatabase: (snapshotId, data = {}) => apiClient.post(`/admin/system/database/restore/${snapshotId}`, data),
-  getDatabaseAnalytics: () => apiClient.get('/admin/system/database/analytics'),
 
   // ── Legacy (backward compat) ──────────────────────────────────────────────
   getUsers: () => apiClient.get('/admin/users'),
@@ -280,12 +252,6 @@ export const smsAuth = {
 export const pdf = {
   getPrescription: (id) => `${API_BASE_URL}/pdf/prescription/${id}`,
   verifyPrescription: (id) => apiClient.get(`/pdf/verify/${id}`),
-  // Reçu de paiement — URL directe (téléchargement navigateur)
-  getPaymentReceiptUrl: (paymentId) => `${API_BASE_URL}/pdf/payment-receipt/${paymentId}`,
-  // Endpoints par rôle
-  getVetReceiptUrl:    (paymentId) => `${API_BASE_URL}/vet/payment-receipt/${paymentId}`,
-  getFarmerReceiptUrl: (paymentId) => `${API_BASE_URL}/payments/receipt/${paymentId}`,
-  getVendorReceiptUrl: (paymentId) => `${API_BASE_URL}/vendor/payment-receipt/${paymentId}`,
 };
 
 // ========== VET ENDPOINTS ==========
@@ -337,11 +303,6 @@ export const vendor = {
 };
 
 // ========== TEBE IA ENDPOINTS ==========
-// ========== PLANS PUBLICS ==========
-export const apiPlans = {
-  getAll: () => apiClient.get('/plans'),
-};
-
 export const tebe = {
   getPublicStats: () => apiClient.get('/tebe/stats'),
   analyzeImage: (data) => apiClient.post('/tebe/analyze-image', data),
@@ -397,5 +358,24 @@ export const createMeeting = async ({ token }) => {
 
 // Health check
 export const healthCheck = () => apiClient.get('/health');
+
+// ========== MOKINELAB AUTH ENDPOINTS ==========
+// Client séparé utilisant le token lab (lab_token)
+const labClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: true,
+});
+labClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('lab_token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+export const labAuth = {
+  register: (data)           => labClient.post('/lab/auth/register', data),
+  login:    (email, password) => labClient.post('/lab/auth/login', { email, password }),
+  getMe:    ()               => labClient.get('/lab/auth/me'),
+};
 
 export default apiClient;

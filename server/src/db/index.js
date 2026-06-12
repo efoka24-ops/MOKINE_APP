@@ -191,6 +191,26 @@ export const SEEDS = {
     { id: 'sp_entreprise', slug: 'entreprise', name: 'Entreprise', price: 45000, priceLabel: '45.000', currency: 'XAF', period: 'par an',      periodDays: 365, description: 'Solution complète professionnels.', features: ["Tout Premium", "Assistance dédiée", "Facturation personnalisée", "Accès API"],                                             color: 'border-purple-400', badge: null,       isActive: true, sortOrder: 4 },
   ],
 
+  // ── MokineLab seeds ──────────────────────────────────────────────────────
+  lab_users: [
+    {
+      id: 'lab_admin1',
+      email: 'admin@mokinelab.cm',
+      // password: 'Lab@Admin2026'
+      password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+      name: 'Admin MokineLab',
+      role: 'lab_admin',
+      isVerified: true,
+      createdAt: new Date().toISOString(),
+    },
+  ],
+  lab_dataset_requests: [],
+  lab_models:           [],
+  lab_training_jobs:    [],
+  lab_api_keys:         [],
+  lab_scans:            [],
+  lab_contributions:    [],
+
   api_plans: [
     {
       id: 'plan_starter',
@@ -313,6 +333,15 @@ const db = {
   api_plans:            makeCollection('api_plans'),
   settings:             makeCollection('settings'),
   subscription_plans:   makeCollection('subscription_plans'),
+
+  // ── MokineLab (comptes séparés) ──────────────────────────────────────────
+  lab_users:            makeCollection('lab_users'),
+  lab_dataset_requests: makeCollection('lab_dataset_requests'),
+  lab_models:           makeCollection('lab_models'),
+  lab_training_jobs:    makeCollection('lab_training_jobs'),
+  lab_api_keys:         makeCollection('lab_api_keys'),
+  lab_scans:            makeCollection('lab_scans'),
+  lab_contributions:    makeCollection('lab_contributions'),
 };
 
 console.log(`[DB] Using ${isProd ? 'PostgreSQL' : 'JSON files'} backend`);

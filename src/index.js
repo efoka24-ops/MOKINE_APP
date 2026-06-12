@@ -12,8 +12,8 @@ import { Ia } from './pages/Ia';
 import LoginPage from './pages/login';
 import { SubscriptionPlans } from './pages/abonnement';
 import { PaymentPage } from './pages/paiement';
-import { PaymentSuccess } from './pages/PaymentSuccess';
-import { PaymentCancel } from './pages/PaymentCancel';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancel from './pages/PaymentCancel';
 import Priere from './pages/visioconference';
 import Dashboard from './pages/Dashboard';
 import RendezVous from './pages/RendezVous';
@@ -27,10 +27,6 @@ import IaQuestionnaire from './pages/IaQuestionnaire';
 import AnimalDetail from './pages/AnimalDetail';
 import MokineVetoPage from './pages/MokineVetoPage';
 import MokineLabPage from './pages/MokineLabPage';
-import ApiDocsPage from './pages/ApiDocsPage';
-import CommandePage from './pages/CommandePage';
-import CommercialApiPage from './pages/CommercialApiPage';
-import CommercialDashboard from './pages/CommercialDashboard';
 import Notification from './pages/Notification';
 import Parametres from './pages/Parametres';
 import { AuthProvider } from './context/AuthContext';
@@ -51,6 +47,13 @@ import SanitaryAlerts from './pages/SanitaryAlerts';
 import FarmManagement from './pages/FarmManagement';
 import FarmerRoute from './components/FarmerRoute';
 
+// MokineLab Imports
+import { LabAuthProvider } from './context/LabAuthContext';
+import LabProtectedRoute from './components/lab/LabProtectedRoute';
+import LabRegister from './pages/lab/LabRegister';
+import LabLogin from './pages/lab/LabLogin';
+import LabDashboard from './pages/lab/LabDashboard';
+
 // Admin Imports
 import ProtectedRoute from './admin/ProtectedRoute';
 import {
@@ -59,6 +62,7 @@ import {
   BoxModule,
   MarketModule,
   LabModule,
+  FieldModule,
   SystemModule,
   AdminUsers,
   AdminVeterinarians,
@@ -83,6 +87,7 @@ root.render(
     <I18nProvider>
     <OfflineProvider>
     <AuthProvider>
+    <LabAuthProvider>
       <BrowserRouter>
       <OfflineIndicator />
       <Routes>
@@ -99,10 +104,10 @@ root.render(
         <Route path='/reset-password' element={ <ResetPassword />}/>
         <Route path='/mokineveto' element={ <MokineVetoPage />}/>
         <Route path='/mokinelab' element={ <MokineLabPage />}/>
-        <Route path='/mokinelab/docs' element={ <ApiDocsPage />}/>
-        <Route path='/commande' element={ <CommandePage />}/>
-        <Route path='/mokinelab/commercial' element={ <CommercialApiPage />}/>
-        <Route path='/mokinelab/dashboard' element={ <CommercialDashboard />}/>
+        <Route path='/mokinelab/register' element={<LabRegister />}/>
+        <Route path='/mokinelab/login'    element={<LabLogin />}/>
+        <Route path='/mokinelab/dashboard' element={<LabProtectedRoute><LabDashboard /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/*' element={<LabProtectedRoute><LabDashboard /></LabProtectedRoute>}/>
         <Route path="/qrcode" element={<QRCodeGenerator />} />
 
 {/* ====== Dashboard area (Layout avec Sidebar + Header) ====== */}
@@ -138,6 +143,7 @@ root.render(
         <Route path="/admin/box" element={<ProtectedRoute><BoxModule /></ProtectedRoute>} />
         <Route path="/admin/market" element={<ProtectedRoute><MarketModule /></ProtectedRoute>} />
         <Route path="/admin/lab" element={<ProtectedRoute><LabModule /></ProtectedRoute>} />
+        <Route path="/admin/field" element={<ProtectedRoute><FieldModule /></ProtectedRoute>} />
         <Route path="/admin/system" element={<ProtectedRoute><SystemModule /></ProtectedRoute>} />
 
         {/* Legacy admin routes (redirect to new module pages) */}
@@ -149,6 +155,7 @@ root.render(
 
       </Routes>
       </BrowserRouter>
+    </LabAuthProvider>
     </AuthProvider>
     </OfflineProvider>
     </I18nProvider>

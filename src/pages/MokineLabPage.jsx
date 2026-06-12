@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useLabAuth } from '../context/LabAuthContext';
 import { tebe } from '../API.js';
 import { useI18n } from '../i18n/index.js';
 import LanguageSelector from '../components/LanguageSelector';
@@ -783,7 +783,7 @@ function LabLandingGate({ navigate, collected, target, pct }) {
 // ─── Page principale ──────────────────────────────────────────────────────────
 export default function MokineLabPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user } = useLabAuth();
   const { t } = useI18n();
   const [stats, setStats] = useState(null);
 
@@ -824,16 +824,16 @@ export default function MokineLabPage() {
               MokineVeto →
             </a>
             {isAuthenticated ? (
-              <button onClick={() => navigate('/dashboard')}
+              <button onClick={() => navigate('/mokinelab/dashboard')}
                 className="px-4 py-2 text-white text-sm rounded-lg transition"
                 style={{ background: PRIMARY }}>
-                {t('lab.nav.dashboard')}
+                Mon espace →
               </button>
             ) : (
-              <button onClick={() => navigate('/register')}
+              <button onClick={() => navigate('/mokinelab/register')}
                 className="px-4 py-2 text-white text-sm rounded-lg transition"
                 style={{ background: PRIMARY }}>
-                {t('lab.nav.register')}
+                Créer un compte
               </button>
             )}
           </div>
@@ -969,18 +969,12 @@ export default function MokineLabPage() {
               </div>
               <button
                 onClick={() => {
-                  if (!isAuthenticated) { navigate('/register'); return; }
-                  const role = user?.role;
-                  if (role === 'farmer') navigate('/ia/questionnaire');
-                  else if (role === 'veterinarian') navigate('/vet/dashboard');
-                  else if (role === 'vendor') navigate('/vendor/dashboard');
-                  else navigate('/ia/questionnaire');
+                  if (!isAuthenticated) { navigate('/mokinelab/register'); return; }
+                  navigate('/mokinelab/dashboard');
                 }}
                 className="px-6 py-2.5 text-white font-semibold rounded-xl text-sm transition-all"
                 style={{ background: PRIMARY }}>
-                {!isAuthenticated ? 'Créer un compte gratuit →'
-                  : user?.role === 'farmer' ? 'Lancer le questionnaire →'
-                  : 'Accéder à mon espace →'}
+                {!isAuthenticated ? 'Créer un compte MokineLab →' : 'Accéder à mon espace →'}
               </button>
             </div>
           </div>
@@ -1006,10 +1000,10 @@ export default function MokineLabPage() {
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
-            onClick={() => navigate(isAuthenticated ? '/dashboard' : '/register')}
+            onClick={() => navigate(isAuthenticated ? '/mokinelab/dashboard' : '/mokinelab/register')}
             className="px-8 py-3.5 bg-white font-bold rounded-xl hover:bg-green-50 transition-all text-sm"
             style={{ color: PRIMARY }}>
-            {isAuthenticated ? 'Mon espace MokineVeto →' : 'Créer un compte gratuit →'}
+            {isAuthenticated ? 'Mon espace MokineLab →' : 'Créer un compte MokineLab →'}
           </button>
           <a href="/"
             className="px-8 py-3.5 border-2 border-white/40 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-sm">

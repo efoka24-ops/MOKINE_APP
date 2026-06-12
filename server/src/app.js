@@ -34,6 +34,7 @@ import farmRoutes from './routes/farmRoutes.js';
 import camooPaymentRoutes from './routes/camooPaymentRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import { sendContactFormEmail } from './services/emailService.js';
+import labRoutes from './routes/labRoutes.js';
 
 // Load .env from server/ using absolute path so CWD doesn't matter
 // override:true ensures server/.env wins over any root-level .env already loaded
@@ -132,6 +133,7 @@ app.use('/api/alerts/sanitary', sanitaryAlertRoutes);
 app.use('/api/farms', farmRoutes);
 app.use('/api/payment/camoo', paymentLimiter, camooPaymentRoutes);
 app.use('/api', settingsRoutes);
+app.use('/api/lab', authLimiter, labRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'Server is running', timestamp: new Date() });
