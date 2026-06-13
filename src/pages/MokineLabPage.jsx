@@ -651,11 +651,11 @@ function LabLandingGate({ navigate, collected, target, pct }) {
             <a href="/mokineveto" className="text-sm text-gray-500 hover:text-green-600 transition hidden sm:block">
               MokineVeto →
             </a>
-            <button onClick={() => navigate('/login')}
+            <button onClick={() => navigate('/mokinelab/login')}
               className="text-sm text-gray-600 hover:text-green-700 font-medium transition">
               Se connecter
             </button>
-            <button onClick={() => navigate('/register')}
+            <button onClick={() => navigate('/mokinelab/register')}
               className="px-4 py-2 text-white text-sm rounded-lg font-semibold transition"
               style={{ background: PRIMARY }}>
               Créer un compte
@@ -697,12 +697,12 @@ function LabLandingGate({ navigate, collected, target, pct }) {
 
           {/* CTA principal */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button onClick={() => navigate('/register')}
+            <button onClick={() => navigate('/mokinelab/register')}
               className="px-10 py-4 text-white font-bold rounded-xl shadow-lg text-base transition-all"
               style={{ background: `linear-gradient(135deg, ${PRIMARY}, ${PRIMARY_D})`, boxShadow: `0 8px 25px ${PRIMARY}50` }}>
               Créer mon compte gratuit →
             </button>
-            <button onClick={() => navigate('/login')}
+            <button onClick={() => navigate('/mokinelab/login')}
               className="px-10 py-4 font-semibold rounded-xl border-2 text-base transition-all hover:bg-green-50"
               style={{ borderColor: PRIMARY, color: PRIMARY }}>
               J'ai déjà un compte
@@ -755,7 +755,7 @@ function LabLandingGate({ navigate, collected, target, pct }) {
               </div>
             ))}
           </div>
-          <button onClick={() => navigate('/register')}
+          <button onClick={() => navigate('/mokinelab/register')}
             className="mt-10 px-10 py-4 text-white font-bold rounded-xl text-base transition-all"
             style={{ background: PRIMARY }}>
             Commencer maintenant →
