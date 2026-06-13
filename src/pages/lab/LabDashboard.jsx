@@ -33,12 +33,22 @@ const NAV = {
     { icon: '🤝', label: 'Mes contributions', path: '/mokinelab/dashboard/contributions' },
     { icon: '🗂️', label: 'Catalogue clinique',path: '/mokinelab/dashboard/catalogue' },
   ],
+  lab_admin: [
+    { icon: '🏠', label: 'Accueil',           path: '/mokinelab/dashboard' },
+    { icon: '👥', label: 'Membres',           path: '/mokinelab/dashboard/admin' },
+    { icon: '📂', label: 'Demandes dataset',  path: '/mokinelab/dashboard/admin' },
+    { icon: '⚙️', label: 'Jobs entraînement', path: '/mokinelab/dashboard/admin' },
+    { icon: '🧬', label: 'Modèles',           path: '/mokinelab/dashboard/admin' },
+    { icon: '🔗', label: 'Intégration Veto',  path: '/mokinelab/dashboard/integration' },
+    { icon: '📈', label: 'Statistiques',      path: '/mokinelab/dashboard/admin' },
+  ],
 };
 
 const ROLE_LABELS = {
-  researcher:   { label: 'Chercheur',    icon: '🔬', color: 'bg-blue-100 text-blue-700' },
-  developer:    { label: 'Développeur',  icon: '🔌', color: 'bg-purple-100 text-purple-700' },
+  researcher:   { label: 'Chercheur',    icon: '🔬', color: 'bg-blue-100 text-blue-700'   },
+  developer:    { label: 'Développeur',  icon: '🔌', color: 'bg-purple-100 text-purple-700'},
   veterinarian: { label: 'Vétérinaire',  icon: '🩺', color: 'bg-green-100 text-green-700' },
+  lab_admin:    { label: 'Admin Lab',    icon: '🛡️', color: 'bg-red-100 text-red-700'     },
 };
 
 function StatCard({ icon, label, value, sub, color }) {

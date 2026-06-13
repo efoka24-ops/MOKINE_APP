@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcryptjs from 'bcryptjs';
 import db from '../db/index.js';
-import { sendWelcomeEmail, sendPasswordResetEmail } from '../services/emailService.js';
 
 const generateToken = (user) => jwt.sign(
   { id: user.id, email: user.email, role: user.role },
@@ -67,8 +66,6 @@ export const register = async (req, res) => {
     await db.users.insert(newUser);
     const token = generateToken(newUser);
 
-    sendWelcomeEmail(newUser).catch(() => {});
-
     res.status(201).json({
       message: 'User registered successfully',
       user: { id: newUser.id, email: newUser.email, name: newUser.name, role: newUser.role },
@@ -112,19 +109,8 @@ export const login = async (req, res) => {
 
 export const getAvailableVets = async (req, res) => {
   try {
-    let vets = (await db.users.filter(u => u.role === 'veterinarian' && u.isVerified && !u.blocked))
+    const vets = (await db.users.filter(u => u.role === 'veterinarian' && u.isVerified && !u.blocked))
       .map(({ password: _, ...v }) => v);
-
-    // Zone filtering: if the caller is authenticated and has a city, only return vets from same city
-    const callerCity = req.user?.city || req.query.city;
-    if (callerCity) {
-      const normalize = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
-      const nc = normalize(callerCity);
-      const zoneVets = vets.filter(v => normalize(v.city) === nc || normalize(v.zone) === nc);
-      // Only apply zone filter if there are vets in the zone; otherwise show all
-      if (zoneVets.length > 0) vets = zoneVets;
-    }
-
     res.status(200).json(vets);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -193,11 +179,11 @@ export const forgotPassword = async (req, res) => {
     const token = Buffer.from(`${user.id}-${Date.now()}-${Math.random()}`).toString('base64url');
     resetTokenStore.set(token, { userId: user.id, expiresAt: Date.now() + 60 * 60 * 1000 });
 
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    const resetLink = `${frontendUrl}/reset-password?token=${token}`;
-    sendPasswordResetEmail({ to: user.email, userName: user.name, resetLink }).catch(() => {});
-
-    res.status(200).json({ message: 'Si cet email existe, un lien de réinitialisation a été envoyé.' });
+    res.status(200).json({
+      message: 'Lien de réinitialisation généré. En production, il serait envoyé par email.',
+      resetToken: token,
+      resetLink: `/reset-password?token=${token}`,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

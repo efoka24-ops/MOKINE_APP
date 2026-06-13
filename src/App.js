@@ -34,6 +34,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import HeaderHome from "./components/HeaderHome";
 import MokineVetoBanner from "./components/MokineVetoBanner";
+import MokineLabBanner from "./components/MokineLabBanner";
 
 /* Helper component for scroll animations */
 function AnimatedOnScroll({ children }) {
@@ -189,7 +190,7 @@ function Hero() {
                                 <button onClick={() => { navigate('/visio') }} className="bg-[#178A3B] hover:bg-[#147932] transition text-white px-7 py-3 rounded-full font-semibold shadow-lg boutonherosection">
                                     Commander
                                 </button>
-                                <button onClick={() => { navigate('/ia/gratuit') }} className="border border-gray-600 hover:border-gray-400 transition text-white px-7 py-3 rounded-full font-semibold boutonherosection">
+                                <button onClick={() => { navigate('/mokinelab') }} className="border border-gray-600 hover:border-gray-400 transition text-white px-7 py-3 rounded-full font-semibold boutonherosection">
                                     Tester notre IA
                                 </button>
                             </motion.div>
@@ -434,7 +435,7 @@ function ContentSections() {
 
         <div className="mt-6">
           <button
-            onClick={() => navigate("/ia/gratuit")}
+            onClick={() => navigate("/mokinelab")}
             className="bg-[#178A3B] text-white px-4 py-2 rounded-md"
           >
             Tester notre IA
@@ -685,6 +686,7 @@ export default function App() {
             <main className="">
                 <Hero />
                 <MokineVetoBanner />
+                <MokineLabBanner />
                 <ContentSections />
             </main>
              <GrayStrip />

@@ -53,7 +53,8 @@ const corsOptions = {
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
     if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
-    callback(new Error(`CORS: origin ${origin} not allowed`));
+    // Don't throw — just reject with false (prevents server crash)
+    return callback(null, false);
   },
   credentials: true,
   optionsSuccessStatus: 200,
@@ -137,7 +138,7 @@ app.use('/api/alerts/sanitary', sanitaryAlertRoutes);
 app.use('/api/farms', farmRoutes);
 app.use('/api/payment/camoo', paymentLimiter, camooPaymentRoutes);
 app.use('/api', settingsRoutes);
-app.use('/api/lab', authLimiter, labRoutes);
+app.use('/api/lab', labRoutes);
 app.use('/api/lab/scans', labScanRoutes);
 app.use('/api/lab/contributions', labContributionRoutes);
 app.use('/api/lab/admin', labAdminRoutes);
