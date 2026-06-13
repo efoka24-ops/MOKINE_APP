@@ -2,7 +2,7 @@
   {
     "id": "lab_admin1",
     "email": "admin@mokinelab.cm",
-    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "password": "$2a$10$U4yatclek6qncKfH/Lp3/evWr4kh2w4juugrlxsHxoemwG3fXDTzK",
     "name": "Admin MokineLab",
     "role": "lab_admin",
     "isVerified": true,
@@ -11,7 +11,7 @@
   {
     "id": "lab_1781339790345",
     "email": "researcher@test.cm",
-    "password": "$2a$10$gVG756hh1BXOrC1dM7tOpeO.Tfl5DWIT8iQA9YBw.2nOe5K5fiHnm",
+    "password": "$2a$10$7uc9bjusNYU3H8GFQOnmX.t8AMSyccgHm5XAR8/b1JYJbjxcPi1oC",
     "name": "Marie Chercheur",
     "phone": "",
     "role": "researcher",
@@ -29,7 +29,7 @@
   {
     "id": "lab_1781339790630",
     "email": "dev@test.cm",
-    "password": "$2a$10$NIBASd5Ya/t4KVSyxQcztOU5pAYVTg/KR8kzLVa6OBYRiSSd1Rbe.",
+    "password": "$2a$10$B8zhlVMVxWwwswrrFbZyGu7UbwODvn4Thr2WLUSQNrfPCJZn3zIMq",
     "name": "Paul Dev",
     "phone": "",
     "role": "developer",
@@ -47,7 +47,7 @@
   {
     "id": "lab_1781339790886",
     "email": "vet@test.cm",
-    "password": "$2a$10$/nZUlGeuW2n2XY3.HYTlyeQpzTsLgLgVqiAef8jcc9MIBYPcf4OR6",
+    "password": "$2a$10$mL/lHLoSkgGVRPTn2PQ1l.Kli3mVp20oYJW7OBcKNV7Qw2zjUF0A2",
     "name": "Dr Aminatou Vet",
     "phone": "",
     "role": "veterinarian",

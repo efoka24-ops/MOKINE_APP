@@ -196,8 +196,8 @@ export const SEEDS = {
     {
       id: 'lab_admin1',
       email: 'admin@mokinelab.cm',
-      // password: 'Lab@Admin2026'
-      password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+      // password: 'Lab@Admin2026' — hash: bcrypt.hash('Lab@Admin2026', 10)
+      password: '$2a$10$U4yatclek6qncKfH/Lp3/evWr4kh2w4juugrlxsHxoemwG3fXDTzK',
       name: 'Admin MokineLab',
       role: 'lab_admin',
       isVerified: true,
