@@ -210,6 +210,8 @@ export const SEEDS = {
   lab_api_keys:         [],
   lab_scans:            [],
   lab_contributions:    [],
+  // Catalogue modèles académiques — chargé depuis lab_catalog_models.json (seed = [])
+  lab_catalog_models:   [],
 
   api_plans: [
     {
@@ -342,6 +344,7 @@ const db = {
   lab_api_keys:         makeCollection('lab_api_keys'),
   lab_scans:            makeCollection('lab_scans'),
   lab_contributions:    makeCollection('lab_contributions'),
+  lab_catalog_models:   makeCollection('lab_catalog_models'),
 };
 
 console.log(`[DB] Using ${isProd ? 'PostgreSQL' : 'JSON files'} backend`);

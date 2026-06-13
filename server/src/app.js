@@ -39,6 +39,7 @@ import labScanRoutes from './routes/labScanRoutes.js';
 import labContributionRoutes from './routes/labContributionRoutes.js';
 import labAdminRoutes from './routes/labAdminRoutes.js';
 import labModelRoutes from './routes/labModelRoutes.js';
+import labCatalogRoutes from './routes/labCatalogRoutes.js';
 
 // Load .env from server/ using absolute path so CWD doesn't matter
 // override:true ensures server/.env wins over any root-level .env already loaded
@@ -144,6 +145,7 @@ app.use('/api/lab/scans', labScanRoutes);
 app.use('/api/lab/contributions', labContributionRoutes);
 app.use('/api/lab/admin', labAdminRoutes);
 app.use('/api/lab/models', labModelRoutes);
+app.use('/api/lab/catalog', labCatalogRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'Server is running', timestamp: new Date() });

@@ -49,6 +49,7 @@ export default function LabScan() {
   const [error, setError]               = useState('');
   const [saving, setSaving]             = useState(false);
   const [saveMsg, setSaveMsg]           = useState('');
+  const [classification, setClassification] = useState(null);
   const [history, setHistory]           = useState([]);
   const [histLoading, setHistLoading]   = useState(true);
   const fileRef = useRef(null);
@@ -84,6 +85,7 @@ export default function LabScan() {
     setLoading(true);
     setError('');
     setSaveMsg('');
+    setClassification(null);
     try {
       const imageBase64 = imagePreview ? imagePreview.split(',')[1] : null;
       const r = await fetch(`${API_BASE}/api/tebe/analyze-image`, {
@@ -96,11 +98,15 @@ export default function LabScan() {
       setResult(data);
 
       setSaving(true);
-      await fetch(`${API_BASE}/api/lab/scans`, {
+      const saveRes = await fetch(`${API_BASE}/api/lab/scans`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({ animalType, imageBase64, result: data }),
       });
+      const saveData = await saveRes.json();
+      if (saveData.scan?.classificationResult) {
+        setClassification(saveData.scan.classificationResult);
+      }
       setSaveMsg('Scan sauvegardé dans votre historique.');
       const hRes = await fetch(`${API_BASE}/api/lab/scans`, { headers: authHeaders });
       const hData = await hRes.json();
@@ -119,6 +125,7 @@ export default function LabScan() {
     setResult(null);
     setError('');
     setSaveMsg('');
+    setClassification(null);
   };
 
   const severityColor = {
@@ -345,6 +352,69 @@ export default function LabScan() {
               </div>
             </div>
           </div>
+
+          {/* ── Classification pré-diagnostic ── */}
+          {classification && (
+            <div className="bg-white rounded-2xl border border-green-100 p-5 mb-2">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                  style={{ background: PRIMARY }}>🧬</div>
+                <p className="text-sm font-bold text-gray-800">Résultat classification préalable</p>
+                <span className="ml-auto text-xs text-gray-400">{classification.modelUsed}</span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                {/* Sujet */}
+                <div className={`rounded-xl p-3 text-center ${classification.isAnimal ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
+                  <div className="text-2xl mb-1">{classification.isAnimal ? '🐾' : '🚫'}</div>
+                  <p className="text-xs font-bold" style={{ color: classification.isAnimal ? PRIMARY : '#dc2626' }}>
+                    {classification.isAnimal ? 'Animal détecté' : 'Non-animal'}
+                  </p>
+                </div>
+                {/* Humain */}
+                <div className={`rounded-xl p-3 text-center ${!classification.isHuman ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
+                  <div className="text-2xl mb-1">{!classification.isHuman ? '✅' : '❌'}</div>
+                  <p className="text-xs font-bold" style={{ color: !classification.isHuman ? PRIMARY : '#dc2626' }}>
+                    {!classification.isHuman ? 'Pas humain' : 'Humain refusé'}
+                  </p>
+                  <p className="text-xs text-gray-400">{(classification.humanDetectionConfidence * 100).toFixed(2)}% conf.</p>
+                </div>
+                {/* Espèce */}
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 text-center">
+                  <div className="text-2xl mb-1">
+                    {classification.isCattle ? '🐄' : classification.isSmallRuminant ? '🐐' : '🐾'}
+                  </div>
+                  <p className="text-xs font-bold text-blue-700 capitalize">{classification.detectedSpecies}</p>
+                  <p className="text-xs text-blue-400">
+                    {classification.isCattle ? 'Bovin ✓' : classification.speciesGroup}
+                  </p>
+                </div>
+                {/* Confiance */}
+                <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 text-center">
+                  <div className="text-2xl mb-1">📊</div>
+                  <p className="text-xs font-bold text-gray-800">
+                    {(classification.classificationConfidence * 100).toFixed(1)}%
+                  </p>
+                  <p className="text-xs text-gray-400">Confiance classif.</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs text-gray-400">
+                <span>Qualité image : <span className="font-medium text-gray-600">{classification.imageQuality}</span></span>
+                <span>Latence : <span className="font-medium text-gray-600">{classification.processingMs}ms</span></span>
+              </div>
+
+              {classification.warnings?.length > 0 && (
+                <div className="mt-3 space-y-1">
+                  {classification.warnings.map((w, i) => (
+                    <div key={i} className="flex items-center gap-1.5 text-xs text-yellow-700 bg-yellow-50 rounded-lg px-3 py-1.5">
+                      <span>⚠️</span> {w}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Historique des scans */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">

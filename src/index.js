@@ -63,6 +63,7 @@ import LabModelCreate from './pages/lab/LabModelCreate';
 import LabDatasetRequest from './pages/lab/LabDatasetRequest';
 import LabApiKeys from './pages/lab/LabApiKeys';
 import LabModelIntegration from './pages/lab/LabModelIntegration';
+import LabCatalog from './pages/lab/LabCatalog';
 
 // Admin Imports
 import ProtectedRoute from './admin/ProtectedRoute';
@@ -128,6 +129,7 @@ root.render(
         <Route path='/mokinelab/dashboard/dataset' element={<LabProtectedRoute><LabDatasetRequest /></LabProtectedRoute>}/>
         <Route path='/mokinelab/dashboard/api-keys' element={<LabProtectedRoute><LabApiKeys /></LabProtectedRoute>}/>
         <Route path='/mokinelab/dashboard/integration' element={<LabProtectedRoute><LabModelIntegration /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/catalog' element={<LabProtectedRoute><LabCatalog /></LabProtectedRoute>}/>
         <Route path='/mokinelab/dashboard/*' element={<LabProtectedRoute><LabDashboard /></LabProtectedRoute>}/>
         <Route path="/qrcode" element={<QRCodeGenerator />} />
 
