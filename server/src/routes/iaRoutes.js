@@ -15,4 +15,8 @@ router.get('/health-report', verifyToken, iaController.getHealthReport);
 router.post('/request/send', optionalAuth, iaController.sendRequest);
 router.get('/request/:id', optionalAuth, iaController.getRequest);
 
+// MokineLab integration routes
+router.get('/active-lab-models', iaController.getActiveLabModels);
+router.post('/analyze-with-model', optionalAuth, iaController.analyzeWithModel);
+
 export default router;

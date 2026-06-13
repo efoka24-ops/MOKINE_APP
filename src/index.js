@@ -53,6 +53,16 @@ import LabProtectedRoute from './components/lab/LabProtectedRoute';
 import LabRegister from './pages/lab/LabRegister';
 import LabLogin from './pages/lab/LabLogin';
 import LabDashboard from './pages/lab/LabDashboard';
+import LabScan from './pages/lab/LabScan';
+import LabQuestionnaire from './pages/lab/LabQuestionnaire';
+import LabContributions from './pages/lab/LabContributions';
+import LabValidate from './pages/lab/LabValidate';
+import LabAdminPanel from './pages/lab/admin/LabAdminPanel';
+import LabModels from './pages/lab/LabModels';
+import LabModelCreate from './pages/lab/LabModelCreate';
+import LabDatasetRequest from './pages/lab/LabDatasetRequest';
+import LabApiKeys from './pages/lab/LabApiKeys';
+import LabModelIntegration from './pages/lab/LabModelIntegration';
 
 // Admin Imports
 import ProtectedRoute from './admin/ProtectedRoute';
@@ -107,6 +117,17 @@ root.render(
         <Route path='/mokinelab/register' element={<LabRegister />}/>
         <Route path='/mokinelab/login'    element={<LabLogin />}/>
         <Route path='/mokinelab/dashboard' element={<LabProtectedRoute><LabDashboard /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/scan' element={<LabProtectedRoute><LabScan /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/questionnaire' element={<LabProtectedRoute><LabQuestionnaire /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/contributions' element={<LabProtectedRoute><LabContributions /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/validate' element={<LabProtectedRoute><LabValidate /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/admin' element={<LabProtectedRoute><LabAdminPanel /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/admin/*' element={<LabProtectedRoute><LabAdminPanel /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/models' element={<LabProtectedRoute><LabModels /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/models/new' element={<LabProtectedRoute><LabModelCreate /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/dataset' element={<LabProtectedRoute><LabDatasetRequest /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/api-keys' element={<LabProtectedRoute><LabApiKeys /></LabProtectedRoute>}/>
+        <Route path='/mokinelab/dashboard/integration' element={<LabProtectedRoute><LabModelIntegration /></LabProtectedRoute>}/>
         <Route path='/mokinelab/dashboard/*' element={<LabProtectedRoute><LabDashboard /></LabProtectedRoute>}/>
         <Route path="/qrcode" element={<QRCodeGenerator />} />
 

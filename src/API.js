@@ -130,6 +130,11 @@ export const payments = {
   refund: (data) => apiClient.post('/payments/refund', data),
 };
 
+export const camooPayment = {
+  cashout: (data) => apiClient.post('/payment/camoo/cashout', data),
+  verify: (id) => apiClient.get('/payment/camoo/verify', { params: { id } }),
+};
+
 // ========== IA ENDPOINTS ==========
 export const ia = {
   getQuestionnaire: () => apiClient.get('/ia/questionnaire'),

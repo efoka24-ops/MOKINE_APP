@@ -1,5 +1,7 @@
-// MokineVeto AI — Questionnaire & Diagnostic cheptel// ─────────────────────────────────────────────────────────────
+// MokineVeto AI — Questionnaire & Diagnostic cheptel
+// ─────────────────────────────────────────────────────────────
 // Base de connaissances vétérinaires pour l'élevage africain
+import db from '../db/index.js';
 // ─────────────────────────────────────────────────────────────
 
 // Mots-clés → symptômes normalisés
@@ -964,4 +966,71 @@ export const sendRequest = async (req, res) => {
 // ─── Compatibilité Ia.jsx : GET /ia/request/:id ──────────────────────────────
 export const getRequest = (req, res) => {
   res.status(200).json({ data: [], discussion_id: req.params.id });
+};
+
+// ─── GET /api/ia/active-lab-models ───────────────────────────────────────────
+export const getActiveLabModels = async (req, res) => {
+  try {
+    const models = await db.lab_models.filter(m => m.deployedToVeto === 'active');
+    res.json({ models, count: models.length });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// ─── POST /api/ia/analyze-with-model ─────────────────────────────────────────
+export const analyzeWithModel = async (req, res) => {
+  try {
+    const { description, animalType, modelId } = req.body;
+    if (!description) return res.status(400).json({ error: 'Description requise' });
+
+    let usedModel = 'mokine-ia-v2.0-ensemble';
+    let usedModelName = 'Modèle par défaut Tebe';
+
+    if (modelId) {
+      const labModels = await db.lab_models.filter(m => m.id === modelId && m.deployedToVeto === 'active');
+      if (labModels.length) {
+        usedModel = modelId;
+        usedModelName = labModels[0].name;
+      }
+    }
+
+    const symptoms = extractSymptoms(description);
+    if (animalType) {
+      const speciesMap = { cattle: 'bovin', sheep: 'ovin', goat: 'caprin', pig: 'porcin', chicken: 'volaille', poultry: 'volaille' };
+      const mapped = speciesMap[animalType] || animalType;
+      if (['bovin','ovin','caprin','porcin','volaille'].includes(mapped) && !symptoms.includes(mapped)) symptoms.push(mapped);
+    }
+
+    const ranked = scoreDiseases(symptoms);
+    if (!ranked.length) {
+      return res.status(200).json({ diagnosis: { description, animalType, diagnosis: 'Symptômes insuffisants', confidence: 0, usedModel, usedModelName } });
+    }
+
+    const primary = ranked[0];
+    const SEVERITY_SCORE = { critical: 9, high: 7, medium: 5, low: 2, unknown: 3 };
+    const severityScore = Math.min(10, SEVERITY_SCORE[primary.disease.severity] || 3);
+
+    return res.status(200).json({
+      diagnosis: {
+        id: Date.now().toString(),
+        description,
+        animalType: animalType || 'unknown',
+        diagnosis: `${primary.disease.icon || ''} ${primary.disease.name}`,
+        severity: primary.disease.severity,
+        severityScore,
+        confidence: primary.confidence,
+        advice: primary.disease.conclusion,
+        consultVet: primary.disease.consultVet || severityScore >= 7,
+        analyzedAt: new Date(),
+        usedModel,
+        usedModelName,
+      },
+      differentials: ranked.slice(1, 4).map(d => ({ name: d.disease.name, confidence: d.confidence })),
+      symptomsDetected: symptoms,
+      modelVersion: usedModel,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
