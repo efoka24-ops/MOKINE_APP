@@ -45,9 +45,10 @@ import labModelRoutes from './routes/labModelRoutes.js';
 const __appdir = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(__appdir, '../.env'), override: true });
 
-const ALLOWED_ORIGINS = process.env.FRONTEND_URL
-  ? [process.env.FRONTEND_URL]
-  : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003'];
+const DEV_ORIGINS = ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003'];
+const ALLOWED_ORIGINS = process.env.NODE_ENV === 'production'
+  ? (process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(u => u.trim()) : [])
+  : DEV_ORIGINS;
 
 const corsOptions = {
   origin: (origin, callback) => {
