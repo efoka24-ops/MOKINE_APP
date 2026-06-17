@@ -84,7 +84,7 @@ const GRAY_STRIP_ITEMS = [
     { img: minader, title: "MINADER", subtitle: "Partenaire Officiel" },
 ];
 
-const VIDEO_SRC = "/video.mp4";
+const VIDEO_DRIVE_EMBED = "https://drive.google.com/file/d/1nhjL6Cu8cII1LUeM7QNlR9qnW-icPerI/preview";
 
 /* Helper small components inside file for rapid integration */
 function GrayStrip({ items = GRAY_STRIP_ITEMS }) {
@@ -537,16 +537,14 @@ function ContentSections() {
                 {/* Section vidéo */}
                 <div className="lg:w-1/2 bg-black flex items-center justify-center min-h-[300px] lg:min-h-[400px]">
                     <div className="relative w-full h-full">
-                        <video
-                            src={VIDEO_SRC}
-                            controls
-                            className="w-full h-full object-cover"
-                        >
-                            Votre navigateur ne supporte pas la lecture vidéo.
-                        </video>
-                        
-                        {/* Overlay décoratif */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                        <iframe
+                            src={VIDEO_DRIVE_EMBED}
+                            className="w-full h-full"
+                            style={{ minHeight: '300px', border: 'none' }}
+                            allow="autoplay"
+                            allowFullScreen
+                            title="Démo Mokine"
+                        />
                     </div>
                 </div>
             </div>
