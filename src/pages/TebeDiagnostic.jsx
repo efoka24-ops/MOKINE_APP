@@ -69,6 +69,8 @@ export default function TebeDiagnostic() {
   const [conditions, setConditions] = useState(null);
   const [showConditions, setShowConditions] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [classifyResult, setClassifyResult] = useState(null);
+  const [classifying, setClassifying] = useState(false);
   const fileRef = useRef(null);
 
   const toBase64 = (f) => new Promise((res, rej) => {
@@ -87,8 +89,26 @@ export default function TebeDiagnostic() {
     setFile(f);
     setError('');
     setResult(null);
+    setClassifyResult(null);
     const url = URL.createObjectURL(f);
     setPreview(url);
+
+    if (isImage) {
+      setClassifying(true);
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        try {
+          const b64 = ev.target.result.split(',')[1];
+          const res = await apiClient.post('/tebe/classify', { imageBase64: b64 });
+          setClassifyResult(res.data);
+        } catch (err) {
+          setClassifyResult({ failed: true, fallback: true, success: false, message: 'Vérification IA indisponible.' });
+        } finally {
+          setClassifying(false);
+        }
+      };
+      reader.readAsDataURL(f);
+    }
   }, []);
 
   const onDrop = (e) => {
@@ -194,7 +214,20 @@ export default function TebeDiagnostic() {
         setResult({ ...data, diagnosis: data.primary ? { condition: data.primary.condition, severity: 'moderate', confidence: data.primary.confidence || 0.70, visual_markers: [] } : null });
       }
     } catch (e) {
-      setError(e.response?.data?.error || 'Erreur lors de l\'analyse. Vérifiez la connexion.');
+      const data = e.response?.data;
+      if (data?.rejection) {
+        // Le backend a rejeté l'image (humain ou non-animal détecté)
+        setClassifyResult({
+          ...data,
+          success: true,
+          fallback: false,
+          isHuman: data.reason === 'human',
+          isAnimal: false,
+          subjectType: data.reason === 'human' ? 'human' : 'object',
+        });
+      } else {
+        setError(data?.error || 'Erreur lors de l\'analyse. Vérifiez la connexion.');
+      }
     } finally {
       setLoading(false);
     }
@@ -214,6 +247,8 @@ export default function TebeDiagnostic() {
     setResult(null);
     setError('');
     setSymptomText('');
+    setClassifyResult(null);
+    setClassifying(false);
     if (fileRef.current) fileRef.current.value = '';
   };
 
@@ -333,6 +368,66 @@ export default function TebeDiagnostic() {
           </div>
         )}
 
+        {/* Classification filter banner */}
+        {classifying && (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-3 text-sm text-blue-700">
+            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+            <span>Tebe IA Vision analyse l'image pour vérifier le sujet…</span>
+          </div>
+        )}
+
+        {classifyResult && (
+          <>
+            {/* Fallback / indisponible */}
+            {classifyResult.fallback && (
+              <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-3 flex items-start gap-3 text-sm text-yellow-700">
+                <span className="text-lg flex-shrink-0">⚠️</span>
+                <div>
+                  <p className="font-semibold">Vérification IA indisponible</p>
+                  <p className="text-xs text-yellow-600 mt-0.5">Le filtre de détection ne peut pas s'exécuter (modèle en chargement). Assurez-vous que l'image montre <strong>uniquement un animal d'élevage</strong> avant de lancer l'analyse.</p>
+                </div>
+              </div>
+            )}
+            {/* Humain détecté */}
+            {!classifyResult.fallback && classifyResult.isHuman && (
+              <div className="bg-red-50 border-2 border-red-400 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🚫</span>
+                  <div>
+                    <p className="font-bold text-red-700 text-sm">Image rejetée — Être humain détecté</p>
+                    <p className="text-red-600 text-xs mt-1">{classifyResult.explanation || classifyResult.message}</p>
+                    <p className="text-red-500 text-xs mt-1">Tebe IA Vision diagnostique uniquement les animaux d'élevage. Envoyez une photo de l'animal à examiner.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* Pas d'animal */}
+            {!classifyResult.fallback && !classifyResult.isHuman && !classifyResult.isAnimal && classifyResult.subjectType && !['no-image','unknown'].includes(classifyResult.subjectType) && (
+              <div className="bg-orange-50 border-2 border-orange-400 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">⚠️</span>
+                  <div>
+                    <p className="font-bold text-orange-700 text-sm">Image rejetée — Aucun animal identifié</p>
+                    <p className="text-orange-600 text-xs mt-1">{classifyResult.message}</p>
+                    <p className="text-orange-500 text-xs mt-1">{classifyResult.warning || "Envoyez une photo claire montrant uniquement l'animal à diagnostiquer, bien éclairé et net."}</p>
+                    {classifyResult.modelUsed && <p className="text-orange-400 text-xs mt-0.5">Modèle : {classifyResult.modelUsed}</p>}
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* Animal confirmé */}
+            {!classifyResult.fallback && classifyResult.isAnimal && (
+              <div className="bg-green-50 border border-green-300 rounded-xl p-3 flex items-center gap-3 text-sm text-green-700">
+                <span className="text-lg">{classifyResult.detectedIcon || '✅'}</span>
+                <div>
+                  <span className="font-semibold">{classifyResult.message}</span>
+                  {classifyResult.explanation && <p className="text-xs text-green-600 mt-0.5">{classifyResult.explanation}</p>}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
             {error}
@@ -340,11 +435,14 @@ export default function TebeDiagnostic() {
         )}
 
         {/* Analyze button */}
-        {!result && (inputMode === 'visual' ? file : symptomText.trim()) && (
+        {(() => {
+          const isBlocked = classifyResult && !classifyResult.fallback && classifyResult.success &&
+            (classifyResult.isHuman || (!classifyResult.isAnimal && !['no-image','unknown'].includes(classifyResult.subjectType)));
+          return !result && (inputMode === 'visual' ? file : symptomText.trim()) && (
           <button
             onClick={analyze}
-            disabled={loading}
-            className="w-full bg-green-700 text-white py-4 rounded-2xl font-semibold text-base shadow-lg hover:bg-green-800 disabled:opacity-50 flex items-center justify-center gap-3 transition-all"
+            disabled={loading || isBlocked || classifying}
+            className={`w-full py-4 rounded-2xl font-semibold text-base shadow-lg flex items-center justify-center gap-3 transition-all ${isBlocked ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-green-700 hover:bg-green-800 text-white disabled:opacity-50'}`}
           >
             {loading ? (
               <>
@@ -358,7 +456,8 @@ export default function TebeDiagnostic() {
               </>
             )}
           </button>
-        )}
+          );
+        })()}
 
         {/* Results */}
         {result && (

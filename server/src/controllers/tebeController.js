@@ -1,4 +1,5 @@
 import db from '../db/index.js';
+import { classifyImage as classifyImg } from '../services/imageClassifier.js';
 
 const VISUAL_CONDITIONS = [
   {
@@ -82,6 +83,17 @@ const runTebeAnalysis = (imageData, animalType, context) => {
   };
 };
 
+// POST /api/tebe/classify — filtre IA avant analyse (détecte humain / non-animal)
+export const classifyImage = async (req, res) => {
+  try {
+    const { imageBase64 } = req.body;
+    const result = await classifyImg(imageBase64 || null);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // GET /api/tebe/stats — public dataset progress
 export const getPublicStats = async (req, res) => {
   try {
@@ -110,6 +122,36 @@ export const analyzeImage = async (req, res) => {
   try {
     const { animalId, animalType, imageData, imageBase64, context, symptoms } = req.body;
     const imagePayload = imageData || imageBase64 || (req.file ? req.file.buffer?.toString('base64') : null);
+
+    // Filtre IA : rejeter humains et non-animaux avant diagnostic
+    if (imagePayload) {
+      try {
+        const cls = await classifyImg(imagePayload);
+        if (cls.success && !cls.fallback) {
+          if (cls.isHuman) {
+            return res.status(400).json({
+              rejection: true,
+              reason: 'human',
+              error: 'Image rejetée : être humain détecté.',
+              message: cls.message,
+              explanation: cls.explanation,
+              modelUsed: cls.modelUsed,
+            });
+          }
+          if (!cls.isAnimal && !['no-image', 'unknown'].includes(cls.subjectType)) {
+            return res.status(400).json({
+              rejection: true,
+              reason: 'non-animal',
+              error: `Image rejetée : aucun animal identifié. ${cls.message}`,
+              message: cls.message,
+              warning: cls.warning,
+              modelUsed: cls.modelUsed,
+            });
+          }
+        }
+      } catch (_) { /* filtre indisponible — on continue l'analyse */ }
+    }
+
     const result = runTebeAnalysis(imagePayload, animalType, context);
     const p = result.primary;
     const sevMap = { critical: 'critical', high: 'severe', medium: 'moderate', none: 'healthy' };
