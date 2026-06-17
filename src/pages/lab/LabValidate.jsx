@@ -22,10 +22,32 @@ function api(token) {
   });
 }
 
+const SPECIES_ALL = [
+  { value: 'cattle',   label: 'Bovin',        icon: '🐄' },
+  { value: 'goat',     label: 'Caprin',        icon: '🐐' },
+  { value: 'sheep',    label: 'Ovin',          icon: '🐑' },
+  { value: 'pig',      label: 'Porcin',        icon: '🐖' },
+  { value: 'poultry',  label: 'Volaille',      icon: '🐔' },
+  { value: 'horse',    label: 'Équin',         icon: '🐎' },
+  { value: 'other',    label: 'Autre animal',  icon: '🐾' },
+  { value: 'non_animal', label: 'PAS un animal — rejeter',  icon: '🚫' },
+];
+
+const PATHOLOGIES_ALL = [
+  'Fièvre aphteuse','Dermatophilose','Pasteurellose','PPCB','Newcastle',
+  'Charbon bactéridien','Trypanosomose','Gale / Dermatite','Conjonctivite',
+  'Météorisation','Émaciation / Malnutrition','Infection Respiratoire',
+  'Animal sain — aucune pathologie visible',
+];
+
 function ContributionCard({ contribution, onValidated }) {
-  const [note, setNote]       = useState('');
-  const [loading, setLoading] = useState(false);
-  const [msg, setMsg]         = useState('');
+  const [note, setNote]             = useState('');
+  const [loading, setLoading]       = useState(false);
+  const [msg, setMsg]               = useState('');
+  const [showAnnotate, setShowAnnotate] = useState(false);
+  const [corrSpecies, setCorrSpecies]   = useState(contribution.species || '');
+  const [corrPathology, setCorrPathology] = useState(contribution.pathology || '');
+  const [annotating, setAnnotating] = useState(false);
 
   const sp = SPECIES_LABELS[contribution.species] || SPECIES_LABELS.other;
   const firstName = contribution.contributorName?.split(' ')[0] || 'Contributeur';
@@ -45,6 +67,32 @@ function ContributionCard({ contribution, onValidated }) {
       setMsg(err.response?.data?.error || 'Erreur.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAnnotate = async () => {
+    if (!corrSpecies || !corrPathology) { setMsg('Espèce et pathologie obligatoires.'); return; }
+    setAnnotating(true);
+    setMsg('');
+    try {
+      const isNonAnimal = corrSpecies === 'non_animal';
+      await api(null).patch(
+        `/api/lab/contributions/${contribution.id}/validate`,
+        {
+          action: isNonAnimal ? 'rejected' : 'validated',
+          note: `[Annotation entraineur] Espèce corrigée: ${corrSpecies}. Pathologie: ${corrPathology}. ${note || ''}`.trim(),
+          correctedSpecies: isNonAnimal ? null : corrSpecies,
+          correctedPathology: isNonAnimal ? null : corrPathology,
+          annotated: true,
+        },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('lab_token')}` } }
+      );
+      setMsg(isNonAnimal ? 'Image rejetée (non-animal).' : 'Annotation sauvegardée et image validée pour le dataset !');
+      setTimeout(() => onValidated(contribution.id), 1000);
+    } catch (err) {
+      setMsg(err.response?.data?.error || 'Erreur annotation.');
+    } finally {
+      setAnnotating(false);
     }
   };
 
@@ -110,8 +158,8 @@ function ContributionCard({ contribution, onValidated }) {
             <p className="text-xs font-medium mt-1 text-green-600">{msg}</p>
           )}
 
-          {/* Actions */}
-          <div className="flex gap-2 mt-3">
+          {/* Actions rapides */}
+          <div className="flex flex-wrap gap-2 mt-3">
             <button
               onClick={() => handleAction('validated')}
               disabled={loading}
@@ -125,7 +173,71 @@ function ContributionCard({ contribution, onValidated }) {
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-xs font-semibold transition-all disabled:opacity-60 hover:bg-red-600">
               ❌ Rejeter
             </button>
+            <button
+              onClick={() => setShowAnnotate(a => !a)}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-100 text-purple-700 text-xs font-semibold transition-all hover:bg-purple-200">
+              🏷️ Corriger & Annoter
+            </button>
           </div>
+
+          {/* Panel d'annotation — pour corriger espèce et pathologie */}
+          {showAnnotate && (
+            <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-2xl space-y-3">
+              <p className="text-xs font-bold text-purple-800">Correction d'étiquette pour l'entraînement du modèle Tebe</p>
+              <p className="text-xs text-purple-600">Indiquez la bonne espèce et la bonne pathologie afin que cette image soit correctement intégrée dans le dataset.</p>
+
+              <div>
+                <label className="block text-xs font-semibold text-purple-700 mb-1">Espèce correcte *</label>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {SPECIES_ALL.map(s => (
+                    <button
+                      key={s.value}
+                      type="button"
+                      onClick={() => setCorrSpecies(s.value)}
+                      className={`flex flex-col items-center p-2 rounded-xl border-2 text-xs transition-all ${
+                        corrSpecies === s.value
+                          ? s.value === 'non_animal' ? 'border-red-500 bg-red-50 text-red-700' : 'border-purple-500 bg-purple-100 text-purple-800'
+                          : 'border-gray-200 hover:border-purple-300 text-gray-600'
+                      }`}
+                    >
+                      <span className="text-lg">{s.icon}</span>
+                      <span className="mt-0.5 leading-tight text-center">{s.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {corrSpecies && corrSpecies !== 'non_animal' && (
+                <div>
+                  <label className="block text-xs font-semibold text-purple-700 mb-1">Pathologie correcte *</label>
+                  <select
+                    value={corrPathology}
+                    onChange={e => setCorrPathology(e.target.value)}
+                    className="w-full border border-purple-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-purple-300 bg-white"
+                  >
+                    <option value="">— Sélectionner —</option>
+                    {PATHOLOGIES_ALL.map(p => <option key={p} value={p}>{p}</option>)}
+                  </select>
+                </div>
+              )}
+
+              {corrSpecies === 'non_animal' && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-700">
+                  Cette image sera <strong>rejetée</strong> du dataset et marquée comme non-animal. Elle ne sera pas utilisée pour l'entraînement.
+                </div>
+              )}
+
+              {msg && <p className="text-xs font-medium text-purple-700">{msg}</p>}
+
+              <button
+                onClick={handleAnnotate}
+                disabled={annotating || !corrSpecies || (corrSpecies !== 'non_animal' && !corrPathology)}
+                className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {annotating ? <><div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" /> Enregistrement…</> : '💾 Sauvegarder l\'annotation dans le dataset'}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

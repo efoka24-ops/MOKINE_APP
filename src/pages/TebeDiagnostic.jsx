@@ -71,6 +71,7 @@ export default function TebeDiagnostic() {
   const [dragOver, setDragOver] = useState(false);
   const [classifyResult, setClassifyResult] = useState(null);
   const [classifying, setClassifying] = useState(false);
+  const [pendingB64, setPendingB64] = useState(null);
   const fileRef = useRef(null);
 
   const toBase64 = (f) => new Promise((res, rej) => {
@@ -97,11 +98,12 @@ export default function TebeDiagnostic() {
       setClassifying(true);
       const reader = new FileReader();
       reader.onload = async (ev) => {
+        const b64 = ev.target.result.split(',')[1];
+        setPendingB64(b64);
         try {
-          const b64 = ev.target.result.split(',')[1];
           const res = await apiClient.post('/tebe/classify', { imageBase64: b64 });
           setClassifyResult(res.data);
-        } catch (err) {
+        } catch {
           setClassifyResult({ failed: true, fallback: true, success: false, message: 'Vérification IA indisponible.' });
         } finally {
           setClassifying(false);
@@ -241,6 +243,20 @@ export default function TebeDiagnostic() {
     } catch {}
   };
 
+  const retryClassify = async () => {
+    if (!pendingB64) return;
+    setClassifying(true);
+    setClassifyResult(null);
+    try {
+      const res = await apiClient.post('/tebe/classify', { imageBase64: pendingB64 });
+      setClassifyResult(res.data);
+    } catch {
+      setClassifyResult({ failed: true, fallback: true, success: false, message: 'Vérification IA indisponible.' });
+    } finally {
+      setClassifying(false);
+    }
+  };
+
   const reset = () => {
     setFile(null);
     setPreview(null);
@@ -249,6 +265,7 @@ export default function TebeDiagnostic() {
     setSymptomText('');
     setClassifyResult(null);
     setClassifying(false);
+    setPendingB64(null);
     if (fileRef.current) fileRef.current.value = '';
   };
 
@@ -378,13 +395,22 @@ export default function TebeDiagnostic() {
 
         {classifyResult && (
           <>
-            {/* Fallback / indisponible */}
+            {/* Fallback / indisponible — bloquant avec retry */}
             {classifyResult.fallback && (
-              <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-3 flex items-start gap-3 text-sm text-yellow-700">
-                <span className="text-lg flex-shrink-0">⚠️</span>
-                <div>
-                  <p className="font-semibold">Vérification IA indisponible</p>
-                  <p className="text-xs text-yellow-600 mt-0.5">Le filtre de détection ne peut pas s'exécuter (modèle en chargement). Assurez-vous que l'image montre <strong>uniquement un animal d'élevage</strong> avant de lancer l'analyse.</p>
+              <div className="bg-yellow-50 border-2 border-yellow-400 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl flex-shrink-0">🔒</span>
+                  <div className="flex-1">
+                    <p className="font-bold text-yellow-800 text-sm">Vérification obligatoire — Modèle IA en chargement</p>
+                    <p className="text-yellow-700 text-xs mt-1">Le filtre de détection n'a pas pu s'exécuter. L'analyse est bloquée jusqu'à confirmation que l'image montre bien un animal d'élevage.</p>
+                    <button
+                      onClick={retryClassify}
+                      disabled={classifying}
+                      className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white text-xs font-semibold transition-all disabled:opacity-60"
+                    >
+                      {classifying ? <><div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" /> Vérification…</> : '🔄 Réessayer la vérification'}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -436,13 +462,20 @@ export default function TebeDiagnostic() {
 
         {/* Analyze button */}
         {(() => {
-          const isBlocked = classifyResult && !classifyResult.fallback && classifyResult.success &&
-            (classifyResult.isHuman || (!classifyResult.isAnimal && !['no-image','unknown'].includes(classifyResult.subjectType)));
+          // Bloqué si : classification échouée/fallback, humain détecté, non-animal, ou en cours de classification
+          const isBlocked = inputMode === 'visual' && mode === 'image' && (
+            classifying ||
+            !classifyResult ||
+            classifyResult.fallback ||
+            classifyResult.isHuman ||
+            (!classifyResult.isAnimal && !['no-image'].includes(classifyResult.subjectType))
+          );
           return !result && (inputMode === 'visual' ? file : symptomText.trim()) && (
           <button
             onClick={analyze}
-            disabled={loading || isBlocked || classifying}
-            className={`w-full py-4 rounded-2xl font-semibold text-base shadow-lg flex items-center justify-center gap-3 transition-all ${isBlocked ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-green-700 hover:bg-green-800 text-white disabled:opacity-50'}`}
+            disabled={loading || isBlocked}
+            title={isBlocked ? 'Vérification IA requise avant l\'analyse' : ''}
+            className={`w-full py-4 rounded-2xl font-semibold text-base shadow-lg flex items-center justify-center gap-3 transition-all ${isBlocked ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-green-700 hover:bg-green-800 text-white disabled:opacity-50'}`}
           >
             {loading ? (
               <>
