@@ -23,7 +23,7 @@ const ROLE_COLORS = { farmer: 'bg-green-100 text-green-700', veterinarian: 'bg-b
 
 const LINKS_FARMER = [
   { to: '/dashboard',         label: 'Tableau de bord',   icon: HomeIcon },
-  { to: '/animals/add',       label: 'Mon Cheptel',        icon: ClipboardDocumentListIcon },
+  { to: '/animals',            label: 'Mon Cheptel',        icon: ClipboardDocumentListIcon },
   { to: '/consultation',      label: 'Consultation',       icon: BriefcaseIcon },
   { to: '/tebe',              label: 'Diagnostic IA',      icon: SparklesIcon },
   { to: '/alertes-sanitaires',label: 'Alertes sanitaires', icon: ExclamationTriangleIcon },

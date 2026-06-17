@@ -5,7 +5,7 @@
 
 import rateLimit from 'express-rate-limit';
 
-const isTest = () => process.env.NODE_ENV === 'test';
+const isTest = () => process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development';
 
 // Brute-force protection for login / register
 export const authLimiter = rateLimit({

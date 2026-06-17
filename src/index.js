@@ -23,6 +23,7 @@ import Layout from './Layout/Layout';
 import QRCodeGenerator from './pages/qrcode';
 import Register from './pages/Register';
 import AddAnimalPage from './pages/AddAnimalPage';
+import AnimalListPage from './pages/AnimalListPage';
 import IaQuestionnaire from './pages/IaQuestionnaire';
 import AnimalDetail from './pages/AnimalDetail';
 import MokineVetoPage from './pages/MokineVetoPage';
@@ -141,6 +142,7 @@ root.render(
             <Route path="/marketplace" element={<MarketPlace />} />
             <Route path="/consultation" element={<Consultation />} />
             {/* ── Farmer-only routes ── */}
+            <Route path="/animals" element={<FarmerRoute><AnimalListPage /></FarmerRoute>} />
             <Route path="/animals/add" element={<FarmerRoute><AddAnimalPage /></FarmerRoute>} />
             <Route path="/animals/:id" element={<FarmerRoute><AnimalDetail /></FarmerRoute>} />
             <Route path="/ia/questionnaire" element={<FarmerRoute><IaQuestionnaire /></FarmerRoute>} />
