@@ -2,21 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const detectCity = async (setter) => {
-  if (!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${coords.latitude}&lon=${coords.longitude}&format=json`,
-        { headers: { 'Accept-Language': 'fr' } }
-      );
-      const data = await res.json();
-      const city = data.address?.city || data.address?.town || data.address?.village || data.address?.county || '';
-      if (city) setter(city);
-    } catch {}
-  }, () => {});
-};
-
 const LANGUAGES = [
   { code: 'fr',  label: 'Français',  flag: '🇫🇷' },
   { code: 'ful', label: 'Fulfuldé',  flag: '🌍' },
@@ -61,6 +46,8 @@ export default function RegisterPage() {
   const [step, setStep]     = useState(0); // 0=lang, 1=role, 2=info, 3=vet-profile
   const [error, setError]   = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPw, setShowPw]             = useState(false);
+  const [showConfirmPw, setShowConfirmPw] = useState(false);
 
   const [formData, setFormData] = useState({
     // language
@@ -260,15 +247,8 @@ export default function RegisterPage() {
               </select>
             </div>
 
-            <div className="flex gap-2">
-              <input value={formData.domicile} onChange={e => { set('domicile', e.target.value); set('city', e.target.value); }}
-                placeholder="Village / Ville de résidence" className="input-field flex-1" />
-              <button type="button" title="Détecter ma ville"
-                onClick={() => detectCity(v => { set('domicile', v); set('city', v); })}
-                className="px-3 py-2 text-lg bg-green-50 border border-gray-300 rounded-lg hover:bg-green-100 transition">
-                📍
-              </button>
-            </div>
+            <input value={formData.domicile} onChange={e => set('domicile', e.target.value)}
+              placeholder="Village / Ville de résidence" className="input-field" />
 
             {/* Farmer-specific */}
             {formData.role === 'farmer' && (
@@ -322,12 +302,30 @@ export default function RegisterPage() {
             )}
 
             <div>
-              <input required type="password" value={formData.password} onChange={e => set('password', e.target.value)}
-                placeholder="Mot de passe *" className="input-field" />
+              <div style={{ position: 'relative' }}>
+                <input required type={showPw ? 'text' : 'password'} value={formData.password}
+                  onChange={e => set('password', e.target.value)}
+                  placeholder="Mot de passe *" className="input-field" style={{ paddingRight: '2.5rem' }} />
+                <button type="button" onClick={() => setShowPw(p => !p)}
+                  style={{ position: 'absolute', right: '0.625rem', top: '50%', transform: 'translateY(-50%)',
+                    background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', fontSize: '1rem', lineHeight: 1 }}
+                  title={showPw ? 'Masquer' : 'Afficher le mot de passe'}>
+                  {showPw ? '🙈' : '👁'}
+                </button>
+              </div>
               <p className="text-xs text-gray-400 mt-1">Min. 8 car., 1 majuscule, 1 chiffre, 1 spécial (!@#$%^&*)</p>
             </div>
-            <input required type="password" value={formData.confirmPassword} onChange={e => set('confirmPassword', e.target.value)}
-              placeholder="Confirmer le mot de passe *" className="input-field" />
+            <div style={{ position: 'relative' }}>
+              <input required type={showConfirmPw ? 'text' : 'password'} value={formData.confirmPassword}
+                onChange={e => set('confirmPassword', e.target.value)}
+                placeholder="Confirmer le mot de passe *" className="input-field" style={{ paddingRight: '2.5rem' }} />
+              <button type="button" onClick={() => setShowConfirmPw(p => !p)}
+                style={{ position: 'absolute', right: '0.625rem', top: '50%', transform: 'translateY(-50%)',
+                  background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', fontSize: '1rem', lineHeight: 1 }}
+                title={showConfirmPw ? 'Masquer' : 'Afficher le mot de passe'}>
+                {showConfirmPw ? '🙈' : '👁'}
+              </button>
+            </div>
 
             <button type="submit" disabled={loading}
               className="w-full py-2.5 bg-[#178A3B] hover:bg-[#136B2F] text-white font-medium rounded-lg transition-colors disabled:opacity-60">
@@ -351,17 +349,10 @@ export default function RegisterPage() {
 
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Zone d'intervention</label>
-              <div className="flex gap-2 mb-2">
-                <input value={formData.city} onChange={e => set('city', e.target.value)}
-                  placeholder="Ville principale (ex: Garoua)" className="input-field flex-1" />
-                <button type="button" title="Détecter ma ville"
-                  onClick={() => detectCity(v => set('city', v))}
-                  className="px-3 py-2 text-lg bg-green-50 border border-gray-300 rounded-lg hover:bg-green-100 transition">
-                  📍
-                </button>
-              </div>
+              <input value={formData.city} onChange={e => set('city', e.target.value)}
+                placeholder="Ville principale (ex: Yaoundé)" className="input-field mb-2" />
               <input value={formData.zone} onChange={e => set('zone', e.target.value)}
-                placeholder="Région / zone couverte (ex: Nord, Adamaoua...)" className="input-field" />
+                placeholder="Région / zone couverte (ex: Centre, Est...)" className="input-field" />
             </div>
 
             <div>
@@ -425,7 +416,7 @@ export default function RegisterPage() {
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .input-field {
           width: 100%;
           padding: 0.5rem 0.75rem;

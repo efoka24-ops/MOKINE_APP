@@ -368,7 +368,51 @@ export default function AnimalDetail() {
               <button onClick={() => { setTreatForm(p => ({...p, treatmentType: 'vaccination'})); setShowTreatmentModal(true); }}
                 className="px-3 py-1.5 bg-[#178A3B] text-white text-sm rounded-lg hover:bg-[#136B2F]">+ Vaccin</button>
             </div>
-            <div className="divide-y">
+
+            {/* Diagnostics récents — à consulter avant de vacciner */}
+            {healthRecords.filter(r => r.type === 'checkup' || r.type === 'observation').length > 0 && (
+              <div className="mx-4 mt-4 rounded-xl border border-blue-200 bg-blue-50 p-3">
+                <p className="text-xs font-bold text-blue-800 mb-2 flex items-center gap-1.5">
+                  🩺 Diagnostics récents — à consulter avant de vacciner
+                </p>
+                <div className="space-y-1.5">
+                  {healthRecords
+                    .filter(r => r.type === 'checkup' || r.type === 'observation')
+                    .slice(0, 3)
+                    .map(r => (
+                      <div key={r.id} className="flex items-start justify-between text-xs bg-white rounded-lg px-3 py-2 border border-blue-100">
+                        <div>
+                          <span className="font-semibold text-gray-800">{r.title || r.description || '—'}</span>
+                          {r.description && r.title && (
+                            <p className="text-gray-500 mt-0.5 line-clamp-1">{r.description}</p>
+                          )}
+                        </div>
+                        <span className="text-gray-400 ml-3 whitespace-nowrap">
+                          {new Date(r.date).toLocaleDateString('fr-FR')}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+                <p className="text-[10px] text-blue-600 mt-2 italic">
+                  Vérifiez l'état de santé de l'animal avant tout acte vaccinal.
+                </p>
+              </div>
+            )}
+
+            {/* Alerte si aucun diagnostic disponible */}
+            {healthRecords.filter(r => r.type === 'checkup' || r.type === 'observation').length === 0 && (
+              <div className="mx-4 mt-4 rounded-xl border border-yellow-200 bg-yellow-50 p-3 flex items-start gap-2">
+                <span className="text-yellow-500 mt-0.5">⚠️</span>
+                <div>
+                  <p className="text-xs font-semibold text-yellow-800">Aucun diagnostic enregistré</p>
+                  <p className="text-xs text-yellow-700 mt-0.5">
+                    Il est recommandé d'effectuer un examen clinique (onglet Santé) avant de vacciner.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="divide-y mt-4">
               {vaccinationRecords.length === 0
                 ? <div className="py-10 text-center text-gray-400 text-sm">Aucune vaccination enregistrée</div>
                 : vaccinationRecords.map(r => <RecordRow key={r.id} record={r} />)

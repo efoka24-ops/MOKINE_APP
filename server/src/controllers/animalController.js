@@ -1,5 +1,8 @@
 import db from '../db/index.js';
 import { pushNotification } from './notificationController.js';
+import { sendCollarPendingAdminEmail } from '../services/emailService.js';
+
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.SMTP_FROM_EMAIL || 'infos@trugroup.cm';
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 const createAlert = async (ownerId, animalId, animalName, message, severity) => {
@@ -64,6 +67,7 @@ export const addAnimal = async (req, res) => {
       breed: breed || '',
       birthDate: birthDate ? new Date(birthDate).toISOString() : null,
       collarId: collarId || '',
+      collarStatus: collarId ? 'pending' : null,
       weight: weight ? parseFloat(weight) : null,
       vaccinations: vaccinations || [],
       sex: sex || '',
@@ -77,6 +81,21 @@ export const addAnimal = async (req, res) => {
     };
 
     await db.animals.insert(newAnimal);
+
+    // Notifier l'admin si un collier a été enregistré
+    if (collarId) {
+      const owner = await db.users.findById(req.user.id).catch(() => null);
+      sendCollarPendingAdminEmail({
+        adminEmail: ADMIN_EMAIL,
+        farmerName: owner?.name || req.user.name || 'Éleveur inconnu',
+        farmerEmail: owner?.email || req.user.email || '',
+        animalName: name,
+        animalType: type,
+        collarId,
+        animalId: newAnimal.id,
+      }).catch(() => {});
+    }
+
     res.status(201).json({ message: 'Animal added', animal: newAnimal });
   } catch (error) {
     res.status(500).json({ error: error.message });

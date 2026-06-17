@@ -3,6 +3,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import db, { SEEDS, COLLECTION_NAMES } from '../../db/index.js';
 import { pushNotification } from '../notificationController.js';
+import {
+  sendCollarActivatedEmail,
+  sendCollarDeactivatedEmail,
+} from '../../services/emailService.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, '../../../data');
@@ -1109,6 +1113,101 @@ export const getAnalytics = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+// ==================== COLLAR MANAGEMENT ====================
+
+export const getCollars = async (req, res) => {
+  try {
+    const { status } = req.query; // pending | active | inactive | all
+    const animals = await db.animals.all();
+    let withCollar = animals.filter(a => a.collarId && a.collarId.trim() !== '');
+    if (status && status !== 'all') {
+      withCollar = withCollar.filter(a => a.collarStatus === status);
+    }
+    // Enrichir avec les infos de l'éleveur
+    const users = await db.users.all();
+    const result = withCollar.map(a => {
+      const owner = users.find(u => u.id === a.ownerId) || {};
+      return {
+        animalId: a.id,
+        animalName: a.name,
+        animalType: a.type,
+        collarId: a.collarId,
+        collarStatus: a.collarStatus || 'pending',
+        collarActivatedAt: a.collarActivatedAt || null,
+        ownerId: a.ownerId,
+        ownerName: owner.name || '—',
+        ownerEmail: owner.email || '—',
+        createdAt: a.createdAt,
+      };
+    });
+    // Trier : pending en premier, puis par date décroissante
+    result.sort((a, b) => {
+      if (a.collarStatus === 'pending' && b.collarStatus !== 'pending') return -1;
+      if (b.collarStatus === 'pending' && a.collarStatus !== 'pending') return 1;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    res.json({ collars: result, total: result.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const activateCollar = async (req, res) => {
+  try {
+    const animal = await db.animals.findById(req.params.animalId);
+    if (!animal) return res.status(404).json({ error: 'Animal introuvable' });
+    if (!animal.collarId) return res.status(400).json({ error: 'Cet animal n\'a pas de collier enregistré' });
+
+    const updated = await db.animals.update(req.params.animalId, {
+      collarStatus: 'active',
+      collarActivatedAt: new Date().toISOString(),
+    });
+
+    // Récupérer l'éleveur pour l'email
+    const owner = await db.users.findById(animal.ownerId).catch(() => null);
+    if (owner?.email) {
+      sendCollarActivatedEmail({
+        to: owner.email,
+        farmerName: owner.name || 'Éleveur',
+        animalName: animal.name,
+        animalType: animal.type,
+        collarId: animal.collarId,
+      }).catch(() => {});
+    }
+
+    res.json({ message: 'Collier activé. Email envoyé à l\'éleveur.', animal: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const deactivateCollar = async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const animal = await db.animals.findById(req.params.animalId);
+    if (!animal) return res.status(404).json({ error: 'Animal introuvable' });
+
+    const updated = await db.animals.update(req.params.animalId, {
+      collarStatus: 'inactive',
+    });
+
+    const owner = await db.users.findById(animal.ownerId).catch(() => null);
+    if (owner?.email) {
+      sendCollarDeactivatedEmail({
+        to: owner.email,
+        farmerName: owner.name || 'Éleveur',
+        animalName: animal.name,
+        collarId: animal.collarId,
+        reason: reason || '',
+      }).catch(() => {});
+    }
+
+    res.json({ message: 'Collier désactivé. Email envoyé à l\'éleveur.', animal: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 

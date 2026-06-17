@@ -3,7 +3,7 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Stethoscope, Users, Dog, MessageSquare, FileText, Calendar,
   AlertTriangle, Radio, Package, ShoppingCart, Building2, ClipboardCheck,
-  FlaskConical, Activity, Settings, CreditCard, Bell,
+  FlaskConical, Activity, Settings, CreditCard, Bell, Tag,
   ChevronDown, ChevronRight, LogOut, X, Menu,
 } from 'lucide-react';
 
@@ -25,6 +25,7 @@ const MODULES = [
       { label: 'Vétérinaires', icon: Stethoscope, path: '/admin/veto' },
       { label: 'Éleveurs', icon: Users, path: '/admin/veto?tab=farmers' },
       { label: 'Animaux', icon: Dog, path: '/admin/veto?tab=animals' },
+      { label: 'Colliers / Tags', icon: Tag, path: '/admin/collars' },
       { label: 'Consultations', icon: MessageSquare, path: '/admin/veto?tab=consultations' },
       { label: 'Ordonnances', icon: FileText, path: '/admin/veto?tab=prescriptions' },
       { label: 'Rendez-vous', icon: Calendar, path: '/admin/veto?tab=appointments' },

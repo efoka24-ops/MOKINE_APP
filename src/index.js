@@ -69,6 +69,7 @@ import LabCatalog from './pages/lab/LabCatalog';
 import ProtectedRoute from './admin/ProtectedRoute';
 import {
   AdminDashboard,
+  AdminCollarsPage,
   VetoModule,
   BoxModule,
   MarketModule,
@@ -162,6 +163,7 @@ root.render(
         {/* ====== Admin Routes (Protected) ====== */}
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/collars" element={<ProtectedRoute><AdminCollarsPage /></ProtectedRoute>} />
         <Route path="/admin/veto" element={<ProtectedRoute><VetoModule /></ProtectedRoute>} />
         <Route path="/admin/box" element={<ProtectedRoute><BoxModule /></ProtectedRoute>} />
         <Route path="/admin/market" element={<ProtectedRoute><MarketModule /></ProtectedRoute>} />

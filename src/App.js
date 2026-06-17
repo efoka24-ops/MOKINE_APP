@@ -84,8 +84,7 @@ const GRAY_STRIP_ITEMS = [
     { img: minader, title: "MINADER", subtitle: "Partenaire Officiel" },
 ];
 
-/* Video source (place in public/video/mokine-demo.mp4) */
-const VIDEO_SRC = "/video/mokine-demo.mp4";
+const VIDEO_SRC = "/video.mp4";
 
 /* Helper small components inside file for rapid integration */
 function GrayStrip({ items = GRAY_STRIP_ITEMS }) {
@@ -538,11 +537,10 @@ function ContentSections() {
                 {/* Section vidéo */}
                 <div className="lg:w-1/2 bg-black flex items-center justify-center min-h-[300px] lg:min-h-[400px]">
                     <div className="relative w-full h-full">
-                        <video 
-                            src={VIDEO_SRC} 
-                            controls 
-                            className="w-full h-full object-cover" 
-                            poster="/path/to/video-thumbnail.jpg" // Optionnel: ajouter une image de preview
+                        <video
+                            src={VIDEO_SRC}
+                            controls
+                            className="w-full h-full object-cover"
                         >
                             Votre navigateur ne supporte pas la lecture vidéo.
                         </video>

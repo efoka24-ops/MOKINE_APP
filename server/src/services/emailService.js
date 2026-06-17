@@ -213,6 +213,69 @@ export const sendPaymentInitiatedEmail = async ({ to, userName, amount, currency
   });
 };
 
+// ── Nouveau collier enregistré → notifier l'admin ─────────────────────────
+export const sendCollarPendingAdminEmail = async ({ adminEmail, farmerName, farmerEmail, animalName, animalType, collarId, animalId }) => {
+  const backofficeUrl = `${APP_URL}/admin/collars`;
+  const typeLabels = { cattle: 'Bovin', goat: 'Caprin', sheep: 'Ovin', pig: 'Porcin', chicken: 'Volaille', horse: 'Équin', fish: 'Poisson' };
+  const typeLabel = typeLabels[animalType] || animalType;
+  await send({
+    to: adminEmail,
+    subject: `🏷️ Nouveau collier en attente de validation — ${collarId}`,
+    html: baseHtml(`
+      <p>Bonjour,</p>
+      <p>Un nouvel identifiant de collier a été enregistré sur la plateforme et nécessite votre validation.</p>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr style="background:#f4f4f4"><td style="padding:10px 14px;font-weight:bold">N° Collier / Tag</td><td style="padding:10px 14px;font-family:monospace;font-size:14px;font-weight:bold;color:#178A3B">${collarId}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:bold">Animal</td><td style="padding:10px 14px">${animalName} (${typeLabel})</td></tr>
+        <tr style="background:#f4f4f4"><td style="padding:10px 14px;font-weight:bold">Éleveur</td><td style="padding:10px 14px">${farmerName}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:bold">Email éleveur</td><td style="padding:10px 14px">${farmerEmail}</td></tr>
+      </table>
+      <p>Rendez-vous dans le back office pour valider ce collier :</p>
+      <a href="${backofficeUrl}" class="btn">Valider le collier dans le back office →</a>
+      <p style="font-size:12px;color:#888;margin-top:16px">Réf. animal : ${animalId}</p>
+      <p>Cordialement,<br>Système Mokine</p>
+    `),
+  });
+};
+
+// ── Collier activé → notifier l'éleveur ───────────────────────────────────
+export const sendCollarActivatedEmail = async ({ to, farmerName, animalName, animalType, collarId }) => {
+  const typeLabels = { cattle: 'Bovin', goat: 'Caprin', sheep: 'Ovin', pig: 'Porcin', chicken: 'Volaille', horse: 'Équin', fish: 'Poisson' };
+  const typeLabel = typeLabels[animalType] || animalType;
+  await send({
+    to,
+    subject: `✅ Collier ${collarId} activé pour ${animalName}`,
+    html: baseHtml(`
+      <p>Bonjour <strong>${farmerName}</strong>,</p>
+      <p>Bonne nouvelle ! Le collier enregistré pour votre animal a été <strong>validé et activé</strong> par l'équipe Mokine.</p>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr style="background:#f0fdf4;border-left:4px solid #178A3B"><td style="padding:10px 14px;font-weight:bold">N° Collier / Tag</td><td style="padding:10px 14px;font-family:monospace;font-size:14px;font-weight:bold;color:#178A3B">${collarId}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:bold">Animal</td><td style="padding:10px 14px">${animalName} (${typeLabel})</td></tr>
+      </table>
+      <p style="color:#178A3B;font-weight:bold">✅ Ce collier est maintenant actif et lié à votre animal dans le système Mokine.</p>
+      <a href="${APP_URL}/dashboard" class="btn">Voir mon cheptel →</a>
+      <p>Pour toute question : <a href="mailto:infos@trugroup.cm">infos@trugroup.cm</a></p>
+      <p>À bientôt,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
+// ── Collier désactivé → notifier l'éleveur ────────────────────────────────
+export const sendCollarDeactivatedEmail = async ({ to, farmerName, animalName, collarId, reason }) => {
+  await send({
+    to,
+    subject: `⚠️ Collier ${collarId} désactivé`,
+    html: baseHtml(`
+      <p>Bonjour <strong>${farmerName}</strong>,</p>
+      <p>Le collier <strong>${collarId}</strong> associé à l'animal <strong>${animalName}</strong> a été <strong>désactivé</strong>.</p>
+      ${reason ? `<p><strong>Motif :</strong> ${reason}</p>` : ''}
+      <p>Veuillez contacter notre équipe si vous pensez qu'il s'agit d'une erreur.</p>
+      <a href="mailto:infos@trugroup.cm" class="btn">Contacter le support →</a>
+      <p>À bientôt,<br>L'équipe Mokine</p>
+    `),
+  });
+};
+
 // ── Contact form (message reçu depuis le site) ─────────────────────────────
 export const sendContactFormEmail = async ({ senderName, senderEmail, subject, message }) => {
   await send({

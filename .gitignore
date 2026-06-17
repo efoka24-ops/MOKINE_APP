@@ -28,3 +28,21 @@ server/.env
 
 # internal docs
 DEPLOYMENT.md
+
+# Large media files (host externally — too large for GitHub)
+public/video.mp4
+public/*.mp4
+public/*.mp3
+public/*.mov
+
+# Logs & test artifacts
+*.log
+frontend.log
+server.log
+playwright-report/
+test-results/
+tests/screenshots/
+verify-*.mjs
+verify-*.png
+flow-*.png
+cahier_des_tests_mokine.xlsx

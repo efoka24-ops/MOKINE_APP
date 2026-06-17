@@ -39,6 +39,7 @@ export default function AddAnimalPage() {
     vaccinations: '',
     // batch
     quantity: 10,
+    batchName: '',
     photoUrl: '',
   });
 
@@ -58,7 +59,8 @@ export default function AddAnimalPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isBatch && !form.name) { setError('Le nom est obligatoire.'); return; }
+    if (!isBatch && !form.name.trim()) { setError('Le nom de l\'animal est obligatoire.'); return; }
+    if (isBatch && !form.batchName.trim()) { setError('Le nom du lot est obligatoire.'); return; }
     if (isBatch && !form.quantity) { setError('La quantité est obligatoire.'); return; }
     setLoading(true); setError('');
     try {
@@ -67,7 +69,9 @@ export default function AddAnimalPage() {
         vaccinations: form.vaccinations ? form.vaccinations.split(',').map(s => s.trim()).filter(Boolean) : [],
         isBatch,
         quantity: isBatch ? parseInt(form.quantity) : 1,
-        name: isBatch ? `${ICON_DEFAULT[form.type] || ''} Lot ${form.type} (${form.quantity})` : form.name,
+        name: isBatch
+          ? `${form.batchName} — ${ICON_DEFAULT[form.type] || ''} ${ANIMAL_TYPES.find(t => t.id === form.type)?.label || form.type} (${form.quantity} têtes)`
+          : form.name.trim(),
       };
       await animalsAPI.add(payload);
       navigate('/dashboard');
@@ -141,21 +145,32 @@ export default function AddAnimalPage() {
             <input ref={photoRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePhoto} />
           </div>
 
-          {/* Batch: quantity OR individual: name */}
+          {/* Batch: quantity + nom du lot OR individual: nom */}
           {isBatch ? (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité *</label>
-              <input type="number" min="1" required value={form.quantity}
-                onChange={e => set('quantity', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B]"
-                placeholder="Ex: 150" />
-            </div>
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nom du lot *</label>
+                <input required value={form.batchName} onChange={e => set('batchName', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B]"
+                  placeholder="Ex: Lot bovin saison sèche 2026" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Quantité *</label>
+                <input type="number" min="1" required value={form.quantity}
+                  onChange={e => set('quantity', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B]"
+                  placeholder="Ex: 150" />
+              </div>
+            </>
           ) : (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l'animal *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nom de l'animal <span className="text-red-500">*</span>
+              </label>
               <input required value={form.name} onChange={e => set('name', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B]"
-                placeholder="Ex: Sultan, Bessie..." />
+                className="w-full px-3 py-2 border-2 border-[#178A3B] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B] bg-green-50"
+                placeholder="Ex: Sultan, Bessie, Fanta…" />
+              <p className="text-xs text-gray-400 mt-1">Donnez un nom unique à votre animal pour le retrouver facilement.</p>
             </div>
           )}
 
@@ -209,10 +224,15 @@ export default function AddAnimalPage() {
                 placeholder="Ex: Étable A, Parcelle 3" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Numéro de collier / Tag</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Numéro de collier / Tag
+              </label>
               <input value={form.collarId} onChange={e => set('collarId', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B]"
-                placeholder="Ex: COLLAR_001" />
+                placeholder="Ex: 001, A-23, TAG-0047…" />
+              <p className="text-xs text-gray-400 mt-1">
+                Saisissez le numéro inscrit sur le collier ou la boucle auriculaire posé sur l'animal.
+              </p>
             </div>
           </div>
 

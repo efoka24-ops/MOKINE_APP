@@ -157,6 +157,11 @@ export const admin = {
   getDashboard: () => apiClient.get('/admin/dashboard'),
   getAnalytics: () => apiClient.get('/admin/analytics'),
 
+  // ── Colliers ──────────────────────────────────────────────────────────────
+  getCollars: (status) => apiClient.get(`/admin/veto/collars${status ? `?status=${status}` : ''}`),
+  activateCollar: (animalId) => apiClient.patch(`/admin/veto/collars/${animalId}/activate`),
+  deactivateCollar: (animalId, reason) => apiClient.patch(`/admin/veto/collars/${animalId}/deactivate`, { reason }),
+
   // ── MokineVeto ────────────────────────────────────────────────────────────
   getVets: () => apiClient.get('/admin/veto/vets'),
   updateVet: (id, data) => apiClient.put(`/admin/veto/vets/${id}`, data),

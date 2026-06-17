@@ -10,6 +10,11 @@ router.use(verifyToken, requireAdmin);
 router.get('/dashboard', ctrl.getDashboard);
 router.get('/analytics', ctrl.getAnalytics);
 
+// ─── Colliers ──────────────────────────────────────────────────────────────────
+router.get('/veto/collars',                         ctrl.getCollars);
+router.patch('/veto/collars/:animalId/activate',    ctrl.activateCollar);
+router.patch('/veto/collars/:animalId/deactivate',  ctrl.deactivateCollar);
+
 // ─── MokineVeto ────────────────────────────────────────────────────────────────
 router.get('/veto/vets', ctrl.getVets);
 router.put('/veto/vets/:id', ctrl.updateVet);

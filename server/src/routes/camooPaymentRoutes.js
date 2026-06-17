@@ -32,20 +32,31 @@ router.post('/cashout', verifyToken, async (req, res) => {
     const network = result?.cashOut?.network || '';
 
     // Persist a pending payment so the webhook can activate the subscription
-    await db.payments.insert({
-      id: vendorRef,
-      camooId: camooId || null,
-      userId: req.user.id,
-      plan: plan || null,
-      amount: Number(amount),
-      phone: phone_number,
-      network,
-      external_reference: vendorRef,
-      status: 'pending',
-      paymentMethod: 'camoo',
-      currency: 'XAF',
-      createdAt: new Date().toISOString(),
-    });
+    // Upsert: si un paiement avec le même external_reference existe déjà, on met à jour
+    const existing = await db.payments.filter(p => p.external_reference === vendorRef).catch(() => []);
+    if (existing.length > 0) {
+      await db.payments.update(existing[0].id, {
+        ...existing[0],
+        camooId: camooId || existing[0].camooId,
+        network: network || existing[0].network,
+        updatedAt: new Date().toISOString(),
+      }).catch(() => {});
+    } else {
+      await db.payments.insert({
+        id: vendorRef,
+        camooId: camooId || null,
+        userId: req.user.id,
+        plan: plan || null,
+        amount: Number(amount),
+        phone: phone_number,
+        network,
+        external_reference: vendorRef,
+        status: 'pending',
+        paymentMethod: 'camoo',
+        currency: 'XAF',
+        createdAt: new Date().toISOString(),
+      });
+    }
 
     // Send "payment initiated" email (non-blocking)
     const user = await db.users.findById(req.user.id).catch(() => null);

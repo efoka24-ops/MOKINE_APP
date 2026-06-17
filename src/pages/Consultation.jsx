@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../context/AuthContext";
 import { consultations as consultationsAPI, animals as animalsAPI, auth as authAPI, pdf as pdfAPI } from "../API";
-import { createMeeting, authToken } from "../API";
 import { PlusIcon } from "@heroicons/react/24/outline";
 
 const SOCKET_URL = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
@@ -15,34 +14,6 @@ const STATUS_COLORS = {
 };
 const STATUS_LABELS = { pending: 'En attente', active: 'Active', closed: 'Fermée' };
 const PRIORITY_COLORS = { low: 'text-gray-500', normal: 'text-blue-600', high: 'text-orange-600', urgent: 'text-red-600' };
-
-const formatDoctorName = (name = '') => {
-  const clean = String(name || '').trim();
-  if (!clean) return 'Dr.';
-  return /^dr\.?\s+/i.test(clean) ? clean : `Dr. ${clean}`;
-};
-
-const getTeleconsultationLink = (consultation) => {
-  const explicitLink = consultation?.meetingLink || consultation?.teleconsultation?.meetingLink;
-  if (explicitLink) return explicitLink;
-  const meetingId = consultation?.meetingId || consultation?.teleconsultation?.meetingId;
-  if (!meetingId) return null;
-  return `/visio?roomId=${encodeURIComponent(meetingId)}`;
-};
-
-const canJoinTeleconsultation = (consultation) => {
-  const scheduledAt = consultation?.scheduledAt || consultation?.teleconsultation?.scheduledAt;
-  if (!scheduledAt) return true;
-  const now = Date.now();
-  const startAt = new Date(scheduledAt).getTime() - 5 * 60 * 1000; // tolérance 5 minutes avant
-  return now >= startAt;
-};
-
-const formatScheduledAt = (consultation) => {
-  const scheduledAt = consultation?.scheduledAt || consultation?.teleconsultation?.scheduledAt;
-  if (!scheduledAt) return null;
-  return new Date(scheduledAt).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
-};
 
 export default function Consultation() {
   const { user } = useAuth();
@@ -57,10 +28,6 @@ export default function Consultation() {
   const [vets, setVets] = useState([]);
   const [typing, setTyping] = useState('');
   const [newForm, setNewForm] = useState({ animalId: '', subject: '', priority: 'normal', veterinarianId: '' });
-  const [showPlanModal, setShowPlanModal] = useState(false);
-  const [planningConsultation, setPlanningConsultation] = useState(null);
-  const [plannedAtLocal, setPlannedAtLocal] = useState('');
-  const [isPlanning, setIsPlanning] = useState(false);
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
 
@@ -146,53 +113,6 @@ export default function Consultation() {
     } catch (e) { console.error(e); }
   };
 
-  const openPlanModal = (consultation) => {
-    const defaultDate = new Date(Date.now() + 30 * 60 * 1000);
-    const defaultLocal = new Date(defaultDate.getTime() - defaultDate.getTimezoneOffset() * 60000)
-      .toISOString()
-      .slice(0, 16);
-    setPlanningConsultation(consultation);
-    setPlannedAtLocal(defaultLocal);
-    setShowPlanModal(true);
-  };
-
-  const handlePlanTeleconsultation = async () => {
-    if (!planningConsultation) return;
-    if (!authToken) {
-      alert("Le token de réunion n'est pas configuré. Impossible de générer un lien visio.");
-      return;
-    }
-
-    const plannedDate = new Date(plannedAtLocal);
-    if (Number.isNaN(plannedDate.getTime())) {
-      alert("Date/heure invalide.");
-      return;
-    }
-
-    setIsPlanning(true);
-    try {
-      const meetingId = await createMeeting({ token: authToken });
-      const meetingLink = `${window.location.origin}/visio?roomId=${encodeURIComponent(meetingId)}`;
-      const res = await consultationsAPI.accept(planningConsultation.id, {
-        mode: 'video',
-        scheduledAt: plannedDate.toISOString(),
-        meetingId,
-        meetingLink,
-      });
-      const updated = res.data.consultation;
-      setConsultations(prev => prev.map(c => c.id === planningConsultation.id ? updated : c));
-      setActiveConsultation(updated);
-      setShowPlanModal(false);
-      setPlanningConsultation(null);
-      alert("Téléconsultation planifiée. Le lien est enregistré et envoyé à l'éleveur.");
-    } catch (error) {
-      console.error(error);
-      alert("Impossible de planifier la téléconsultation.");
-    } finally {
-      setIsPlanning(false);
-    }
-  };
-
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
@@ -266,44 +186,9 @@ export default function Consultation() {
         </div>
       )}
 
-      {showPlanModal && planningConsultation && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-5 border border-gray-200">
-            <h3 className="font-semibold text-gray-800 mb-2">Planifier la téléconsultation</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Consultation: <span className="font-medium">{planningConsultation.animalName || 'Animal'}</span>
-            </p>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Date et heure</label>
-            <input
-              type="datetime-local"
-              value={plannedAtLocal}
-              onChange={(e) => setPlannedAtLocal(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#178A3B] focus:border-[#178A3B]"
-            />
-            <div className="flex justify-end gap-2 mt-5">
-              <button
-                type="button"
-                onClick={() => { setShowPlanModal(false); setPlanningConsultation(null); }}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
-              >
-                Annuler
-              </button>
-              <button
-                type="button"
-                onClick={handlePlanTeleconsultation}
-                disabled={isPlanning || !plannedAtLocal}
-                className="px-4 py-2 bg-[#178A3B] text-white text-sm rounded-lg hover:bg-[#136B2F] disabled:opacity-50"
-              >
-                {isPlanning ? 'Planification...' : 'Confirmer'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0" style={{ height: 'calc(100vh - 250px)' }}>
+      <div className="flex gap-4 flex-1 min-h-0" style={{ height: 'calc(100vh - 250px)' }}>
         {/* Consultation list */}
-        <div className="w-full lg:w-80 lg:flex-shrink-0 bg-white rounded-xl shadow overflow-y-auto max-h-56 lg:max-h-none">
+        <div className="w-80 flex-shrink-0 bg-white rounded-xl shadow overflow-y-auto">
           {loading ? (
             <div className="flex justify-center items-center h-24 text-gray-400 text-sm">Chargement...</div>
           ) : consultations.length === 0 ? (
@@ -334,7 +219,7 @@ export default function Consultation() {
         </div>
 
         {/* Chat window */}
-        <div className="flex-1 min-w-0 bg-white rounded-xl shadow flex flex-col overflow-hidden">
+        <div className="flex-1 bg-white rounded-xl shadow flex flex-col overflow-hidden">
           {!activeConsultation ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-400">
               <div className="text-5xl mb-4">💬</div>
@@ -349,45 +234,26 @@ export default function Consultation() {
                   <div className="font-semibold text-gray-800">{activeConsultation.animalName}</div>
                   <div className="text-sm text-gray-500">{activeConsultation.subject}</div>
                   {activeConsultation.veterinarianName && (
-                    <div className="text-xs text-[#178A3B]">{formatDoctorName(activeConsultation.veterinarianName)}</div>
+                    <div className="text-xs text-[#178A3B]">Dr. {activeConsultation.veterinarianName}</div>
                   )}
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   {user?.role === 'veterinarian' && activeConsultation.status === 'pending' && (
-                    <button onClick={() => openPlanModal(activeConsultation)}
+                    <button onClick={() => handleAccept(activeConsultation.id)}
                       className="px-3 py-1.5 bg-[#178A3B] text-white text-xs rounded-lg hover:bg-[#136B2F]">
-                      Planifier la visio
+                      Accepter
                     </button>
                   )}
-                  {user?.role === 'veterinarian' && activeConsultation.status === 'pending' && (
-                    <a
-                      onClick={() => handleAccept(activeConsultation.id)}
-                      className="px-3 py-1.5 bg-gray-600 text-white text-xs rounded-lg hover:bg-gray-700 flex items-center gap-1 cursor-pointer"
-                    >
-                      Accepter sans visio
-                    </a>
-                  )}
                   {/* Visioconférence */}
-                  {activeConsultation.status === 'active' && getTeleconsultationLink(activeConsultation) && (
+                  {activeConsultation.status === 'active' && (
                     <a
-                      href={canJoinTeleconsultation(activeConsultation) ? getTeleconsultationLink(activeConsultation) : undefined}
+                      href="/visio"
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={(e) => {
-                        if (!canJoinTeleconsultation(activeConsultation)) {
-                          e.preventDefault();
-                          alert(`La téléconsultation sera disponible à ${formatScheduledAt(activeConsultation)}.`);
-                        }
-                      }}
-                      className={`px-3 py-1.5 text-white text-xs rounded-lg flex items-center gap-1 ${canJoinTeleconsultation(activeConsultation) ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-300 cursor-not-allowed'}`}
+                      className="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 flex items-center gap-1"
                     >
-                      📹 Se connecter
+                      📹 Visio
                     </a>
-                  )}
-                  {activeConsultation.status === 'active' && formatScheduledAt(activeConsultation) && (
-                    <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">
-                      🗓 {formatScheduledAt(activeConsultation)}
-                    </span>
                   )}
                   {/* PDF prescription download */}
                   {activeConsultation.prescriptionId && (

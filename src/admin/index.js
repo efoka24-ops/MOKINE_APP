@@ -1,5 +1,6 @@
 // Module pages
 export { default as AdminDashboard } from './pages/AdminDashboard.jsx';
+export { default as AdminCollarsPage } from './pages/AdminCollarsPage.jsx';
 export { default as VetoModule } from './pages/VetoModule.jsx';
 export { default as BoxModule } from './pages/BoxModule.jsx';
 export { default as MarketModule } from './pages/MarketModule.jsx';

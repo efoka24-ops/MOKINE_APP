@@ -79,28 +79,11 @@ export const acceptConsultation = async (req, res) => {
     if (!consultation) return res.status(404).json({ error: 'Consultation not found' });
 
     const mode = req.body.mode || 'text'; // 'text' | 'audio' | 'video' | 'onsite'
-    const scheduledAt = req.body.scheduledAt ? new Date(req.body.scheduledAt).toISOString() : null;
-    const meetingId = req.body.meetingId || null;
-    const meetingLink = req.body.meetingLink || null;
-
-    const teleconsultation = meetingId || meetingLink || scheduledAt
-      ? {
-          meetingId,
-          meetingLink,
-          scheduledAt,
-          updatedAt: new Date().toISOString(),
-        }
-      : (consultation.teleconsultation || null);
-
     const updated = await db.consultations.update(req.params.id, {
       veterinarianId: req.user.id,
       veterinarianName: req.user.name || 'Vétérinaire',
       status: 'active',
       mode,
-      scheduledAt,
-      meetingId,
-      meetingLink,
-      teleconsultation,
       acceptedAt: new Date().toISOString(),
     });
 
@@ -108,14 +91,10 @@ export const acceptConsultation = async (req, res) => {
       ioInstance.to(`consultation_${updated.id}`).emit('consultation_accepted', updated);
     }
 
-    const whenLabel = scheduledAt
-      ? ` Rendez-vous prévu le ${new Date(scheduledAt).toLocaleString('fr-FR')}.`
-      : '';
-
     pushNotification(consultation.farmerId, {
       type: 'consultation',
       title: 'Consultation acceptée',
-      message: `${req.user.name || 'Un vétérinaire'} a accepté votre consultation.${whenLabel}`,
+      message: `${req.user.name || 'Un vétérinaire'} a accepté votre consultation.`,
       link: '/consultation'
     });
 
