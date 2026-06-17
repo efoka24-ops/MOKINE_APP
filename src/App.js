@@ -84,7 +84,7 @@ const GRAY_STRIP_ITEMS = [
     { img: minader, title: "MINADER", subtitle: "Partenaire Officiel" },
 ];
 
-const VIDEO_DRIVE_EMBED = "https://drive.google.com/file/d/1nhjL6Cu8cII1LUeM7QNlR9qnW-icPerI/preview";
+const VIDEO_YOUTUBE_EMBED = "https://www.youtube.com/embed/aEa-EISaCLw";
 
 /* Helper small components inside file for rapid integration */
 function GrayStrip({ items = GRAY_STRIP_ITEMS }) {
@@ -538,10 +538,10 @@ function ContentSections() {
                 <div className="lg:w-1/2 bg-black flex items-center justify-center min-h-[300px] lg:min-h-[400px]">
                     <div className="relative w-full h-full">
                         <iframe
-                            src={VIDEO_DRIVE_EMBED}
+                            src={VIDEO_YOUTUBE_EMBED}
                             className="w-full h-full"
-                            style={{ minHeight: '300px', border: 'none' }}
-                            allow="autoplay"
+                            style={{ minHeight: '350px', border: 'none' }}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                             title="Démo Mokine"
                         />
