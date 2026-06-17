@@ -57,12 +57,13 @@ export const addAnimal = async (req, res) => {
       photoUrl,
     } = req.body;
 
-    if (!name || !type) return res.status(400).json({ error: 'Name and type are required' });
+    if (!type) return res.status(400).json({ error: 'Le type d\'animal est obligatoire' });
+    if (!isBatch && !collarId) return res.status(400).json({ error: 'Le numéro de collier / tag est obligatoire pour identifier l\'animal' });
 
     const newAnimal = {
       id: Date.now().toString(),
       ownerId: req.user.id,
-      name,
+      name: name || '',
       type,
       breed: breed || '',
       birthDate: birthDate ? new Date(birthDate).toISOString() : null,
