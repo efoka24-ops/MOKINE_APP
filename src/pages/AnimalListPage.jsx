@@ -108,44 +108,45 @@ export default function AnimalListPage() {
                 onClick={() => navigate(`/animals/${a.id}`)}
                 className="bg-white border border-gray-100 rounded-2xl p-4 hover:border-[#178A3B] hover:shadow-md cursor-pointer transition-all"
               >
-                {/* Icône + Nom + Statut */}
+                {/* Icône + Collier (identifiant principal) + Statut */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-3">
                     <span className="text-3xl">{TYPE_ICON[a.type] || '🐾'}</span>
                     <div>
-                      <p className="font-bold text-gray-900 text-base leading-tight">
-                        {a.name || <span className="italic text-gray-400">Sans nom</span>}
-                      </p>
-                      <p className="text-xs text-gray-500">
+                      {/* Numéro de collier = identifiant principal */}
+                      {a.collarId ? (
+                        <p className="font-bold text-gray-900 text-base leading-tight font-mono tracking-wide">
+                          🏷️ {a.collarId}
+                        </p>
+                      ) : (
+                        <p className="font-medium text-orange-500 text-sm italic">Pas de collier</p>
+                      )}
+                      <p className="text-xs text-gray-500 mt-0.5">
                         {TYPE_LABEL[a.type] || a.type}{a.breed ? ` — ${a.breed}` : ''}
+                        {a.name ? <span className="text-gray-400"> · {a.name}</span> : ''}
                       </p>
                     </div>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${st.cls}`}>
-                    {st.label}
-                  </span>
-                </div>
-
-                {/* Infos secondaires */}
-                <div className="mt-3 pt-3 border-t border-gray-50 flex items-center justify-between text-xs text-gray-500">
-                  <div className="flex items-center gap-1.5">
-                    {a.collarId ? (
-                      <>
-                        <span>🏷️</span>
-                        <span className="font-mono font-medium text-gray-700">{a.collarId}</span>
-                        {a.collarStatus === 'pending' && (
-                          <span className="bg-orange-100 text-orange-600 text-[10px] px-1.5 py-0.5 rounded-full">En attente</span>
-                        )}
-                        {a.collarStatus === 'active' && (
-                          <span className="bg-green-100 text-green-600 text-[10px] px-1.5 py-0.5 rounded-full">Actif</span>
-                        )}
-                      </>
-                    ) : (
-                      <span className="text-gray-300 italic">Pas de collier</span>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${st.cls}`}>
+                      {st.label}
+                    </span>
+                    {a.collarId && (
+                      a.collarStatus === 'pending'
+                        ? <span className="bg-orange-100 text-orange-600 text-[10px] px-1.5 py-0.5 rounded-full whitespace-nowrap">⏳ En attente d'activation</span>
+                        : a.collarStatus === 'active'
+                          ? <span className="bg-green-100 text-green-600 text-[10px] px-1.5 py-0.5 rounded-full">✅ Collier actif</span>
+                          : null
                     )}
                   </div>
-                  {a.weight && <span>{a.weight} kg</span>}
                 </div>
+
+                {/* Poids */}
+                {a.weight && (
+                  <div className="mt-2 pt-2 border-t border-gray-50 text-xs text-gray-400 text-right">
+                    {a.weight} kg
+                  </div>
+                )}
               </div>
             );
           })}

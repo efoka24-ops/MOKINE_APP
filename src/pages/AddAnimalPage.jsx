@@ -59,7 +59,7 @@ export default function AddAnimalPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isBatch && !form.name.trim()) { setError('Le nom de l\'animal est obligatoire.'); return; }
+    if (!isBatch && !form.collarId.trim()) { setError('Le numéro de collier / tag est obligatoire pour identifier l\'animal.'); return; }
     if (isBatch && !form.batchName.trim()) { setError('Le nom du lot est obligatoire.'); return; }
     if (isBatch && !form.quantity) { setError('La quantité est obligatoire.'); return; }
     setLoading(true); setError('');
@@ -145,8 +145,32 @@ export default function AddAnimalPage() {
             <input ref={photoRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePhoto} />
           </div>
 
-          {/* Batch: quantity + nom du lot OR individual: nom */}
-          {isBatch ? (
+          {/* Collier — identifiant principal (individuel uniquement) */}
+          {!isBatch && (
+            <div>
+              <label className="block text-sm font-semibold text-gray-800 mb-1">
+                Numéro de collier / Tag <span className="text-red-500">*</span>
+              </label>
+              <input
+                value={form.collarId}
+                onChange={e => set('collarId', e.target.value)}
+                className="w-full px-3 py-2.5 border-2 border-[#178A3B] rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#178A3B] bg-green-50"
+                placeholder="Ex: 001, A-23, TAG-0047…"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Saisissez le numéro inscrit sur le collier ou la boucle auriculaire physiquement posé sur l'animal.
+              </p>
+              {form.collarId.trim() && (
+                <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700 flex items-start gap-2">
+                  <span className="mt-0.5">ℹ️</span>
+                  <span>Ce collier sera enregistré en <strong>attente d'activation</strong>. L'administrateur Mokine recevra une notification pour valider et activer ce numéro depuis le back office.</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Lot : nom du lot + quantité */}
+          {isBatch && (
             <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Nom du lot *</label>
@@ -162,17 +186,17 @@ export default function AddAnimalPage() {
                   placeholder="Ex: 150" />
               </div>
             </>
-          ) : (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nom de l'animal <span className="text-red-500">*</span>
-              </label>
-              <input required value={form.name} onChange={e => set('name', e.target.value)}
-                className="w-full px-3 py-2 border-2 border-[#178A3B] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B] bg-green-50"
-                placeholder="Ex: Sultan, Bessie, Fanta…" />
-              <p className="text-xs text-gray-400 mt-1">Donnez un nom unique à votre animal pour le retrouver facilement.</p>
-            </div>
           )}
+
+          {/* Nom (optionnel) */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nom ou surnom <span className="text-gray-400 font-normal">(optionnel)</span>
+            </label>
+            <input value={form.name} onChange={e => set('name', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B]"
+              placeholder="Ex: Sultan, Fanta…" />
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Race</label>
@@ -216,24 +240,11 @@ export default function AddAnimalPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Enclos / Bâtiment</label>
-              <input value={form.enclos} onChange={e => set('enclos', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B]"
-                placeholder="Ex: Étable A, Parcelle 3" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Numéro de collier / Tag
-              </label>
-              <input value={form.collarId} onChange={e => set('collarId', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B]"
-                placeholder="Ex: 001, A-23, TAG-0047…" />
-              <p className="text-xs text-gray-400 mt-1">
-                Saisissez le numéro inscrit sur le collier ou la boucle auriculaire posé sur l'animal.
-              </p>
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Enclos / Bâtiment</label>
+            <input value={form.enclos} onChange={e => set('enclos', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#178A3B]"
+              placeholder="Ex: Étable A, Parcelle 3" />
           </div>
 
           <div>
